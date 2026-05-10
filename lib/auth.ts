@@ -3,7 +3,11 @@ import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 import { prisma } from './db';
 
-const SECRET = new TextEncoder().encode(process.env.JWT_SECRET || 'dev-secret');
+const SECRET_STR = process.env.JWT_SECRET;
+if (!SECRET_STR && process.env.NODE_ENV === 'production') {
+  throw new Error('JWT_SECRET environment variable is required in production');
+}
+const SECRET = new TextEncoder().encode(SECRET_STR || 'dev-only-secret-do-not-use-in-prod');
 const ADMIN_COOKIE = 'fantasia_admin';
 const CUSTOMER_COOKIE = 'fantasia_customer';
 

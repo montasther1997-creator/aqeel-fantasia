@@ -54,7 +54,7 @@ export function AdminShell({ children, locale, admin }: { children: React.ReactN
 
   return (
     <div className="min-h-screen flex bg-bg-primary text-frost" dir={dir}>
-      <aside className={`w-64 shrink-0 hidden lg:flex flex-col bg-bg-secondary/40 sticky top-0 h-screen ${isAr ? 'border-l' : 'border-r'} border-line`}>
+      <aside className={`w-64 shrink-0 hidden lg:flex flex-col bg-bg-secondary/60 backdrop-blur-xl ${isAr ? 'border-l' : 'border-r'} border-line h-screen sticky top-0 z-30 overflow-y-auto`}>
         <div className="p-6 border-b border-line">
           <Logo />
           <p className="text-[9px] tracking-cinematic text-electric mt-1">{t('controlRoom').toUpperCase()}</p>
@@ -68,13 +68,14 @@ export function AdminShell({ children, locale, admin }: { children: React.ReactN
                 const href = `${base}${item.href}`;
                 const active = pathname === href || (item.href && pathname.startsWith(href));
                 return (
-                  <Link key={href} href={href}
-                    className={`flex items-center gap-3 px-3 py-2 text-sm transition-colors ${
+                  <Link key={href} href={href} prefetch={false}
+                    className={`relative flex items-center gap-3 px-3 py-2 text-sm transition-all cursor-pointer rounded-sm ${
                       active
                         ? `bg-frost/10 text-frost ${isAr ? 'border-r-2' : 'border-l-2'} border-electric`
-                        : 'text-muted hover:text-frost hover:bg-white/5'
+                        : 'text-muted hover:text-frost hover:bg-white/[0.06]'
                     }`}>
-                    <Icon className="w-4 h-4 shrink-0" /> {item.label}
+                    <Icon className="w-4 h-4 shrink-0" />
+                    <span className="truncate">{item.label}</span>
                   </Link>
                 );
               })}

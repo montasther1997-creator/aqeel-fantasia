@@ -3,7 +3,7 @@ import { prisma } from '@/lib/db';
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const q = searchParams.get('q')?.trim() || '';
+  const q = (searchParams.get('q') || '').trim().slice(0, 100);
   if (!q) return NextResponse.json({ ok: true, products: [] });
   const products = await prisma.product.findMany({
     where: {
