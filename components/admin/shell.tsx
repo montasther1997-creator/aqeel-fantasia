@@ -48,8 +48,8 @@ export function AdminShell({ children, locale, admin }: { children: React.ReactN
   const pathname = usePathname();
   const base = `/${locale}/admin`;
   return (
-    <div className="min-h-screen flex bg-bg-primary text-frost" dir="ltr">
-      <aside className="w-64 border-r border-line shrink-0 hidden lg:flex flex-col bg-bg-secondary/40">
+    <div className="min-h-screen flex bg-bg-primary text-frost" dir="ltr" style={{ direction: 'ltr' }}>
+      <aside className="w-64 border-r border-line shrink-0 hidden lg:flex flex-col bg-bg-secondary/40 sticky top-0 h-screen">
         <div className="p-6 border-b border-line">
           <Logo />
           <p className="text-[9px] tracking-cinematic text-electric mt-1">CONTROL ROOM</p>
