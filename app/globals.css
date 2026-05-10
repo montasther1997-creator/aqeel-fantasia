@@ -8,8 +8,7 @@
     --font-body: 'Inter', system-ui;
     --font-arabic: 'IBM Plex Arabic', 'Tajawal', system-ui;
   }
-  html { scroll-behavior: smooth; cursor: none; }
-  @media (hover: none) { html { cursor: auto; } }
+  html { scroll-behavior: smooth; }
   body {
     @apply bg-bg-primary text-frost font-body antialiased;
     background-color: #0A0A0A;
