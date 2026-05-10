@@ -1,0 +1,137 @@
+{
+  "nav": {
+    "gate": "Gate",
+    "identity": "Identity",
+    "archive": "Archive",
+    "drops": "Drops",
+    "cult": "Cult",
+    "signal": "Signal",
+    "cart": "Cart",
+    "account": "Account",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "search": "Search"
+  },
+  "gate": {
+    "kicker": "Welcome to the world",
+    "title": "THIS IS NOT A BRAND",
+    "title2": "THIS IS A WORLD",
+    "subtitle": "Enter Fantasia",
+    "enter": "ENTER FANTASIA",
+    "scroll": "Scroll"
+  },
+  "identity": {
+    "title": "The Identity",
+    "quote": "Fantasy is not escape. It's power.",
+    "philosophy": "Built for those who live between shadow and light. Those who don't ask for permission."
+  },
+  "archive": {
+    "title": "The Archive",
+    "subtitle": "A vault of memory and motion"
+  },
+  "drops": {
+    "title": "Drops",
+    "subtitle": "Limited pieces from the world",
+    "addToCart": "Add to Cart",
+    "buyNow": "Buy Now",
+    "outOfStock": "Out of Stock",
+    "newDrop": "NEW",
+    "limited": "LIMITED",
+    "size": "Size",
+    "color": "Color",
+    "selectSize": "Select Size",
+    "selectColor": "Select Color",
+    "description": "Description",
+    "details": "Details",
+    "shipping": "Shipping",
+    "viewAll": "View All",
+    "filter": "Filter",
+    "sort": "Sort"
+  },
+  "cult": {
+    "title": "The Cult",
+    "subtitle": "Join the inner circle",
+    "join": "Join Now",
+    "perks": "Perks"
+  },
+  "signal": {
+    "title": "The Signal",
+    "subtitle": "Underground transmissions",
+    "placeholder": "your phone number",
+    "subscribe": "TRANSMIT",
+    "thanks": "Signal received. Stay tuned."
+  },
+  "cart": {
+    "title": "Cart",
+    "empty": "Your cart is empty",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "total": "Total",
+    "checkout": "Checkout",
+    "remove": "Remove",
+    "continue": "Continue Shopping",
+    "qty": "Qty"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "contact": "Contact",
+    "shipping": "Shipping Address",
+    "payment": "Payment",
+    "review": "Review",
+    "name": "Full Name",
+    "phone": "Phone Number",
+    "email": "Email (optional)",
+    "country": "Country",
+    "governorate": "Governorate",
+    "city": "City / District",
+    "area": "Area",
+    "street": "Street",
+    "details": "Extra Details",
+    "notes": "Order Notes",
+    "cod": "Cash on Delivery",
+    "place": "Place Order",
+    "success": "Order received",
+    "orderNumber": "Order Number"
+  },
+  "account": {
+    "title": "Account",
+    "profile": "Profile",
+    "orders": "Orders",
+    "addresses": "Addresses",
+    "wishlist": "Wishlist",
+    "settings": "Settings",
+    "loginTitle": "Login",
+    "registerTitle": "Create Account",
+    "phone": "Phone Number",
+    "password": "Password",
+    "name": "Full Name",
+    "emailOptional": "Email (optional)",
+    "loginCta": "Login",
+    "registerCta": "Register",
+    "haveAccount": "Have an account?",
+    "noAccount": "No account?"
+  },
+  "common": {
+    "currency": {
+      "iqd": "IQD",
+      "usd": "$"
+    },
+    "loading": "Loading",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "back": "Back",
+    "next": "Next",
+    "all": "All",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "footer": {
+    "tagline": "AQEEL FANTASIA — The world you choose",
+    "rights": "All rights reserved"
+  }
+}

@@ -1,0 +1,14 @@
+[build]
+  command = "prisma generate && next build"
+  publish = ".next"
+
+[build.environment]
+  NEXT_TELEMETRY_DISABLED = "1"
+  NODE_VERSION = "20"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[functions]
+  external_node_modules = ["@prisma/client", "prisma"]
+  included_files = ["node_modules/.prisma/client/**", "node_modules/@prisma/client/**"]

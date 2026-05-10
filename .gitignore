@@ -1,0 +1,15 @@
+node_modules
+.next
+out
+.env.local
+*.db
+*.db-journal
+.DS_Store
+public/uploads/*
+!public/uploads/.gitkeep
+
+# Local Netlify folder
+.netlify
+.env
+scripts/gen-seed-sql.ts
+.claude/
