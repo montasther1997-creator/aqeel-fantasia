@@ -1,8 +1,5 @@
 import { prisma } from '@/lib/db';
 import { getTranslations } from 'next-intl/server';
-import { StatusBar } from '@/components/atelier/phone-shell';
-import { TopBar } from '@/components/atelier/topbar';
-import { BottomNav } from '@/components/atelier/bottomnav';
 import { Editorial } from '@/components/atelier/editorial';
 import { ProductCard } from '@/components/atelier/product-card';
 
@@ -24,47 +21,59 @@ export default async function CollectionsPage({ params, searchParams }: { params
   ]);
 
   return (
-    <div className="h-full relative">
-      <StatusBar />
-      <div className="screen-body has-bottomnav">
-        <TopBar />
-        <header className={`px-6 pt-12 pb-8 ${isAr ? 'text-right' : 'text-left'}`}>
-          <div className="t-eyebrow">{t('eyebrow')}</div>
-          <h1 className="serif text-5xl font-light leading-[0.95] mt-3" style={isAr ? { fontFamily: 'var(--serif-ar)' } : { letterSpacing: '-0.03em' }}>{t('title')}</h1>
-          <p className="serif text-base text-fg-secondary mt-4 italic font-light" style={isAr ? { fontFamily: 'var(--serif-ar)', fontStyle: 'normal' } : {}}>{t('sub')}</p>
-        </header>
+    <div className="pt-20 md:pt-32 pb-20">
+      {/* Header */}
+      <section className="container-x mb-16 md:mb-20">
+        <div className={`max-w-3xl ${isAr ? 'md:mr-auto md:ml-0' : ''}`}>
+          <div className="text-[10px] tracking-[0.3em] uppercase text-fg-tertiary mb-4" style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>
+            {t('eyebrow')}
+          </div>
+          <h1 className="serif text-5xl md:text-7xl lg:text-8xl font-light leading-[0.95]" style={isAr ? { fontFamily: 'var(--serif-ar)' } : { letterSpacing: '-0.03em' }}>
+            {t('title')}
+          </h1>
+          <p className="serif italic text-lg md:text-xl text-fg-secondary mt-6 font-light max-w-xl" style={isAr ? { fontFamily: 'var(--serif-ar)', fontStyle: 'normal' } : {}}>
+            {t('sub')}
+          </p>
+        </div>
+      </section>
 
-        {/* Filters */}
-        <div className="px-6 mb-6 flex gap-2 overflow-x-auto no-scrollbar">
-          <a href="/collections" className={`shrink-0 px-4 py-2 text-[10px] tracking-[0.2em] uppercase border ${!sp.cat ? 'border-fg text-fg' : 'border-border text-fg-tertiary'}`} style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>
+      {/* Filters */}
+      <section className="container-x mb-12">
+        <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+          <a href="/collections" className={`shrink-0 px-5 py-2.5 text-[10px] md:text-xs tracking-[0.2em] uppercase border transition-colors ${!sp.cat ? 'border-fg text-fg bg-fg/5' : 'border-border text-fg-tertiary hover:border-fg hover:text-fg'}`} style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>
             {t('all')}
           </a>
           {categories.map((c) => (
-            <a key={c.id} href={`/collections?cat=${c.slug}`} className={`shrink-0 px-4 py-2 text-[10px] tracking-[0.2em] uppercase border whitespace-nowrap ${sp.cat === c.slug ? 'border-fg text-fg' : 'border-border text-fg-tertiary'}`} style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>
+            <a key={c.id} href={`/collections?cat=${c.slug}`} className={`shrink-0 px-5 py-2.5 text-[10px] md:text-xs tracking-[0.2em] uppercase border whitespace-nowrap transition-colors ${sp.cat === c.slug ? 'border-fg text-fg bg-fg/5' : 'border-border text-fg-tertiary hover:border-fg hover:text-fg'}`} style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>
               {isAr ? c.nameAr : c.nameEn}
             </a>
           ))}
         </div>
+      </section>
 
-        {/* Featured editorial */}
-        <section className="mx-6 mb-8">
-          <Editorial variant="v3" ratio="4/3" fade>
-            <div className={`absolute bottom-4 left-0 right-0 px-5 text-pearl z-[4] ${isAr ? 'text-right' : 'text-left'}`}>
-              <div className="text-[9px] tracking-[0.3em] text-bone uppercase" style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>{t('featuredEye')}</div>
-              <h3 className="serif text-3xl font-light leading-none mt-1" style={isAr ? { fontFamily: 'var(--serif-ar)' } : {}}>{t('featuredTitle')}</h3>
-              <div className="text-[10px] text-bone mt-2 num"><span className="num">{products.length}</span> {t('featuredMeta')}</div>
+      {/* Featured editorial */}
+      <section className="container-x mb-16 md:mb-20">
+        <Editorial variant="v3" ratio="21/9" fade>
+          <div className={`absolute bottom-8 md:bottom-12 left-0 right-0 px-8 md:px-16 text-pearl z-[4] ${isAr ? 'text-right' : 'text-left'}`}>
+            <div className="text-[10px] tracking-[0.3em] uppercase text-bone mb-2" style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>
+              {t('featuredEye')}
             </div>
-          </Editorial>
-        </section>
-
-        {/* Grid */}
-        <section className="px-6 pb-12">
-          <div className="grid grid-cols-2 gap-3">
-            {products.map((p) => <ProductCard key={p.id} p={p} />)}
+            <h3 className="serif text-4xl md:text-6xl lg:text-7xl font-light" style={isAr ? { fontFamily: 'var(--serif-ar)' } : { letterSpacing: '-0.02em' }}>
+              {t('featuredTitle')}
+            </h3>
+            <div className="text-xs text-bone mt-3 num">
+              <span className="num">{products.length}</span> {t('featuredMeta')}
+            </div>
           </div>
-        </section>
-      </div>
-      <BottomNav />
+        </Editorial>
+      </section>
+
+      {/* Product grid */}
+      <section className="container-x">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+          {products.map((p) => <ProductCard key={p.id} p={p} />)}
+        </div>
+      </section>
     </div>
   );
 }

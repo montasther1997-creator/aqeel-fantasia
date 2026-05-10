@@ -2,12 +2,11 @@
 import { useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
-import { StatusBar } from '@/components/atelier/phone-shell';
-import { TopBar } from '@/components/atelier/topbar';
 import { Editorial } from '@/components/atelier/editorial';
 import { Icon } from '@/components/atelier/icons';
 import { useCart } from '@/lib/cart-store';
 import { fmtNumber } from '@/lib/utils';
+import { ProductCard } from './product-card';
 
 export function ProductDetail({ product, related }: { product: any; related: any[] }) {
   const t = useTranslations('product');
@@ -42,83 +41,86 @@ export function ProductDetail({ product, related }: { product: any; related: any
   };
 
   return (
-    <div className="h-full relative">
-      <StatusBar />
-      <div className="screen-body">
-        <TopBar leftIcon="chevronL" />
-
-        {/* Hero image */}
-        <div className="relative">
-          <Editorial variant="v2" ratio="4/5" src={images[imgIdx]?.url} alt={name} />
-        </div>
-
-        {/* Thumbs */}
-        {images.length > 1 && (
-          <div className="px-6 mt-3 flex gap-2 overflow-x-auto no-scrollbar">
-            {images.map((im: any, i: number) => (
-              <button key={im.id} onClick={() => setImgIdx(i)} className={`shrink-0 w-14 h-18 overflow-hidden border ${i === imgIdx ? 'border-accent' : 'border-border'}`}>
-                <img src={im.url} alt="" className="w-full h-full object-cover" />
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* Title block */}
-        <div className={`px-6 pt-8 ${isAr ? 'text-right' : 'text-left'}`}>
-          <div className="t-eyebrow">{meta}</div>
-          <h1 className="serif text-3xl font-normal mt-2" style={isAr ? { fontFamily: 'var(--serif-ar)' } : { letterSpacing: '-0.01em' }}>{name}</h1>
-          <div className="mt-3 font-light text-fg-secondary">
-            <span className="num">{fmtNumber(product.priceIQD)}</span> {isAr ? 'د.ع' : 'IQD'}
-          </div>
-        </div>
-
-        {/* Stylist note */}
-        {desc && (
-          <section className={`mx-6 my-8 py-6 border-y border-border ${isAr ? 'text-right' : 'text-left'}`}>
-            <div className="t-eyebrow mb-3">{t('stylistEye')}</div>
-            <p className="serif text-base leading-relaxed font-light" style={isAr ? { fontFamily: 'var(--serif-ar)', fontStyle: 'normal' } : { fontStyle: 'italic' }}>
-              {desc}
-            </p>
-          </section>
-        )}
-
-        {/* Sizes */}
-        {sizes.length > 0 && (
-          <section className={`px-6 mb-6 ${isAr ? 'text-right' : 'text-left'}`}>
-            <div className="t-eyebrow mb-4">{t('size')}</div>
-            <div className="flex flex-wrap gap-2">
-              {sizes.map((s) => (
-                <button key={String(s)} onClick={() => setSize(String(s))}
-                  className={`min-w-[3rem] h-12 px-4 border text-sm num ${size === s ? 'border-fg bg-fg text-bg' : 'border-border text-fg hover:border-fg'}`}>
-                  {String(s)}
-                </button>
-              ))}
+    <div className="pt-20 md:pt-24 pb-20">
+      <div className="container-x">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16">
+          {/* Left column: gallery */}
+          <div>
+            <div className="aspect-[3/4] bg-bg-elevated overflow-hidden">
+              <Editorial variant="v2" ratio="auto" src={images[imgIdx]?.url} alt={name} className="w-full h-full" />
             </div>
-          </section>
-        )}
+            {/* Thumbnails */}
+            {images.length > 1 && (
+              <div className="mt-4 grid grid-cols-5 gap-2">
+                {images.map((im: any, i: number) => (
+                  <button key={im.id} onClick={() => setImgIdx(i)} className={`aspect-square overflow-hidden border ${i === imgIdx ? 'border-accent' : 'border-border'}`}>
+                    <img src={im.url} alt="" className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
-        {/* CTAs */}
-        <section className="px-6 pb-8 space-y-3">
-          <button onClick={() => onAdd(false)} className={`btn btn-secondary w-full ${!size && sizes.length ? 'opacity-50' : ''}`} disabled={!size && sizes.length > 0}>
-            {added ? <><Icon name="check" size={14} /> {t('added')}</> : t('add')}
-          </button>
-          <button onClick={() => onAdd(true)} className="btn btn-champagne w-full">
-            {t('reserve')}
-          </button>
-        </section>
+          {/* Right column: info (sticky on desktop) */}
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <div className={isAr ? 'text-right' : 'text-left'}>
+              <div className="text-[10px] tracking-[0.3em] uppercase text-fg-tertiary mb-3" style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>
+                {meta}
+              </div>
+              <h1 className="serif text-3xl md:text-5xl font-light leading-tight" style={isAr ? { fontFamily: 'var(--serif-ar)' } : { letterSpacing: '-0.01em' }}>
+                {name}
+              </h1>
+              <div className="mt-4 text-xl md:text-2xl font-light">
+                <span className="num">{fmtNumber(product.priceIQD)}</span> <span className="text-fg-tertiary text-sm ml-2">{isAr ? 'د.ع' : 'IQD'}</span>
+              </div>
+
+              {desc && (
+                <section className={`mt-10 py-8 border-y border-border`}>
+                  <div className="text-[10px] tracking-[0.3em] uppercase text-fg-tertiary mb-3" style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>
+                    {t('stylistEye')}
+                  </div>
+                  <p className="serif text-base md:text-lg leading-relaxed font-light" style={isAr ? { fontFamily: 'var(--serif-ar)', fontStyle: 'normal' } : { fontStyle: 'italic' }}>
+                    {desc}
+                  </p>
+                </section>
+              )}
+
+              {sizes.length > 0 && (
+                <section className="mt-8">
+                  <div className="text-[10px] tracking-[0.3em] uppercase text-fg-tertiary mb-4" style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>
+                    {t('size')}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {sizes.map((s) => (
+                      <button key={String(s)} onClick={() => setSize(String(s))}
+                        className={`min-w-[3.5rem] h-12 px-4 border text-sm num transition-colors ${size === s ? 'border-fg bg-fg text-bg' : 'border-border text-fg hover:border-fg'}`}>
+                        {String(s)}
+                      </button>
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              <div className="mt-10 space-y-3">
+                <button onClick={() => onAdd(false)} className={`btn btn-secondary w-full ${!size && sizes.length ? 'opacity-50' : ''}`} disabled={!size && sizes.length > 0}>
+                  {added ? <><Icon name="check" size={14} /> {t('added')}</> : t('add')}
+                </button>
+                <button onClick={() => onAdd(true)} className="btn btn-champagne w-full">
+                  {t('reserve')}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
 
         {/* Related */}
         {related.length > 0 && (
-          <section className="px-6 pt-6 pb-12">
-            <div className="t-eyebrow mb-5">{t('related')}</div>
-            <div className="grid grid-cols-2 gap-3">
-              {related.slice(0, 2).map((r) => (
-                <a key={r.id} href={`/${locale}/product/${r.slug}`} className="pcard block">
-                  <div className="img-wrap"><Editorial variant="v4" ratio="4/5" src={r.images[0]?.url} alt={isAr ? r.nameAr : r.nameEn} /></div>
-                  <div className="name">{isAr ? r.nameAr : r.nameEn}</div>
-                  <div className="meta">{isAr ? r.taglineAr : r.taglineEn}</div>
-                </a>
-              ))}
+          <section className="mt-32">
+            <div className="text-[10px] tracking-[0.3em] uppercase text-fg-tertiary mb-6" style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>
+              {t('related')}
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+              {related.map((r) => <ProductCard key={r.id} p={r} />)}
             </div>
           </section>
         )}

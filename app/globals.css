@@ -131,44 +131,24 @@
 
   .divider { height: 1px; background: var(--border); border: none; }
 
-  /* === Phone frame (desktop only) === */
-  .phone-shell {
-    width: 390px;
-    height: 844px;
+  /* Atelier shell — full viewport, responsive */
+  .atelier-shell {
     background: var(--bg);
     color: var(--fg);
-    border-radius: 48px;
-    box-shadow: 0 0 0 12px #1c1b19, 0 0 0 13px #2a2825, 0 60px 120px -40px rgba(0,0,0,0.8);
-    overflow: hidden;
-    position: relative;
-    isolation: isolate;
     transition: background var(--d-default) var(--ease-editorial);
   }
-  .phone-shell::before {
-    content: ""; position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
-    width: 110px; height: 34px; background: #0e0d0c; border-radius: 22px; z-index: 100;
-  }
-  /* Mobile: shell becomes the actual viewport */
-  @media (max-width: 768px) {
-    .phone-shell {
-      width: 100%; height: 100vh; height: 100dvh;
-      border-radius: 0; box-shadow: none;
-    }
-    .phone-shell::before { display: none; }
+
+  /* Desktop content padding for fixed header */
+  @media (min-width: 769px) {
+    .atelier-shell main { padding-top: 0; }
   }
 
-  /* === Status bar === */
-  .status-bar {
-    height: 54px;
-    display: flex; align-items: flex-end; justify-content: space-between;
-    padding: 0 28px 8px;
-    font-family: var(--sans); font-size: 14px; font-weight: 600;
-    position: relative; z-index: 10;
-    color: var(--fg);
-  }
-  @media (max-width: 768px) {
-    .status-bar { display: none; }
-  }
+  /* Container */
+  .container-x { max-width: 1500px; margin: 0 auto; padding: 0 24px; }
+  @media (min-width: 769px) { .container-x { padding: 0 48px; } }
+
+  /* Status bar removed in full desktop site (was mobile-app metaphor) */
+  .status-bar { display: none; }
   .status-bar .icons { display: inline-flex; gap: 6px; align-items: center; }
 
   /* === Topbar === */

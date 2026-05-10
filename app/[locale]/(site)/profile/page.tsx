@@ -1,7 +1,4 @@
 import { getTranslations } from 'next-intl/server';
-import { StatusBar } from '@/components/atelier/phone-shell';
-import { TopBar } from '@/components/atelier/topbar';
-import { BottomNav } from '@/components/atelier/bottomnav';
 import { Icon } from '@/components/atelier/icons';
 import { Link } from '@/i18n/routing';
 import { getCustomer } from '@/lib/auth';
@@ -29,53 +26,51 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
   ];
 
   return (
-    <div className="h-full relative">
-      <StatusBar />
-      <div className="screen-body has-bottomnav">
-        <TopBar />
-
-        <header className={`px-6 pt-8 pb-6 ${isAr ? 'text-right' : 'text-left'}`}>
-          <div className="t-eyebrow">{t('eyebrow')}</div>
-          <h1 className="serif text-5xl font-light mt-3" style={isAr ? { fontFamily: 'var(--serif-ar)' } : { letterSpacing: '-0.02em' }}>
+    <div className="pt-20 md:pt-32 pb-20">
+      <div className="container-x max-w-3xl">
+        <header className={`mb-12 ${isAr ? 'text-right' : 'text-left'}`}>
+          <div className="text-[10px] tracking-[0.3em] uppercase text-fg-tertiary mb-3" style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>
+            {t('eyebrow')}
+          </div>
+          <h1 className="serif text-5xl md:text-7xl font-light" style={isAr ? { fontFamily: 'var(--serif-ar)' } : { letterSpacing: '-0.02em' }}>
             {me ? me.name : t('title')}
           </h1>
-          {me?.phone && <div className="text-xs text-fg-tertiary mt-2 num" dir="ltr">{me.phone}</div>}
+          {me?.phone && <div className="text-xs text-fg-tertiary mt-3 num" dir="ltr">{me.phone}</div>}
         </header>
 
-        <p className={`px-6 pb-10 text-sm text-fg-secondary serif font-light leading-relaxed ${isAr ? 'text-right' : 'text-left'}`} style={isAr ? { fontFamily: 'var(--serif-ar)', fontStyle: 'normal' } : { fontStyle: 'italic' }}>
+        <p className={`text-base md:text-lg text-fg-secondary serif font-light leading-relaxed mb-12 max-w-2xl ${isAr ? 'text-right' : 'text-left'}`} style={isAr ? { fontFamily: 'var(--serif-ar)', fontStyle: 'normal' } : { fontStyle: 'italic' }}>
           {t('manifesto')}
         </p>
 
         <nav className="border-y border-border">
           {rows.map((r) => (
-            <Link key={r.href} href={r.href as any} className="flex items-center justify-between px-6 py-5 border-b border-border last:border-0 hover:bg-bg-elevated transition-colors">
+            <Link key={r.href} href={r.href as any} className="flex items-center justify-between px-2 md:px-6 py-6 border-b border-border last:border-0 hover:bg-bg-elevated transition-colors group">
               <div>
-                <div className={`text-sm ${isAr ? 'text-right' : ''}`}>{r.label}</div>
+                <div className="serif text-lg md:text-xl" style={isAr ? { fontFamily: 'var(--serif-ar)' } : {}}>{r.label}</div>
                 {r.desc && <div className="text-xs text-fg-tertiary mt-1 num">{r.desc}</div>}
               </div>
-              <Icon name={isAr ? 'chevronL' : 'chevronR'} size={16} />
+              <Icon name={isAr ? 'chevronL' : 'chevronR'} size={18} className="group-hover:text-accent transition-colors" />
             </Link>
           ))}
           {me ? (
             <form action="/api/account/logout" method="post">
-              <button type="submit" className="w-full flex items-center justify-between px-6 py-5 text-burgundy">
-                <span>{t('signOut')}</span>
-                <Icon name={isAr ? 'chevronL' : 'chevronR'} size={16} />
+              <button type="submit" className="w-full flex items-center justify-between px-2 md:px-6 py-6 text-burgundy hover:bg-bg-elevated transition-colors">
+                <span className="serif text-lg md:text-xl" style={isAr ? { fontFamily: 'var(--serif-ar)' } : {}}>{t('signOut')}</span>
+                <Icon name={isAr ? 'chevronL' : 'chevronR'} size={18} />
               </button>
             </form>
           ) : (
-            <Link href={'/auth' as any} className="flex items-center justify-between px-6 py-5 text-accent">
-              <span>{t('signIn' as any) || 'تسجيل الدخول'}</span>
-              <Icon name={isAr ? 'chevronL' : 'chevronR'} size={16} />
+            <Link href={'/auth' as any} className="flex items-center justify-between px-2 md:px-6 py-6 text-accent">
+              <span className="serif text-lg md:text-xl" style={isAr ? { fontFamily: 'var(--serif-ar)' } : {}}>{isAr ? 'تسجيل الدخول' : 'Sign in'}</span>
+              <Icon name={isAr ? 'chevronL' : 'chevronR'} size={18} />
             </Link>
           )}
         </nav>
 
-        <footer className="px-6 py-12 text-center text-[10px] tracking-[0.2em] text-fg-tertiary uppercase" style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>
+        <footer className="pt-12 text-center text-[10px] tracking-[0.3em] uppercase text-fg-tertiary num" style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>
           {t('footer')}
         </footer>
       </div>
-      <BottomNav />
     </div>
   );
 }

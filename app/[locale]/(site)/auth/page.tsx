@@ -2,8 +2,6 @@
 import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter, Link } from '@/i18n/routing';
-import { StatusBar } from '@/components/atelier/phone-shell';
-import { Editorial } from '@/components/atelier/editorial';
 import { Crest } from '@/components/atelier/crest';
 import { Icon } from '@/components/atelier/icons';
 
@@ -32,68 +30,76 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="h-full relative overflow-hidden">
-      <StatusBar />
-      <div className="absolute inset-0">
-        <Editorial variant="v8" ratio="auto" className="absolute inset-0" fade>
-          {/* Top: crest */}
-          <div className="absolute top-[54px] left-0 right-0 px-6 py-4 flex items-center justify-between z-10">
-            <button onClick={() => router.back()} className="text-pearl">
-              <Icon name={isAr ? 'chevronR' : 'chevronL'} size={20} />
+    <div className="min-h-screen grid md:grid-cols-2">
+      {/* Left: image (desktop) / hero (mobile) */}
+      <div className="relative h-[40vh] md:h-screen md:sticky md:top-0 overflow-hidden">
+        <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=1600&q=85" alt="" className="w-full h-full object-cover" style={{ filter: 'grayscale(0.3) contrast(1.1) brightness(0.55)' }} />
+        <div className="absolute inset-0 bg-gradient-to-b md:bg-gradient-to-r from-transparent via-onyx/30 to-onyx" />
+        <div className="absolute top-6 md:top-12 left-6 md:left-12 text-pearl">
+          <Crest size={40} className="md:w-12 md:h-12" />
+        </div>
+        <div className="absolute bottom-8 md:bottom-12 left-6 md:left-12 right-6 md:right-12 text-pearl">
+          <div className="text-[10px] tracking-[0.3em] uppercase text-bone mb-3" style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>
+            {t('eyebrow')}
+          </div>
+          <h1 className="serif font-light leading-[0.95] text-5xl md:text-7xl lg:text-8xl" style={isAr ? { fontFamily: 'var(--serif-ar)' } : { letterSpacing: '-0.03em' }}>
+            {t('headline1')}<br />
+            <em style={{ color: 'var(--accent)', fontStyle: isAr ? 'normal' : 'italic', fontWeight: 400 }}>{t('headline2')}</em>
+          </h1>
+          <p className="text-bone mt-6 max-w-md opacity-85">{t('sub')}</p>
+        </div>
+      </div>
+
+      {/* Right: form */}
+      <div className="bg-bg p-6 md:p-12 lg:p-20 flex flex-col justify-center">
+        <button onClick={() => router.back()} className="self-start mb-8 text-fg-tertiary hover:text-fg flex items-center gap-2 text-xs tracking-[0.2em] uppercase" style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>
+          <Icon name={isAr ? 'chevronR' : 'chevronL'} size={16} /> {isAr ? 'رجوع' : 'Back'}
+        </button>
+
+        <div className="max-w-md w-full mx-auto">
+          <h2 className="serif text-4xl md:text-5xl font-light mb-3" style={isAr ? { fontFamily: 'var(--serif-ar)' } : { letterSpacing: '-0.02em' }}>
+            {mode === 'login' ? (isAr ? 'أهلاً بعودتك' : 'Welcome back') : (isAr ? 'إنشاء حساب' : 'Create your account')}
+          </h2>
+          <p className="text-fg-secondary text-sm mb-10">
+            {mode === 'login' ? (isAr ? 'سجّل الدخول للوصول إلى حسابك.' : 'Sign in to access your account.') : (isAr ? 'انضم إلى الأتيليه.' : 'Join the atelier.')}
+          </p>
+
+          <form onSubmit={submit} className="space-y-6">
+            {mode === 'signup' && (
+              <div>
+                <label className="field-label">{t('name')}</label>
+                <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required className="field" />
+              </div>
+            )}
+            <div>
+              <label className="field-label">{t('phone')}</label>
+              <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} required dir="ltr" placeholder="+964..." className="field" />
+            </div>
+            <div>
+              <label className="field-label">{t('password')}</label>
+              <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required className="field" />
+            </div>
+            {mode === 'signup' && (
+              <div>
+                <label className="field-label">{t('emailOptional')}</label>
+                <input type="email" dir="ltr" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="field" />
+              </div>
+            )}
+            {err && <p className="text-burgundy text-xs">{err}</p>}
+            <button type="submit" disabled={busy} className="btn btn-champagne w-full mt-2">
+              {busy ? '…' : (mode === 'login' ? t('submitLogin') : t('submitSignup'))}
             </button>
-            <div className="text-pearl"><Crest size={32} /></div>
-            <div className="w-5" />
-          </div>
-
-          {/* Center: headline */}
-          <div className={`absolute top-[180px] left-0 right-0 px-8 z-[4] text-pearl ${isAr ? 'text-right' : 'text-left'}`}>
-            <div className="t-eyebrow text-bone">{t('eyebrow')}</div>
-            <h1 className="serif text-4xl sm:text-5xl leading-[0.95] font-light mt-4" style={isAr ? { fontFamily: 'var(--serif-ar)' } : { letterSpacing: '-0.03em' }}>
-              {t('headline1')}<br />
-              <em className={isAr ? '' : 'italic'} style={{ color: 'var(--accent)', fontStyle: isAr ? 'normal' : 'italic' }}>{t('headline2')}</em>
-            </h1>
-            <p className="text-bone text-xs mt-4 opacity-80 max-w-[280px]">{t('sub')}</p>
-          </div>
-
-          {/* Bottom: form */}
-          <div className="absolute bottom-0 left-0 right-0 px-8 pb-10 pt-6 z-[5] bg-gradient-to-t from-onyx via-onyx/95 to-transparent">
-            <form onSubmit={submit} className="space-y-4">
-              {mode === 'signup' && (
-                <div>
-                  <div className="field-label">{t('name')}</div>
-                  <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required className="field text-pearl" />
-                </div>
-              )}
-              <div>
-                <div className="field-label">{t('phone')}</div>
-                <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} required dir="ltr" placeholder="+964..." className="field text-pearl" />
-              </div>
-              <div>
-                <div className="field-label">{t('password')}</div>
-                <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required className="field text-pearl" />
-              </div>
-              {mode === 'signup' && (
-                <div>
-                  <div className="field-label">{t('emailOptional')}</div>
-                  <input type="email" dir="ltr" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="field text-pearl" />
-                </div>
-              )}
-              {err && <p className="text-burgundy text-xs">{err}</p>}
-              <button type="submit" disabled={busy} className="btn btn-pearl w-full">
-                {busy ? '…' : (mode === 'login' ? t('submitLogin') : t('submitSignup'))}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs pt-3">
+              <button type="button" onClick={() => setMode(mode === 'login' ? 'signup' : 'login')} className="text-fg-secondary hover:text-fg underline underline-offset-4">
+                {mode === 'login' ? t('newHere') : t('haveAccount')}
               </button>
-              <div className="flex items-center justify-between text-xs pt-1">
-                <button type="button" onClick={() => setMode(mode === 'login' ? 'signup' : 'login')} className="text-bone underline underline-offset-4">
-                  {mode === 'login' ? t('newHere') : t('haveAccount')}
-                </button>
-                <Link href={'/home' as any} className="text-mist">
-                  {t('guest')}
-                </Link>
-              </div>
-              <p className="text-[10px] text-mist text-center pt-2">{t('legal')}</p>
-            </form>
-          </div>
-        </Editorial>
+              <Link href={'/home' as any} className="text-fg-tertiary hover:text-fg">
+                {t('guest')}
+              </Link>
+            </div>
+            <p className="text-[10px] text-fg-tertiary text-center pt-4 leading-relaxed">{t('legal')}</p>
+          </form>
+        </div>
       </div>
     </div>
   );

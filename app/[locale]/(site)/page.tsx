@@ -1,5 +1,3 @@
-import { StatusBar } from '@/components/atelier/phone-shell';
-import { Editorial } from '@/components/atelier/editorial';
 import { Crest } from '@/components/atelier/crest';
 import { Link } from '@/i18n/routing';
 import { getTranslations } from 'next-intl/server';
@@ -10,36 +8,51 @@ export default async function WelcomePage({ params }: { params: Promise<{ locale
   const isAr = locale === 'ar';
 
   return (
-    <div className="h-full relative overflow-hidden">
-      <StatusBar />
+    <div className="relative min-h-screen overflow-hidden">
+      {/* Background image */}
       <div className="absolute inset-0">
-        <Editorial variant="v5" ratio="auto" className="absolute inset-0" fade>
-          <div className="absolute top-[54px] left-0 right-0 px-6 py-4 flex items-center justify-between z-10">
-            <div className="text-pearl"><Crest size={36} /></div>
-            <Link href={'/' as any} locale={isAr ? 'en' : 'ar'} className="border border-pearl/30 text-pearl px-3 py-1.5 text-[10px] tracking-[0.16em] uppercase">
-              {isAr ? 'English' : 'العربية'}
-            </Link>
+        <img src="https://images.unsplash.com/photo-1593030103066-0093718efeb9?w=2400&q=85" alt="" className="w-full h-full object-cover" style={{ filter: 'grayscale(0.4) contrast(1.1) brightness(0.45)' }} />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(10,10,10,0.4) 0%, transparent 30%, transparent 50%, rgba(10,10,10,0.95) 100%)' }} />
+        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(10,10,10,0.6) 80%)' }} />
+      </div>
+
+      {/* Top bar */}
+      <div className="relative z-10 px-6 md:px-12 lg:px-16 py-6 md:py-8 flex items-center justify-between">
+        <div className="text-pearl"><Crest size={36} className="md:w-12 md:h-12" /></div>
+        <Link href={'/' as any} locale={isAr ? 'en' : 'ar'} className="border border-pearl/30 text-pearl px-4 py-2 text-[10px] tracking-[0.2em] uppercase hover:border-pearl transition-colors" style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>
+          {isAr ? 'English' : 'العربية'}
+        </Link>
+      </div>
+
+      {/* Center hero content */}
+      <div className="relative z-10 max-w-[1500px] mx-auto px-6 md:px-12 lg:px-16 min-h-[calc(100vh-200px)] flex flex-col justify-center md:justify-end md:pb-32 lg:pb-40">
+        <div className={`max-w-3xl ${isAr ? 'mr-auto md:mr-0' : ''}`}>
+          <div className="text-[10px] md:text-xs tracking-[0.3em] uppercase text-bone mb-6 md:mb-8" style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>
+            {t('eyebrow')}
           </div>
+          <h1 className="serif font-light text-pearl leading-[0.92]" style={isAr ? { fontFamily: 'var(--serif-ar)' } : { letterSpacing: '-0.03em' }}>
+            <span className="block text-7xl sm:text-8xl md:text-9xl lg:text-[10rem]">{t('headline1')}</span>
+            <em className="block text-7xl sm:text-8xl md:text-9xl lg:text-[10rem]" style={{ color: 'var(--accent)', fontStyle: isAr ? 'normal' : 'italic', fontWeight: 400 }}>
+              {t('headline2')}
+            </em>
+          </h1>
+          <p className="text-bone text-base md:text-lg mt-8 md:mt-10 opacity-80 max-w-md">{t('sub')}</p>
 
-          <div className="absolute inset-0 flex items-end justify-end p-8 pt-32 pb-48 z-[2]">
-            <div className={`serif italic text-pearl/[0.18] text-5xl leading-none font-light ${isAr ? 'text-left' : 'text-right'}`} style={isAr ? { fontStyle: 'normal', fontFamily: 'var(--serif-ar)' } : {}}>
-              {isAr ? <>عقيل<br />فنتازيا</> : <>Aqeel<br />Fantasia</>}
-            </div>
-          </div>
-
-          <div className={`absolute bottom-12 left-0 right-0 px-8 z-[4] text-pearl ${isAr ? 'text-right' : 'text-left'}`}>
-            <div className="t-eyebrow text-bone">{t('eyebrow')}</div>
-            <h1 className="serif text-5xl sm:text-6xl leading-[0.95] font-light mt-4" style={isAr ? { fontFamily: 'var(--serif-ar)' } : { letterSpacing: '-0.03em' }}>
-              {t('headline1')}<br />
-              <em className={`${isAr ? '' : 'italic'} font-normal`} style={{ color: 'var(--accent)', fontStyle: isAr ? 'normal' : 'italic' }}>{t('headline2')}</em>
-            </h1>
-            <p className="text-bone text-sm mt-6 opacity-80">{t('sub')}</p>
-
-            <Link href={'/home' as any} className="btn btn-pearl w-full mt-8">
+          <div className="mt-10 md:mt-12 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <Link href={'/home' as any} className="btn btn-pearl">
               {t('enter')}
             </Link>
+            <Link href={'/auth' as any} className="text-[11px] tracking-[0.2em] uppercase text-pearl/70 hover:text-pearl underline underline-offset-4" style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>
+              {isAr ? 'تسجيل الدخول' : 'Sign in'}
+            </Link>
           </div>
-        </Editorial>
+        </div>
+      </div>
+
+      {/* Bottom credit */}
+      <div className="absolute bottom-6 inset-x-0 z-10 px-6 md:px-12 flex items-center justify-between text-[10px] tracking-[0.3em] uppercase text-pearl/40 font-mono">
+        <span>EST. 2024 · BAGHDAD</span>
+        <span className="hidden sm:inline">ATELIER DIGITAL</span>
       </div>
     </div>
   );

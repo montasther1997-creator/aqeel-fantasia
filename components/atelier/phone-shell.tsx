@@ -1,35 +1,25 @@
 'use client';
-import { useEffect, useState } from 'react';
 import { useLocale } from 'next-intl';
 
 /**
- * PhoneShell wraps every screen.
- * - On mobile (<768px): becomes the full viewport
- * - On desktop: shows as a 390x844 phone with bezel, centered on stage background
+ * AdaptiveShell:
+ * - Mobile (< 768px): phone-like full viewport with mobile chrome
+ * - Desktop (>= 768px): full-width editorial layout
  */
 export function PhoneShell({ children, mode = 'dark', accent = 'champagne' }: { children: React.ReactNode; mode?: 'dark' | 'light'; accent?: string }) {
   const locale = useLocale();
-  const [isDesktop, setIsDesktop] = useState(false);
-  useEffect(() => {
-    const check = () => setIsDesktop(window.innerWidth >= 769);
-    check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
-  }, []);
-
   return (
-    <div className={isDesktop ? 'stage-bg flex items-center justify-center py-12 lg:py-20' : ''} data-mode={mode} data-accent={accent}>
-      <div className="phone-shell" lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'} data-mode={mode} data-accent={accent}>
-        {children}
-      </div>
+    <div className="atelier-shell min-h-screen" lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'} data-mode={mode} data-accent={accent}>
+      {children}
     </div>
   );
 }
 
-export function StatusBar({ time = '9:41' }: { time?: string }) {
+export function StatusBar() {
+  // Hidden on desktop; only shown on mobile via CSS
   return (
-    <div className="status-bar">
-      <span className="num">{time}</span>
+    <div className="status-bar md:hidden">
+      <span className="num">9:41</span>
       <span className="icons">
         <svg viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="6" width="3" height="6"/><rect x="4" y="4" width="3" height="8"/><rect x="8" y="2" width="3" height="10"/><rect x="12" y="0" width="3" height="12"/></svg>
         <svg viewBox="0 0 18 12" fill="currentColor"><path d="M9 2C5 2 2 4 0 6l9 6 9-6c-2-2-5-4-9-4z"/></svg>
