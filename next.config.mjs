@@ -13,6 +13,14 @@ const nextConfig = {
   },
   experimental: {
     serverActions: { bodySizeLimit: '10mb' },
+    serverComponentsExternalPackages: ['@prisma/client', 'prisma'],
+  },
+  outputFileTracingIncludes: {
+    '/**/*': [
+      './node_modules/.prisma/client/**/*',
+      './node_modules/@prisma/client/**/*',
+      './node_modules/prisma/**/*',
+    ],
   },
 };
 
