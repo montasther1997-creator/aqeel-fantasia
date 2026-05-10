@@ -105,7 +105,7 @@
 
   /* === Decorative === */
   .divider-line {
-    @apply h-px bg-gradient-to-r from-transparent via-white/12 to-transparent;
+    @apply h-px bg-gradient-to-r from-transparent via-white/10 to-transparent;
   }
   .divider-gold {
     @apply h-px bg-gradient-to-r from-transparent via-[#C9A66B]/40 to-transparent;
