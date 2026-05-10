@@ -6,9 +6,7 @@ export default async function AdminLayout({
 }: { children: React.ReactNode; params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const admin = await getAdmin();
-  return (
-    <div dir="ltr" style={{ direction: 'ltr' }}>
-      {admin ? <AdminShell locale={locale} admin={admin}>{children}</AdminShell> : <>{children}</>}
-    </div>
-  );
+  return admin
+    ? <AdminShell locale={locale} admin={admin}>{children}</AdminShell>
+    : <>{children}</>;
 }

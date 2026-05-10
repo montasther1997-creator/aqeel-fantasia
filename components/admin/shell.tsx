@@ -1,58 +1,63 @@
 'use client';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import {
   LayoutDashboard, Package, ShoppingBag, Users, FolderTree, Layers,
   FileText, Image, Palette, Mail, Tag, Truck, CreditCard, Settings, Activity, LogOut, Crown, Globe2,
 } from 'lucide-react';
 import { Logo } from '@/components/ui/logo';
 
-const NAV = [
-  { group: 'OVERVIEW', items: [
-    { href: '', label: 'Dashboard', icon: LayoutDashboard },
-    { href: '/reports', label: 'Reports', icon: Activity },
-  ]},
-  { group: 'CATALOG', items: [
-    { href: '/products', label: 'Products', icon: Package },
-    { href: '/categories', label: 'Categories', icon: FolderTree },
-    { href: '/collections', label: 'Collections', icon: Layers },
-  ]},
-  { group: 'SALES', items: [
-    { href: '/orders', label: 'Orders', icon: ShoppingBag },
-    { href: '/customers', label: 'Customers', icon: Users },
-    { href: '/discounts', label: 'Discounts', icon: Tag },
-  ]},
-  { group: 'COMMUNITY', items: [
-    { href: '/cult', label: 'Cult Members', icon: Crown },
-    { href: '/newsletter', label: 'Newsletter', icon: Mail },
-  ]},
-  { group: 'CONTENT', items: [
-    { href: '/content', label: 'Site Content', icon: FileText },
-    { href: '/archive', label: 'Archive', icon: Image },
-    { href: '/media', label: 'Media Library', icon: Image },
-    { href: '/appearance', label: 'Appearance', icon: Palette },
-  ]},
-  { group: 'STORE', items: [
-    { href: '/shipping', label: 'Shipping', icon: Truck },
-    { href: '/payments', label: 'Payments', icon: CreditCard },
-  ]},
-  { group: 'SYSTEM', items: [
-    { href: '/users', label: 'Admins', icon: Users },
-    { href: '/activity', label: 'Activity Log', icon: Activity },
-    { href: '/languages', label: 'Languages', icon: Globe2 },
-    { href: '/settings', label: 'Settings', icon: Settings },
-  ]},
-];
-
 export function AdminShell({ children, locale, admin }: { children: React.ReactNode; locale: string; admin: any }) {
+  const t = useTranslations('admin');
   const pathname = usePathname();
   const base = `/${locale}/admin`;
+  const isAr = locale === 'ar';
+  const dir = isAr ? 'rtl' : 'ltr';
+
+  const NAV = [
+    { group: t('groups.overview'), items: [
+      { href: '', label: t('nav.dashboard'), icon: LayoutDashboard },
+      { href: '/reports', label: t('nav.reports'), icon: Activity },
+    ]},
+    { group: t('groups.catalog'), items: [
+      { href: '/products', label: t('nav.products'), icon: Package },
+      { href: '/categories', label: t('nav.categories'), icon: FolderTree },
+      { href: '/collections', label: t('nav.collections'), icon: Layers },
+    ]},
+    { group: t('groups.sales'), items: [
+      { href: '/orders', label: t('nav.orders'), icon: ShoppingBag },
+      { href: '/customers', label: t('nav.customers'), icon: Users },
+      { href: '/discounts', label: t('nav.discounts'), icon: Tag },
+    ]},
+    { group: t('groups.community'), items: [
+      { href: '/cult', label: t('nav.cult'), icon: Crown },
+      { href: '/newsletter', label: t('nav.newsletter'), icon: Mail },
+    ]},
+    { group: t('groups.content'), items: [
+      { href: '/content', label: t('nav.siteContent'), icon: FileText },
+      { href: '/archive', label: t('nav.archive'), icon: Image },
+      { href: '/media', label: t('nav.media'), icon: Image },
+      { href: '/appearance', label: t('nav.appearance'), icon: Palette },
+    ]},
+    { group: t('groups.store'), items: [
+      { href: '/shipping', label: t('nav.shipping'), icon: Truck },
+      { href: '/payments', label: t('nav.payments'), icon: CreditCard },
+    ]},
+    { group: t('groups.system'), items: [
+      { href: '/users', label: t('nav.users'), icon: Users },
+      { href: '/activity', label: t('nav.activity'), icon: Activity },
+      { href: '/languages', label: t('nav.languages'), icon: Globe2 },
+      { href: '/settings', label: t('nav.settings'), icon: Settings },
+    ]},
+  ];
+
   return (
-    <div className="min-h-screen flex bg-bg-primary text-frost" dir="ltr" style={{ direction: 'ltr' }}>
-      <aside className="w-64 border-r border-line shrink-0 hidden lg:flex flex-col bg-bg-secondary/40 sticky top-0 h-screen">
+    <div className="min-h-screen flex bg-bg-primary text-frost" dir={dir}>
+      <aside className={`w-64 shrink-0 hidden lg:flex flex-col bg-bg-secondary/40 sticky top-0 h-screen ${isAr ? 'border-l' : 'border-r'} border-line`}>
         <div className="p-6 border-b border-line">
           <Logo />
-          <p className="text-[9px] tracking-cinematic text-electric mt-1">CONTROL ROOM</p>
+          <p className="text-[9px] tracking-cinematic text-electric mt-1">{t('controlRoom').toUpperCase()}</p>
         </div>
         <nav className="flex-1 overflow-y-auto p-3">
           {NAV.map((g) => (
@@ -65,9 +70,11 @@ export function AdminShell({ children, locale, admin }: { children: React.ReactN
                 return (
                   <Link key={href} href={href}
                     className={`flex items-center gap-3 px-3 py-2 text-sm transition-colors ${
-                      active ? 'bg-frost/10 text-frost border-l-2 border-electric' : 'text-muted hover:text-frost hover:bg-white/5'
+                      active
+                        ? `bg-frost/10 text-frost ${isAr ? 'border-r-2' : 'border-l-2'} border-electric`
+                        : 'text-muted hover:text-frost hover:bg-white/5'
                     }`}>
-                    <Icon className="w-4 h-4" /> {item.label}
+                    <Icon className="w-4 h-4 shrink-0" /> {item.label}
                   </Link>
                 );
               })}
@@ -78,7 +85,7 @@ export function AdminShell({ children, locale, admin }: { children: React.ReactN
           <p className="text-xs text-frost">{admin.name}</p>
           <p className="text-[10px] text-muted">{admin.email}</p>
           <form action="/api/admin/logout" method="post" className="mt-3">
-            <button className="text-xs text-muted hover:text-frost flex items-center gap-2"><LogOut className="w-3 h-3" /> Logout</button>
+            <button className="text-xs text-muted hover:text-frost flex items-center gap-2"><LogOut className="w-3 h-3" /> {t('logout')}</button>
           </form>
         </div>
       </aside>

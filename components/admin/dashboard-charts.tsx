@@ -1,11 +1,11 @@
 'use client';
 import { LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip, BarChart, Bar, CartesianGrid } from 'recharts';
 
-export function DashboardCharts({ data }: { data: any[] }) {
+export function DashboardCharts({ data, ordersLabel = 'ORDERS (30D)', revenueLabel = 'REVENUE (30D)' }: { data: any[]; ordersLabel?: string; revenueLabel?: string }) {
   return (
     <div className="grid lg:grid-cols-2 gap-6">
       <div className="glass p-6">
-        <h3 className="text-xs tracking-cinematic text-muted mb-4">— REVENUE (30D)</h3>
+        <h3 className="text-xs tracking-cinematic text-muted mb-4">— {revenueLabel}</h3>
         <ResponsiveContainer width="100%" height={220}>
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
@@ -17,7 +17,7 @@ export function DashboardCharts({ data }: { data: any[] }) {
         </ResponsiveContainer>
       </div>
       <div className="glass p-6">
-        <h3 className="text-xs tracking-cinematic text-muted mb-4">— ORDERS (30D)</h3>
+        <h3 className="text-xs tracking-cinematic text-muted mb-4">— {ordersLabel}</h3>
         <ResponsiveContainer width="100%" height={220}>
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />

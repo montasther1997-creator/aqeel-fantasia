@@ -1,11 +1,14 @@
 import { requireAdmin } from '@/lib/admin-guard';
 import { prisma } from '@/lib/db';
-import { ShoppingBag, Users, Package, DollarSign, TrendingUp, Crown } from 'lucide-react';
+import { ShoppingBag, Users, Package, DollarSign } from 'lucide-react';
 import { DashboardCharts } from '@/components/admin/dashboard-charts';
+import { getTranslations, getLocale } from 'next-intl/server';
 
 export default async function AdminHome({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   await requireAdmin(locale);
+  const t = await getTranslations('admin');
+  const isAr = locale === 'ar';
 
   const [productsCount, ordersCount, customersCount, revenueAgg, recentOrders, lowStock] = await Promise.all([
     prisma.product.count(),
@@ -32,20 +35,20 @@ export default async function AdminHome({ params }: { params: Promise<{ locale: 
   const chart = Object.entries(days).map(([d, v]) => ({ day: d.slice(5), orders: v.count, revenue: v.total }));
 
   const stats = [
-    { label: 'Revenue', value: `$${(revenueAgg._sum.total || 0).toLocaleString()}`, icon: DollarSign },
-    { label: 'Orders', value: ordersCount, icon: ShoppingBag },
-    { label: 'Customers', value: customersCount, icon: Users },
-    { label: 'Products', value: productsCount, icon: Package },
+    { label: t('labels.revenue'), value: `$${(revenueAgg._sum.total || 0).toLocaleString()}`, icon: DollarSign },
+    { label: t('labels.orders'), value: ordersCount, icon: ShoppingBag },
+    { label: t('labels.customers'), value: customersCount, icon: Users },
+    { label: t('labels.products'), value: productsCount, icon: Package },
   ];
 
   return (
     <div>
       <div className="flex items-end justify-between mb-8">
         <div>
-          <p className="text-xs tracking-cinematic text-muted">— OVERVIEW</p>
-          <h1 className="h-display text-4xl mt-2">Dashboard</h1>
+          <p className="text-xs tracking-cinematic text-muted">— {t('groups.overview').toUpperCase()}</p>
+          <h1 className="h-display text-4xl mt-2">{t('nav.dashboard')}</h1>
         </div>
-        <p className="text-xs text-muted">{new Date().toLocaleDateString()}</p>
+        <p className="text-xs text-muted">{new Date().toLocaleDateString(isAr ? 'ar-IQ' : 'en-US')}</p>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
@@ -53,27 +56,30 @@ export default async function AdminHome({ params }: { params: Promise<{ locale: 
           const Icon = s.icon;
           return (
             <div key={s.label} className="glass p-6">
-              <div className="flex items-center justify-between mb-3"><span className="text-xs text-muted tracking-cinematic uppercase">{s.label}</span><Icon className="w-4 h-4 text-electric" /></div>
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs text-muted tracking-cinematic uppercase">{s.label}</span>
+                <Icon className="w-4 h-4 text-electric" />
+              </div>
               <p className="text-3xl font-display">{s.value}</p>
             </div>
           );
         })}
       </div>
 
-      <DashboardCharts data={chart} />
+      <DashboardCharts data={chart} ordersLabel={t('labels.ordersChart')} revenueLabel={t('labels.revenueChart')} />
 
       <div className="grid lg:grid-cols-2 gap-6 mt-10">
         <div className="glass p-6">
-          <h3 className="text-xs tracking-cinematic text-muted mb-4">— RECENT ORDERS</h3>
-          {recentOrders.length === 0 ? <p className="text-muted text-sm">No orders yet.</p> :
+          <h3 className="text-xs tracking-cinematic text-muted mb-4">— {t('labels.recentOrders')}</h3>
+          {recentOrders.length === 0 ? <p className="text-muted text-sm">{t('labels.noOrders')}</p> :
             <div className="divide-y divide-line">
               {recentOrders.map((o) => (
-                <div key={o.id} className="py-3 flex justify-between items-center text-sm">
-                  <div>
+                <div key={o.id} className="py-3 flex justify-between items-center text-sm gap-3">
+                  <div className="min-w-0">
                     <p className="font-mono text-xs">{o.number}</p>
-                    <p className="text-xs text-muted mt-1">{new Date(o.createdAt).toLocaleString()} · {o.items.length} items</p>
+                    <p className="text-xs text-muted mt-1">{new Date(o.createdAt).toLocaleString(isAr ? 'ar-IQ' : 'en-US')} · {o.items.length} {t('labels.items')}</p>
                   </div>
-                  <div className="text-right">
+                  <div className={isAr ? 'text-left' : 'text-right'}>
                     <p>{o.currency} {o.total.toLocaleString()}</p>
                     <p className="text-[10px] uppercase tracking-cinematic text-electric">{o.status}</p>
                   </div>
@@ -83,13 +89,13 @@ export default async function AdminHome({ params }: { params: Promise<{ locale: 
           }
         </div>
         <div className="glass p-6">
-          <h3 className="text-xs tracking-cinematic text-muted mb-4">— LOW STOCK</h3>
-          {lowStock.length === 0 ? <p className="text-muted text-sm">All good.</p> :
+          <h3 className="text-xs tracking-cinematic text-muted mb-4">— {t('labels.lowStock')}</h3>
+          {lowStock.length === 0 ? <p className="text-muted text-sm">{t('labels.allGood')}</p> :
             <div className="divide-y divide-line">
               {lowStock.map((p) => (
                 <div key={p.id} className="py-3 flex justify-between text-sm">
-                  <span>{p.nameEn}</span>
-                  <span className="text-blood">{p.stock} left</span>
+                  <span>{isAr ? p.nameAr : p.nameEn}</span>
+                  <span className="text-blood">{p.stock} {t('labels.left')}</span>
                 </div>
               ))}
             </div>
