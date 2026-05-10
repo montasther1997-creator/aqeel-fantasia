@@ -6,6 +6,8 @@ import { CultTeaser } from '@/components/site/cult-teaser';
 import { SignalBand } from '@/components/site/signal-band';
 import { EditorialBand } from '@/components/site/editorial-band';
 import { StatsCounter } from '@/components/site/stats-counter';
+import { FounderSection } from '@/components/site/founder-section';
+import { BranchesSection } from '@/components/site/branches-section';
 import { prisma } from '@/lib/db';
 
 export const revalidate = 60;
@@ -24,12 +26,14 @@ export default async function GatePage() {
   return (
     <>
       <GateHero />
-      <MarqueeBand items={['AQEEL FANTASIA', 'NEW DROP_01', 'JOIN THE CULT', 'UNDERGROUND', 'SHADOW EDITION', 'BUILT IN BAGHDAD', '2026']} />
+      <MarqueeBand items={['عقيل فنتازيا', 'AQEEL FANTASIA', 'BABYLON · BAGHDAD', 'الأناقة الرجالية', 'EST. 2026', '@SHOPFANTASIA1']} />
       <FeaturedDrops products={products} />
+      <FounderSection />
       <EditorialBand />
       <StatsCounter />
+      <BranchesSection />
       <Manifesto />
-      <MarqueeBand items={['LIMITED EDITIONS', 'NIGHTLIFE', 'CINEMATIC', 'BUILT IN THE DARK', 'NO PERMISSION']} />
+      <MarqueeBand items={['LIMITED EDITIONS', 'حرفية فاخرة', 'CINEMATIC', 'الأصالة', 'BUILT IN IRAQ']} />
       <CultTeaser tiers={tiers} />
       <SignalBand />
     </>
