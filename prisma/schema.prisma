@@ -59,6 +59,7 @@ model Customer {
   orders      Order[]
   wishlist    WishlistItem[]
   cultMember  CultMember?
+  bespokes    BespokeRequest[]
   @@schema("fantasia")
 }
 
@@ -354,6 +355,29 @@ model ShippingZone {
   etaDays     String?
   active      Boolean  @default(true)
   order       Int      @default(0)
+  @@schema("fantasia")
+}
+
+// ==================== BESPOKE ====================
+model BespokeRequest {
+  id              String   @id @default(cuid())
+  customerId      String?
+  customer        Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  name            String
+  phone           String
+  email           String?
+  occasion        String
+  preferredDate   String?
+  fitPreference   String?
+  fabricPreference String?
+  budget          String?
+  contactMethod   String   @default("whatsapp")
+  city            String?
+  notes           String?
+  status          String   @default("new")
+  internalNotes   String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
   @@schema("fantasia")
 }
 

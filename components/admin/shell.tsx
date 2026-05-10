@@ -32,6 +32,7 @@ export function AdminShell({ children, locale, admin }: { children: React.ReactN
     ]},
     { group: t('groups.community'), items: [
       { href: '/cult', label: t('nav.cult'), icon: Crown },
+      { href: '/bespoke', label: 'Bespoke', icon: Mail },
       { href: '/newsletter', label: t('nav.newsletter'), icon: Mail },
     ]},
     { group: t('groups.content'), items: [

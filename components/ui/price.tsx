@@ -1,6 +1,6 @@
 'use client';
 import { useCart } from '@/lib/cart-store';
-import { formatIQD, formatUSD } from '@/lib/utils';
+import { fmtNumber } from '@/lib/utils';
 import { useLocale } from 'next-intl';
 
 export function Price({
@@ -10,15 +10,17 @@ export function Price({
 }) {
   const currency = useCart((s) => s.currency);
   const locale = useLocale() as 'ar' | 'en';
-  const main = currency === 'IQD' ? formatIQD(iqd, locale) : formatUSD(usd, locale);
-  const compare = compareIQD && compareUSD
-    ? (currency === 'IQD' ? formatIQD(compareIQD, locale) : formatUSD(compareUSD, locale))
+  const value = currency === 'IQD' ? fmtNumber(iqd) : usd.toFixed(2);
+  const label = currency === 'IQD' ? (locale === 'ar' ? 'د.ع' : 'IQD') : '$';
+  const cmpVal = compareIQD && compareUSD
+    ? (currency === 'IQD' ? fmtNumber(compareIQD) : (compareUSD as number).toFixed(2))
     : null;
   return (
     <span className={className}>
-      <span className="text-frost">{main}</span>
-      {compare && (
-        <span className="ml-2 text-muted line-through text-xs rtl:mr-2 rtl:ml-0">{compare}</span>
+      <span className="text-fg">{label}</span>{' '}
+      <span className="num">{value}</span>
+      {cmpVal && (
+        <span className="ml-2 text-fg-tertiary line-through text-xs rtl:mr-2 rtl:ml-0 num">{cmpVal}</span>
       )}
     </span>
   );

@@ -1,41 +1,46 @@
-import { GateHero } from '@/components/site/gate-hero';
-import { FeaturedDrops } from '@/components/site/featured-drops';
-import { Manifesto } from '@/components/site/manifesto';
-import { MarqueeBand } from '@/components/site/marquee-band';
-import { CultTeaser } from '@/components/site/cult-teaser';
-import { SignalBand } from '@/components/site/signal-band';
-import { EditorialBand } from '@/components/site/editorial-band';
-import { StatsCounter } from '@/components/site/stats-counter';
-import { FounderSection } from '@/components/site/founder-section';
-import { BranchesSection } from '@/components/site/branches-section';
-import { prisma } from '@/lib/db';
+import { StatusBar } from '@/components/atelier/phone-shell';
+import { Editorial } from '@/components/atelier/editorial';
+import { Crest } from '@/components/atelier/crest';
+import { Link } from '@/i18n/routing';
+import { getTranslations } from 'next-intl/server';
 
-export const revalidate = 60;
-
-export default async function GatePage() {
-  const [products, tiers] = await Promise.all([
-    prisma.product.findMany({
-      where: { active: true, featured: true },
-      include: { images: { orderBy: { order: 'asc' } } },
-      orderBy: { order: 'asc' },
-      take: 8,
-    }),
-    prisma.cultTier.findMany({ where: { active: true }, orderBy: { order: 'asc' } }),
-  ]);
+export default async function WelcomePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations('welcome');
+  const isAr = locale === 'ar';
 
   return (
-    <>
-      <GateHero />
-      <MarqueeBand items={['عقيل فنتازيا', 'AQEEL FANTASIA', 'BABYLON · BAGHDAD', 'الأناقة الرجالية', 'EST. 2026', '@SHOPFANTASIA1']} />
-      <FeaturedDrops products={products} />
-      <FounderSection />
-      <EditorialBand />
-      <StatsCounter />
-      <BranchesSection />
-      <Manifesto />
-      <MarqueeBand items={['LIMITED EDITIONS', 'حرفية فاخرة', 'CINEMATIC', 'الأصالة', 'BUILT IN IRAQ']} />
-      <CultTeaser tiers={tiers} />
-      <SignalBand />
-    </>
+    <div className="h-full relative overflow-hidden">
+      <StatusBar />
+      <div className="absolute inset-0">
+        <Editorial variant="v5" ratio="auto" className="absolute inset-0" fade>
+          <div className="absolute top-[54px] left-0 right-0 px-6 py-4 flex items-center justify-between z-10">
+            <div className="text-pearl"><Crest size={36} /></div>
+            <Link href={'/' as any} locale={isAr ? 'en' : 'ar'} className="border border-pearl/30 text-pearl px-3 py-1.5 text-[10px] tracking-[0.16em] uppercase">
+              {isAr ? 'English' : 'العربية'}
+            </Link>
+          </div>
+
+          <div className="absolute inset-0 flex items-end justify-end p-8 pt-32 pb-48 z-[2]">
+            <div className={`serif italic text-pearl/[0.18] text-5xl leading-none font-light ${isAr ? 'text-left' : 'text-right'}`} style={isAr ? { fontStyle: 'normal', fontFamily: 'var(--serif-ar)' } : {}}>
+              {isAr ? <>عقيل<br />فنتازيا</> : <>Aqeel<br />Fantasia</>}
+            </div>
+          </div>
+
+          <div className={`absolute bottom-12 left-0 right-0 px-8 z-[4] text-pearl ${isAr ? 'text-right' : 'text-left'}`}>
+            <div className="t-eyebrow text-bone">{t('eyebrow')}</div>
+            <h1 className="serif text-5xl sm:text-6xl leading-[0.95] font-light mt-4" style={isAr ? { fontFamily: 'var(--serif-ar)' } : { letterSpacing: '-0.03em' }}>
+              {t('headline1')}<br />
+              <em className={`${isAr ? '' : 'italic'} font-normal`} style={{ color: 'var(--accent)', fontStyle: isAr ? 'normal' : 'italic' }}>{t('headline2')}</em>
+            </h1>
+            <p className="text-bone text-sm mt-6 opacity-80">{t('sub')}</p>
+
+            <Link href={'/home' as any} className="btn btn-pearl w-full mt-8">
+              {t('enter')}
+            </Link>
+          </div>
+        </Editorial>
+      </div>
+    </div>
   );
 }

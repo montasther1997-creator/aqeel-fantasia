@@ -3,128 +3,96 @@ import { useState, useEffect } from 'react';
 import { useCart } from '@/lib/cart-store';
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
-import { formatIQD, formatUSD } from '@/lib/utils';
+import { StatusBar } from '@/components/atelier/phone-shell';
+import { TopBar } from '@/components/atelier/topbar';
+import { fmtNumber } from '@/lib/utils';
 import { IRAQ_GOVERNORATES_AR, IRAQ_GOVERNORATES_EN } from '@/lib/constants';
-import { motion } from 'framer-motion';
 
 export default function CheckoutPage() {
   const t = useTranslations('checkout');
   const locale = useLocale() as 'ar' | 'en';
+  const isAr = locale === 'ar';
   const items = useCart((s) => s.items);
-  const currency = useCart((s) => s.currency);
   const discount = useCart((s) => s.discount);
-  const shipping = useCart((s) => s.shipping);
-  const setShipping = useCart((s) => s.setShipping);
   const clear = useCart((s) => s.clear);
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({
-    name: '', phone: '', email: '', country: locale === 'ar' ? 'العراق' : 'Iraq',
-    governorate: '', city: '', area: '', street: '', details: '', notes: '',
-  });
+  const [busy, setBusy] = useState(false);
+  const [form, setForm] = useState({ name: '', phone: '', email: '', country: isAr ? 'العراق' : 'Iraq', governorate: '', city: '', area: '', street: '', details: '', notes: '' });
+  const [shipping, setShipping] = useState<{ name: string; priceIQD: number } | null>(null);
+  const govs = isAr ? IRAQ_GOVERNORATES_AR : IRAQ_GOVERNORATES_EN;
 
-  const subIQD = items.reduce((n, x) => n + x.priceIQD * x.qty, 0);
-  const subUSD = items.reduce((n, x) => n + x.priceUSD * x.qty, 0);
-  const sub = currency === 'IQD' ? subIQD : subUSD;
-  const disc = discount?.discount || 0;
-  const ship = shipping ? (currency === 'IQD' ? shipping.priceIQD : shipping.priceUSD) : 0;
-  const total = Math.max(0, sub - disc + ship);
-
-  const fmt = (v: number) => currency === 'IQD' ? formatIQD(v, locale) : formatUSD(v, locale);
-  const govs = locale === 'ar' ? IRAQ_GOVERNORATES_AR : IRAQ_GOVERNORATES_EN;
-
-  // Auto-calc shipping when governorate changes
   useEffect(() => {
-    if (!form.governorate) { setShipping(null); return; }
+    if (!form.governorate) return;
     fetch('/api/shipping', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ governorate: form.governorate }) })
-      .then((r) => r.json()).then((d) => {
-        if (d.ok) setShipping({ name: d.name, priceIQD: d.priceIQD, priceUSD: d.priceUSD, etaDays: d.etaDays });
-      });
-  }, [form.governorate, setShipping]);
+      .then((r) => r.json()).then((d) => d.ok && setShipping({ name: d.name, priceIQD: d.priceIQD }));
+  }, [form.governorate]);
+
+  const sub = items.reduce((n, x) => n + x.priceIQD * x.qty, 0);
+  const disc = discount?.discount || 0;
+  const ship = shipping?.priceIQD || 0;
+  const total = Math.max(0, sub - disc + ship);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!items.length) return;
-    setLoading(true);
-    try {
-      const res = await fetch('/api/orders', {
-        method: 'POST', headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ ...form, currency, items, discount, shipping }),
-      });
-      const data = await res.json();
-      if (data.ok) {
-        clear();
-        router.push(`/checkout/success?o=${data.number}` as any);
-      } else { alert(data.error || 'error'); }
-    } finally { setLoading(false); }
+    setBusy(true);
+    const res = await fetch('/api/orders', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ...form, currency: 'IQD', items, discount }) });
+    const d = await res.json();
+    if (d.ok) { clear(); router.push(`/checkout/success?o=${d.number}` as any); }
+    setBusy(false);
   };
 
   if (!items.length) {
-    return <div className="pt-32 container-x"><p className="text-muted">Empty cart.</p></div>;
+    return <div className="h-full relative"><StatusBar /><div className="screen-body"><TopBar leftIcon="chevronL" /><p className="px-6 pt-8 text-fg-secondary">Empty.</p></div></div>;
   }
 
   return (
-    <div className="pt-32 pb-20 container-x">
-      <h1 className="h-display text-5xl sm:text-6xl mb-10">{t('title')}</h1>
-      <form onSubmit={submit} className="grid lg:grid-cols-3 gap-10">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="lg:col-span-2 space-y-10">
-          <fieldset>
-            <legend className="text-xs tracking-cinematic uppercase text-muted mb-4">— {t('contact')}</legend>
-            <div className="grid sm:grid-cols-2 gap-3">
-              <div><label className="label">{t('name')}</label><input required className="input" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
-              <div><label className="label">{t('phone')}</label><input required className="input" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="+964 ..." /></div>
-              <div className="sm:col-span-2"><label className="label">{t('email')}</label><input className="input" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} /></div>
-            </div>
-          </fieldset>
+    <div className="h-full relative">
+      <StatusBar />
+      <div className="screen-body">
+        <TopBar leftIcon="chevronL" hideRight />
+        <header className={`px-6 pt-8 pb-6 ${isAr ? 'text-right' : 'text-left'}`}>
+          <h1 className="serif text-4xl font-light" style={isAr ? { fontFamily: 'var(--serif-ar)' } : {}}>{t('title')}</h1>
+        </header>
 
-          <fieldset>
-            <legend className="text-xs tracking-cinematic uppercase text-muted mb-4">— {t('shipping')}</legend>
-            <div className="grid sm:grid-cols-2 gap-3">
-              <div><label className="label">{t('country')}</label><input className="input" value={form.country} disabled /></div>
-              <div>
-                <label className="label">{t('governorate')}</label>
-                <select required className="input" value={form.governorate} onChange={(e) => setForm({ ...form, governorate: e.target.value })}>
-                  <option value="">—</option>
-                  {govs.map((g) => <option key={g} value={g}>{g}</option>)}
-                </select>
-              </div>
-              <div><label className="label">{t('city')}</label><input required className="input" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} /></div>
-              <div><label className="label">{t('area')}</label><input className="input" value={form.area} onChange={(e) => setForm({ ...form, area: e.target.value })} /></div>
-              <div className="sm:col-span-2"><label className="label">{t('street')}</label><input className="input" value={form.street} onChange={(e) => setForm({ ...form, street: e.target.value })} /></div>
-              <div className="sm:col-span-2"><label className="label">{t('details')}</label><textarea className="input min-h-[80px]" value={form.details} onChange={(e) => setForm({ ...form, details: e.target.value })} /></div>
-              <div className="sm:col-span-2"><label className="label">{t('notes')}</label><textarea className="input min-h-[60px]" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} /></div>
-            </div>
-            {shipping && (
-              <p className="text-xs text-electric mt-3">→ {shipping.name} · {fmt(currency === 'IQD' ? shipping.priceIQD : shipping.priceUSD)} · {shipping.etaDays} {locale === 'ar' ? 'أيام' : 'days'}</p>
-            )}
-          </fieldset>
-        </motion.div>
+        <form onSubmit={submit} className="px-6 pb-8 space-y-6">
+          <Field label={t('name')} value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
+          <Field label={t('phone')} value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} required dir="ltr" placeholder="+964..." />
+          <Field label={t('email')} value={form.email} onChange={(v) => setForm({ ...form, email: v })} dir="ltr" />
+          <div>
+            <div className="field-label">{t('governorate')}</div>
+            <select required className="field" value={form.governorate} onChange={(e) => setForm({ ...form, governorate: e.target.value })}>
+              <option value="">—</option>
+              {govs.map((g) => <option key={g} value={g}>{g}</option>)}
+            </select>
+          </div>
+          <Field label={t('city')} value={form.city} onChange={(v) => setForm({ ...form, city: v })} required />
+          <Field label={t('area')} value={form.area} onChange={(v) => setForm({ ...form, area: v })} />
+          <Field label={t('street')} value={form.street} onChange={(v) => setForm({ ...form, street: v })} />
+          <Field label={t('details')} value={form.details} onChange={(v) => setForm({ ...form, details: v })} />
 
-        <div className="glass-strong p-6 h-fit lg:sticky lg:top-24">
-          <h3 className="text-xs tracking-cinematic uppercase text-muted mb-4">— {t('review')}</h3>
-          <div className="space-y-3 max-h-72 overflow-y-auto pr-2">
-            {items.map((it) => (
-              <div key={it.productId + (it.variantId || '')} className="flex gap-3 text-sm">
-                <div className="w-12 h-16 bg-bg-secondary shrink-0">{it.image && <img src={it.image} className="w-full h-full object-cover" />}</div>
-                <div className="flex-1 min-w-0">
-                  <p className="truncate text-xs tracking-cinematic uppercase">{locale === 'ar' ? it.nameAr : it.nameEn}</p>
-                  <p className="text-xs text-muted">x{it.qty} {it.size && `· ${it.size}`}</p>
-                </div>
-                <span className="text-xs">{fmt(currency === 'IQD' ? it.priceIQD * it.qty : it.priceUSD * it.qty)}</span>
-              </div>
-            ))}
+          <div className="border-t border-border pt-6 space-y-2 text-sm">
+            <div className="flex justify-between"><span className="text-fg-tertiary">{isAr ? 'المجموع' : 'Subtotal'}</span><span><span className="num">{fmtNumber(sub)}</span> {isAr ? 'د.ع' : 'IQD'}</span></div>
+            {shipping && <div className="flex justify-between"><span className="text-fg-tertiary">{isAr ? 'الشحن' : 'Shipping'}</span><span><span className="num">{fmtNumber(ship)}</span></span></div>}
+            <div className="border-t border-border pt-3 mt-3 flex justify-between serif text-xl" style={isAr ? { fontFamily: 'var(--serif-ar)' } : {}}>
+              <span>{isAr ? 'الإجمالي' : 'Total'}</span>
+              <span><span className="num">{fmtNumber(total)}</span> {isAr ? 'د.ع' : 'IQD'}</span>
+            </div>
           </div>
-          <div className="divider-line my-4" />
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between"><span className="text-muted">Subtotal</span><span>{fmt(sub)}</span></div>
-            {discount && <div className="flex justify-between text-electric"><span>{discount.code}</span><span>-{fmt(disc)}</span></div>}
-            {shipping && <div className="flex justify-between"><span className="text-muted">Shipping</span><span>{fmt(ship)}</span></div>}
-            <div className="flex justify-between text-lg font-display pt-2 border-t border-line"><span>TOTAL</span><span>{fmt(total)}</span></div>
-          </div>
-          <p className="mt-4 text-xs text-muted">{t('cod')}</p>
-          <button type="submit" disabled={loading || !shipping} className="btn-primary w-full mt-6">{loading ? '...' : t('place')}</button>
-        </div>
-      </form>
+
+          <p className="text-xs text-fg-tertiary">{t('cod')}</p>
+          <button type="submit" disabled={busy || !shipping} className="btn btn-champagne w-full">{busy ? '…' : t('place')}</button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+function Field({ label, value, onChange, required, dir, placeholder }: { label: string; value: string; onChange: (v: string) => void; required?: boolean; dir?: string; placeholder?: string }) {
+  return (
+    <div>
+      <div className="field-label">{label}</div>
+      <input value={value} onChange={(e) => onChange(e.target.value)} required={required} dir={dir as any} placeholder={placeholder} className="field" />
     </div>
   );
 }
