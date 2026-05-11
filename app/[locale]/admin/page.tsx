@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { requireAdmin } from '@/lib/admin-guard';
 import { prisma } from '@/lib/db';
 import { ShoppingBag, Users, Package, DollarSign } from 'lucide-react';
@@ -35,10 +36,10 @@ export default async function AdminHome({ params }: { params: Promise<{ locale: 
   const chart = Object.entries(days).map(([d, v]) => ({ day: d.slice(5), orders: v.count, revenue: v.total }));
 
   const stats = [
-    { label: t('labels.revenue'), value: `$${(revenueAgg._sum.total || 0).toLocaleString()}`, icon: DollarSign },
-    { label: t('labels.orders'), value: ordersCount, icon: ShoppingBag },
-    { label: t('labels.customers'), value: customersCount, icon: Users },
-    { label: t('labels.products'), value: productsCount, icon: Package },
+    { label: t('labels.revenue'), value: `$${(revenueAgg._sum.total || 0).toLocaleString()}`, icon: DollarSign, href: `/${locale}/admin/reports` },
+    { label: t('labels.orders'), value: ordersCount, icon: ShoppingBag, href: `/${locale}/admin/orders` },
+    { label: t('labels.customers'), value: customersCount, icon: Users, href: `/${locale}/admin/customers` },
+    { label: t('labels.products'), value: productsCount, icon: Package, href: `/${locale}/admin/products` },
   ];
 
   return (
@@ -55,13 +56,13 @@ export default async function AdminHome({ params }: { params: Promise<{ locale: 
         {stats.map((s) => {
           const Icon = s.icon;
           return (
-            <div key={s.label} className="glass p-6">
+            <Link key={s.label} href={s.href} className="glass p-6 hover:bg-white/5 transition-colors block">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs text-muted tracking-cinematic uppercase">{s.label}</span>
                 <Icon className="w-4 h-4 text-electric" />
               </div>
               <p className="text-3xl font-display">{s.value}</p>
-            </div>
+            </Link>
           );
         })}
       </div>
@@ -74,7 +75,7 @@ export default async function AdminHome({ params }: { params: Promise<{ locale: 
           {recentOrders.length === 0 ? <p className="text-muted text-sm">{t('labels.noOrders')}</p> :
             <div className="divide-y divide-line">
               {recentOrders.map((o) => (
-                <div key={o.id} className="py-3 flex justify-between items-center text-sm gap-3">
+                <Link key={o.id} href={`/${locale}/admin/orders/${o.id}`} className="py-3 flex justify-between items-center text-sm gap-3 hover:bg-white/5 -mx-2 px-2 transition-colors">
                   <div className="min-w-0">
                     <p className="font-mono text-xs">{o.number}</p>
                     <p className="text-xs text-muted mt-1">{new Date(o.createdAt).toLocaleString(isAr ? 'ar-IQ' : 'en-US')} · {o.items.length} {t('labels.items')}</p>
@@ -83,7 +84,7 @@ export default async function AdminHome({ params }: { params: Promise<{ locale: 
                     <p>{o.currency} {o.total.toLocaleString()}</p>
                     <p className="text-[10px] uppercase tracking-cinematic text-electric">{o.status}</p>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           }
@@ -93,10 +94,10 @@ export default async function AdminHome({ params }: { params: Promise<{ locale: 
           {lowStock.length === 0 ? <p className="text-muted text-sm">{t('labels.allGood')}</p> :
             <div className="divide-y divide-line">
               {lowStock.map((p) => (
-                <div key={p.id} className="py-3 flex justify-between text-sm">
+                <Link key={p.id} href={`/${locale}/admin/products/${p.id}`} className="py-3 flex justify-between text-sm hover:bg-white/5 -mx-2 px-2 transition-colors">
                   <span>{isAr ? p.nameAr : p.nameEn}</span>
                   <span className="text-blood">{p.stock} {t('labels.left')}</span>
-                </div>
+                </Link>
               ))}
             </div>
           }

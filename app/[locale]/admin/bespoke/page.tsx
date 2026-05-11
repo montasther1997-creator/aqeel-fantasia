@@ -1,5 +1,6 @@
 import { requireAdmin } from '@/lib/admin-guard';
 import { prisma } from '@/lib/db';
+import { BespokeRow } from './bespoke-row';
 
 export default async function BespokeAdminPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params; await requireAdmin(locale);
@@ -20,7 +21,7 @@ export default async function BespokeAdminPage({ params }: { params: Promise<{ l
                   <p className="font-medium">{r.name}</p>
                   <p className="text-xs text-muted mt-1 font-mono">{r.phone}{r.email && ` · ${r.email}`}</p>
                 </div>
-                <span className="text-[10px] tracking-cinematic uppercase text-accent">{r.status}</span>
+                <BespokeRow id={r.id} initialStatus={r.status} summary={r.name} />
               </div>
               <div className="grid sm:grid-cols-2 gap-3 text-sm text-frost/80">
                 <div><span className="text-muted text-xs">Occasion:</span> {r.occasion}</div>

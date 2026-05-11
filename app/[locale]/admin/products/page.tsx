@@ -72,7 +72,7 @@ export default async function ProductsAdmin({
                   </span>
                 </td>
                 <td className="p-3 flex gap-2">
-                  <Link href={`/${locale}/drops/${p.slug}`} target="_blank" className="text-muted hover:text-frost"><Eye className="w-4 h-4" /></Link>
+                  <Link href={`/${locale}/product/${p.slug}`} target="_blank" className="text-muted hover:text-frost"><Eye className="w-4 h-4" /></Link>
                   <Link href={`/${locale}/admin/products/${p.id}`} className="text-muted hover:text-frost"><Edit className="w-4 h-4" /></Link>
                 </td>
               </tr>
