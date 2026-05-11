@@ -258,6 +258,561 @@
       "lowStock": "Low Stock",
       "allGood": "All good",
       "left": "left"
+    },
+    "common": {
+      "all": "All",
+      "apply": "Apply",
+      "reset": "Reset",
+      "filter": "Filter",
+      "search": "Search",
+      "new": "New",
+      "edit": "Edit",
+      "delete": "Delete",
+      "view": "View",
+      "save": "Save",
+      "saving": "Saving…",
+      "saved": "Saved",
+      "loading": "Loading…",
+      "exportCsv": "Export CSV",
+      "prev": "Prev",
+      "next": "Next",
+      "pageOf": "Page {page} of {total}",
+      "active": "Active",
+      "inactive": "Inactive",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "hidden": "Hidden",
+      "yes": "Yes",
+      "no": "No",
+      "create": "Create",
+      "update": "Update",
+      "updateFailed": "Update failed",
+      "deleteFailed": "Delete failed",
+      "saveFailed": "Save failed",
+      "deleted": "Deleted",
+      "statusUpdated": "Status updated",
+      "activated": "Activated",
+      "deactivated": "Deactivated",
+      "confirmDelete": "Delete?",
+      "on": "on",
+      "off": "off",
+      "add": "Add",
+      "created": "Created",
+      "createFailed": "Create failed"
+    },
+    "products": {
+      "eyebrow": "Catalog",
+      "title": "Products",
+      "count": "Products ({count})",
+      "new": "New",
+      "searchPlaceholder": "Search products...",
+      "search": "Search",
+      "active": "Active",
+      "hidden": "Hidden",
+      "th": {
+        "image": "Image",
+        "name": "Name",
+        "sku": "SKU",
+        "category": "Category",
+        "priceIQD": "Price IQD",
+        "stock": "Stock",
+        "status": "Status"
+      }
+    },
+    "productEdit": {
+      "eyebrow": "Edit · {sku}"
+    },
+    "productNew": {
+      "eyebrow": "New",
+      "title": "Create Product"
+    },
+    "productForm": {
+      "details": "Details",
+      "pricing": "Pricing",
+      "images": "Images",
+      "variants": "Variants",
+      "organize": "Organize",
+      "status": "Status",
+      "nameEn": "Name (EN)",
+      "nameAr": "Name (AR)",
+      "taglineEn": "Tagline (EN)",
+      "taglineAr": "Tagline (AR)",
+      "slug": "Slug",
+      "sku": "SKU",
+      "descEn": "Description (EN)",
+      "descAr": "Description (AR)",
+      "priceIQD": "Price IQD",
+      "priceUSD": "Price USD",
+      "compareIQD": "Compare IQD",
+      "compareUSD": "Compare USD",
+      "stock": "Stock",
+      "category": "Category",
+      "collection": "Collection",
+      "addImageUrl": "Or paste image URL",
+      "addVariant": "Add Variant",
+      "size": "Size",
+      "color": "Color",
+      "active": "Active",
+      "featured": "Featured",
+      "isNew": "New",
+      "isLimited": "Limited",
+      "save": "Save",
+      "create": "Create",
+      "delete": "Delete",
+      "confirmDelete": "Delete this product?"
+    },
+    "orders": {
+      "eyebrow": "Sales",
+      "title": "Orders",
+      "count": "Orders ({count})",
+      "filterAll": "All",
+      "view": "VIEW",
+      "th": {
+        "order": "Order",
+        "customer": "Customer",
+        "items": "Items",
+        "total": "Total",
+        "status": "Status",
+        "date": "Date"
+      }
+    },
+    "orderDetail": {
+      "eyebrow": "Order · {number}",
+      "sections": {
+        "items": "Items",
+        "customer": "Customer",
+        "shipping": "Shipping",
+        "totals": "Totals",
+        "update": "Update Status"
+      },
+      "labels": {
+        "subtotal": "Subtotal",
+        "shipping": "Shipping",
+        "discount": "Discount",
+        "total": "Total",
+        "trackingNumber": "Tracking number",
+        "tracking": "Tracking",
+        "payment": "Payment",
+        "status": "Status"
+      },
+      "buttons": {
+        "update": "Update"
+      }
+    },
+    "customers": {
+      "eyebrow": "Sales",
+      "title": "Customers",
+      "count": "Customers ({count})",
+      "searchPlaceholder": "Search name, phone, email...",
+      "view": "VIEW",
+      "th": {
+        "name": "Name",
+        "phone": "Phone",
+        "email": "Email",
+        "vip": "VIP",
+        "orders": "Orders",
+        "spent": "Spent",
+        "joined": "Joined"
+      },
+      "blocked": "Blocked"
+    },
+    "customerDetail": {
+      "eyebrow": "Customer",
+      "stats": {
+        "orders": "Orders",
+        "spent": "Spent",
+        "loyalty": "Loyalty"
+      },
+      "sections": {
+        "orders": "Orders"
+      }
+    },
+    "tierChanger": {
+      "title": "Change cult tier",
+      "newTier": "New tier",
+      "none": "No tier",
+      "reason": "Reason",
+      "reasonPlaceholder": "Manual promote, demote, comp…",
+      "apply": "Apply change",
+      "updated": "Tier updated",
+      "showHistory": "Show history",
+      "hideHistory": "Hide history",
+      "historyHeading": "Change history",
+      "noHistory": "No prior changes.",
+      "points": "pts"
+    },
+    "customerActions": {
+      "vipTier": "VIP Tier",
+      "blocked": "Blocked",
+      "notes": "Notes",
+      "save": "Save",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "orderActions": {
+      "status": "Status",
+      "payment": "Payment",
+      "tracking": "Tracking",
+      "update": "Update"
+    },
+    "reports": {
+      "eyebrow": "Overview",
+      "title": "Reports",
+      "from": "From",
+      "to": "To",
+      "range": "Range",
+      "orders": "orders",
+      "apply": "Apply",
+      "exportCsv": "Export CSV",
+      "last7d": "Last 7 days",
+      "last30d": "Last 30 days",
+      "allTime": "All time",
+      "bestSellers": "Best Sellers (Range)",
+      "noBestSellers": "No sales in range.",
+      "sold": "sold",
+      "topCustomers": "Top Customers (All Time)",
+      "noTopCustomers": "No customers yet.",
+      "ordersByStatus": "Orders by Status (Range)"
+    },
+    "bespoke": {
+      "eyebrow": "Atelier",
+      "title": "Bespoke Requests",
+      "count": "Bespoke Requests ({count})",
+      "empty": "No bespoke requests yet.",
+      "deleteConfirm": "Delete bespoke request for {name}?",
+      "labels": {
+        "occasion": "Occasion",
+        "date": "Date",
+        "fit": "Fit",
+        "fabric": "Fabric",
+        "budget": "Budget",
+        "city": "City",
+        "contactVia": "Contact via",
+        "notes": "Notes"
+      }
+    },
+    "madeForOne": {
+      "eyebrow": "Atelier",
+      "title": "Made for One",
+      "description": "Reserve a unique product for a single customer. Once assigned, the product remains visible publicly but is marked as 'Made for One' with the customer's name.",
+      "reserveTitle": "Reserve a piece",
+      "selectProduct": "— select product —",
+      "selectCustomer": "— select customer (or leave empty) —",
+      "unassigned": "— unassigned —",
+      "editionPlaceholder": "Edition (e.g. N°042/100)",
+      "edition": "Edition",
+      "personalNotePlaceholder": "Personal note from Aqeel (optional)...",
+      "reserve": "Reserve",
+      "empty": "No reservations yet.",
+      "confirmRemove": "Remove reservation?",
+      "status": {
+        "available": "available",
+        "reserved": "reserved",
+        "claimed": "claimed"
+      }
+    },
+    "notes": {
+      "eyebrow": "Editorial",
+      "title": "Atelier Notes",
+      "newNote": "New Note",
+      "number": "N°",
+      "signature": "Signature",
+      "signaturePlaceholder": "Signature",
+      "linkedProduct": "— linked product (optional) —",
+      "textArPlaceholder": "نص ع: «...»",
+      "textEnPlaceholder": "English text: \"...\"",
+      "addNote": "Add Note",
+      "delete": "Delete"
+    },
+    "cult": {
+      "eyebrow": "Community",
+      "title": "Cult Tiers",
+      "slug": "slug",
+      "nameEn": "Name EN",
+      "nameAr": "Name AR",
+      "priceIQD": "IQD",
+      "priceUSD": "USD",
+      "perks": "perks comma,separated",
+      "members": "Members ({count})",
+      "noMembers": "No members yet.",
+      "intro": "Configure tiers, point thresholds and perks. Customers auto-promote when crossing each threshold.",
+      "addTier": "Add tier",
+      "emptyTiers": "No tiers yet. Add your first tier.",
+      "confirmDelete": "Delete this tier? Existing members will lose it.",
+      "membersHeading": "Members",
+      "points": "pts",
+      "sections": {
+        "scoring": "Points & Multiplier",
+        "perks": "Perks"
+      },
+      "fields": {
+        "nameAr": "Name (Arabic)",
+        "nameEn": "Name (English)",
+        "slug": "Slug",
+        "slugHint": "Lowercase letters and hyphens only",
+        "color": "Color",
+        "pointsThreshold": "Points threshold",
+        "pointsThresholdHint": "Minimum points to reach this tier",
+        "multiplier": "Earning multiplier",
+        "multiplierHint": "1 = normal, 1.5 = +50%, 2 = double points",
+        "freeShipping": "Free shipping",
+        "earlyAccess": "Early access",
+        "discountPct": "Discount %",
+        "customPerks": "Custom perks",
+        "customPerksPlaceholder": "e.g. Private event invite, press Enter to add"
+      }
+    },
+    "newsletter": {
+      "eyebrow": "Signal",
+      "title": "Newsletter",
+      "count": "Newsletter ({count})",
+      "exportCsv": "Export CSV",
+      "confirmDelete": "Delete subscriber?",
+      "active": "✓ ACTIVE",
+      "inactive": "— INACTIVE",
+      "th": {
+        "contact": "Contact",
+        "type": "Type",
+        "status": "Status",
+        "joined": "Joined"
+      }
+    },
+    "categories": {
+      "eyebrow": "Catalog",
+      "title": "Categories",
+      "slug": "slug",
+      "nameEn": "Name EN",
+      "nameAr": "Name AR"
+    },
+    "collections": {
+      "eyebrow": "Catalog",
+      "title": "Collections / Drops",
+      "slug": "slug",
+      "nameEn": "Name EN",
+      "nameAr": "Name AR",
+      "productsCount": "{count} prod"
+    },
+    "discounts": {
+      "eyebrow": "Sales",
+      "title": "Discounts",
+      "code": "CODE",
+      "type": "Type",
+      "value": "Value",
+      "percent": "Percent %",
+      "fixed": "Fixed"
+    },
+    "content": {
+      "eyebrow": "CMS",
+      "title": "Site Content",
+      "keyPlaceholder": "key (e.g. gate.title)",
+      "groupPlaceholder": "group",
+      "valueEnPlaceholder": "value EN",
+      "valueArPlaceholder": "value AR"
+    },
+    "archive": {
+      "eyebrow": "Content",
+      "title": "Archive",
+      "titleEn": "Title EN",
+      "titleAr": "Title AR",
+      "coverUrl": "cover URL",
+      "type": "Type",
+      "delete": "Delete"
+    },
+    "media": {
+      "eyebrow": "Content",
+      "title": "Media Library",
+      "count": "Media Library ({count})",
+      "copied": "Copied",
+      "copyUrl": "Copy URL",
+      "delete": "Delete",
+      "empty": "No media yet. Drop files above to upload."
+    },
+    "imageUploader": {
+      "uploading": "UPLOADING...",
+      "dropOrClick": "DROP FILES OR CLICK"
+    },
+    "appearance": {
+      "eyebrow": "Content",
+      "title": "Appearance",
+      "subtitle": "Brand identity — video, logo, colors, tagline.",
+      "palette": "Brand Palette (Reference)",
+      "typography": "Typography",
+      "displayFont": "Display · Fraunces",
+      "bodyFont": "Body · Inter",
+      "arabicFont": "Arabic · IBM Plex / Amiri",
+      "fields": {
+        "heroVideoUrl": "Hero Video URL",
+        "logoUrl": "Logo URL",
+        "faviconUrl": "Favicon URL",
+        "brandTagline": "Brand Tagline",
+        "brandTaglineAr": "Brand Tagline (Arabic)",
+        "primaryAccent": "Primary Accent",
+        "heroOverlayOpacity": "Hero Overlay Opacity (0–1)"
+      },
+      "saving": "Saving…",
+      "save": "Save"
+    },
+    "shipping": {
+      "eyebrow": "Store",
+      "title": "Shipping Zones",
+      "intro": "Group Iraq into shipping zones. Each zone groups several governorates with a single price and ETA.",
+      "addZone": "Add zone",
+      "emptyZones": "No zones yet. Add your first zone.",
+      "confirmDelete": "Delete this zone?",
+      "generalSettings": "General Shipping Settings",
+      "fields": {
+        "nameAr": "Zone name (Arabic)",
+        "nameEn": "Zone name (English)",
+        "governorates": "Governorates in this zone",
+        "governoratesHint": "Comma-separated governorate names. Example: Karbala, Najaf, Babylon",
+        "governoratesPlaceholder": "Baghdad, Karbala, Najaf…",
+        "priceIQD": "Shipping price (IQD)",
+        "priceUSD": "Shipping price (USD)",
+        "eta": "ETA (days)",
+        "etaHint": "Format: 2-4 or 1-2",
+        "freeThreshold": "Free shipping threshold",
+        "freeThresholdHint": "If order total exceeds this, shipping is free. Set 0 to disable.",
+        "codFee": "Cash on Delivery fee",
+        "codFeeHint": "Extra fee added when COD is selected. Set 0 for no fee."
+      },
+      "nameEn": "Name EN",
+      "nameAr": "Name AR",
+      "governorates": "Governorates (comma)",
+      "eta": "ETA (2-4)"
+    },
+    "payments": {
+      "eyebrow": "Store",
+      "title": "Payments",
+      "subtitle": "Enable or disable payment methods shown at checkout.",
+      "enabled": "✓ ENABLED",
+      "disabled": "— DISABLED",
+      "methods": {
+        "cod": "Cash on Delivery",
+        "card": "Credit / Debit Card",
+        "bank": "Bank Transfer",
+        "zaincash": "ZainCash"
+      },
+      "comingSoon": "Gateway not yet integrated"
+    },
+    "users": {
+      "eyebrow": "System",
+      "title": "Admin Users",
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "role": "Role"
+    },
+    "activity": {
+      "eyebrow": "System",
+      "title": "Activity Log",
+      "count": "Activity Log ({count})",
+      "filters": {
+        "action": "Action",
+        "entity": "Entity",
+        "admin": "Admin"
+      },
+      "all": "All",
+      "filter": "Filter",
+      "reset": "Reset",
+      "prev": "Prev",
+      "next": "Next",
+      "pageOf": "Page {page} of {total}",
+      "empty": "No activity matches."
+    },
+    "languages": {
+      "eyebrow": "System",
+      "title": "Languages",
+      "availableLanguages": "AVAILABLE LANGUAGES",
+      "default": "DEFAULT",
+      "setDefault": "SET DEFAULT",
+      "active": "ACTIVE",
+      "disabled": "DISABLED",
+      "preview": "PREVIEW →",
+      "setAsDefault": "{code} set as default",
+      "languageEnabled": "{code} enabled",
+      "languageDisabled": "{code} disabled",
+      "cannotDisableDefault": "Cannot disable the default language",
+      "failedToUpdate": "Failed to update",
+      "languagesHint": "Languages affect what users see at /ar and /en. The default language is what visitors land on first.",
+      "translationsTitle": "Content Translations",
+      "translationsCount": "You have {count} translatable content keys.",
+      "translationsHint": "Each key has both Arabic and English values. Edit them in Content.",
+      "editTranslations": "Edit Translations"
+    },
+    "settings": {
+      "eyebrow": "System",
+      "title": "Settings",
+      "key": "key",
+      "group": "group",
+      "value": "value"
+    },
+    "smartSettings": {
+      "tabs": {
+        "about": "About",
+        "branches": "Branches",
+        "social": "Social",
+        "shipping": "Shipping",
+        "loyalty": "Loyalty",
+        "advanced": "Advanced"
+      },
+      "about": {
+        "heading": "Founder & House story",
+        "founderAr": "Founder name (Arabic)",
+        "founderEn": "Founder name (English)",
+        "storyAr": "House story (Arabic)",
+        "storyEn": "House story (English)",
+        "foundedYear": "Founded year",
+        "foundedCity": "Founded city",
+        "foundedCityPlaceholder": "Baghdad"
+      },
+      "branches": {
+        "heading": "Branches",
+        "addBranch": "Add branch",
+        "branchN": "Branch {n}",
+        "addressAr": "Address (Arabic)",
+        "addressEn": "Address (English)",
+        "phone": "Branch phone",
+        "hours": "Opening hours",
+        "hoursPlaceholder": "9 AM — 9 PM",
+        "confirmRemove": "Remove this branch?"
+      },
+      "social": {
+        "heading": "Social links",
+        "instagram": "Instagram",
+        "instagramHint": "Username with @",
+        "whatsapp": "WhatsApp",
+        "whatsappHint": "International number starting with +964",
+        "tiktok": "TikTok",
+        "email": "Contact email",
+        "twitter": "Twitter / X"
+      },
+      "shipping": {
+        "heading": "Global shipping settings",
+        "hint": "Store-wide settings. Per-zone prices are managed in the Shipping page.",
+        "freeThreshold": "Free shipping threshold",
+        "freeThresholdHint": "If order total exceeds this, shipping is free. Set 0 to disable.",
+        "codFee": "Cash-on-delivery fee",
+        "codFeeHint": "Extra fee added when COD is chosen. Set 0 for no fee."
+      },
+      "loyalty": {
+        "heading": "Points earning rules",
+        "hint": "How points are earned per purchase. Tier thresholds themselves are edited in the Cult page.",
+        "iqdPerPoint": "IQD per 1 point",
+        "iqdPerPointHint": "Lower number = customers earn faster. Default 1,000 IQD.",
+        "pointsPerUSD": "Points per USD",
+        "pointsPerUSDHint": "For USD orders. Default 1 point per dollar.",
+        "tierHint": "Customers auto-upgrade when reaching each tier's points threshold, set in Cult Tiers."
+      }
+    },
+    "login": {
+      "eyebrow": "Control Room",
+      "title": "Sign In",
+      "email": "Email",
+      "password": "Password",
+      "enter": "ENTER",
+      "loading": "...",
+      "invalid": "invalid",
+      "hint": "Default: admin@aqeelfantasia.com / Fantasia@2026"
     }
   }
 }

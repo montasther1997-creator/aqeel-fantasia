@@ -3,6 +3,7 @@ import { Icon } from '@/components/atelier/icons';
 import { Link } from '@/i18n/routing';
 import { getCustomer } from '@/lib/auth';
 import { prisma } from '@/lib/db';
+import { LoyaltyCard } from '@/components/atelier/loyalty-card';
 
 export default async function ProfilePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -43,6 +44,8 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
         <p className={`text-base md:text-lg text-fg-secondary serif font-light leading-relaxed mb-12 max-w-2xl ${isAr ? 'text-right' : 'text-left'}`} style={isAr ? { fontFamily: 'var(--serif-ar)', fontStyle: 'normal' } : { fontStyle: 'italic' }}>
           {t('manifesto')}
         </p>
+
+        {me && <div className="mb-10"><LoyaltyCard locale={isAr ? 'ar' : 'en'} /></div>}
 
         <nav className="border-y border-border">
           {rows.map((r) => (

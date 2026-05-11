@@ -5,6 +5,7 @@ import { getCustomer } from '@/lib/auth';
 import { Prisma } from '@prisma/client';
 import { rateLimit } from '@/lib/ratelimit';
 import { OrderSchema, zodError } from '@/lib/validators';
+import { awardPointsForOrder } from '@/lib/loyalty';
 
 /**
  * Order creation — fully atomic.
@@ -168,12 +169,22 @@ export async function POST(req: Request) {
         },
       });
 
-      // 4. Update customer totalSpent
+      // 4. Update customer totalSpent + award loyalty points (auto-tier)
       if (me?.id) {
         await tx.customer.update({
           where: { id: me.id },
           data: { totalSpent: { increment: total } },
         });
+        try {
+          await awardPointsForOrder({
+            customerId: me.id,
+            amount: total,
+            currency: cur,
+            tx,
+          });
+        } catch (e) {
+          console.error('loyalty award failed:', e);
+        }
       }
 
       return created;

@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Save, Plus } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export function SettingsEditor({ items }: { items: any[] }) {
   const groups = items.reduce<Record<string, any[]>>((acc, x) => {
@@ -22,6 +23,7 @@ export function SettingsEditor({ items }: { items: any[] }) {
 
 function NewSetting() {
   const router = useRouter();
+  const t = useTranslations('admin.settings');
   const [d, setD] = useState({ key: '', value: '', group: 'general' });
   const add = async () => {
     if (!d.key) return;
@@ -30,9 +32,9 @@ function NewSetting() {
   };
   return (
     <div className="glass p-4 grid grid-cols-12 gap-2">
-      <input placeholder="key" className="input col-span-4" value={d.key} onChange={(e) => setD({ ...d, key: e.target.value })} />
-      <input placeholder="group" className="input col-span-2" value={d.group} onChange={(e) => setD({ ...d, group: e.target.value })} />
-      <input placeholder="value" className="input col-span-5" value={d.value} onChange={(e) => setD({ ...d, value: e.target.value })} />
+      <input placeholder={t('key')} className="input col-span-4" value={d.key} onChange={(e) => setD({ ...d, key: e.target.value })} />
+      <input placeholder={t('group')} className="input col-span-2" value={d.group} onChange={(e) => setD({ ...d, group: e.target.value })} />
+      <input placeholder={t('value')} className="input col-span-5" value={d.value} onChange={(e) => setD({ ...d, value: e.target.value })} />
       <button onClick={add} className="btn-primary col-span-1"><Plus className="w-4 h-4" /></button>
     </div>
   );

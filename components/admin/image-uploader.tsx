@@ -1,8 +1,10 @@
 'use client';
 import { useState, useRef } from 'react';
-import { Upload, X, Loader2 } from 'lucide-react';
+import { Upload, Loader2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export function ImageUploader({ onUpload }: { onUpload: (urls: string[]) => void }) {
+  const t = useTranslations('admin.imageUploader');
   const [drag, setDrag] = useState(false);
   const [busy, setBusy] = useState(false);
   const ref = useRef<HTMLInputElement>(null);
@@ -33,12 +35,12 @@ export function ImageUploader({ onUpload }: { onUpload: (urls: string[]) => void
       {busy ? (
         <div className="flex flex-col items-center gap-2 text-muted">
           <Loader2 className="w-6 h-6 animate-spin" />
-          <p className="text-xs tracking-cinematic">UPLOADING...</p>
+          <p className="text-xs tracking-cinematic">{t('uploading')}</p>
         </div>
       ) : (
         <div className="flex flex-col items-center gap-2 text-muted">
           <Upload className="w-6 h-6" />
-          <p className="text-xs tracking-cinematic">DROP FILES OR CLICK</p>
+          <p className="text-xs tracking-cinematic">{t('dropOrClick')}</p>
         </div>
       )}
     </div>

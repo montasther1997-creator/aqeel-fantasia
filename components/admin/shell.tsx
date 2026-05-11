@@ -32,9 +32,9 @@ export function AdminShell({ children, locale, admin }: { children: React.ReactN
     ]},
     { group: t('groups.community'), items: [
       { href: '/cult', label: t('nav.cult'), icon: Crown },
-      { href: '/bespoke', label: 'Bespoke', icon: Mail },
-      { href: '/made-for-one', label: 'Made for One', icon: Crown },
-      { href: '/notes', label: 'Atelier Notes', icon: FileText },
+      { href: '/bespoke', label: t('nav.bespoke'), icon: Mail },
+      { href: '/made-for-one', label: t('nav.madeForOne'), icon: Crown },
+      { href: '/notes', label: t('nav.notes'), icon: FileText },
       { href: '/newsletter', label: t('nav.newsletter'), icon: Mail },
     ]},
     { group: t('groups.content'), items: [
@@ -65,7 +65,7 @@ export function AdminShell({ children, locale, admin }: { children: React.ReactN
         <nav className="flex-1 overflow-y-auto p-3">
           {NAV.map((g) => (
             <div key={g.group} className="mb-4">
-              <p className="text-[9px] tracking-cinematic text-muted px-3 mb-2">{g.group}</p>
+              <p className="text-[10px] tracking-cinematic text-fg-secondary px-3 mb-2 font-medium">{g.group}</p>
               {g.items.map((item) => {
                 const Icon = item.icon;
                 const href = `${base}${item.href}`;
@@ -74,8 +74,8 @@ export function AdminShell({ children, locale, admin }: { children: React.ReactN
                   <Link key={href} href={href} prefetch={false}
                     className={`relative flex items-center gap-3 px-3 py-2 text-sm transition-all cursor-pointer rounded-sm ${
                       active
-                        ? `bg-frost/10 text-frost ${isAr ? 'border-r-2' : 'border-l-2'} border-electric`
-                        : 'text-muted hover:text-frost hover:bg-white/[0.06]'
+                        ? `bg-white/10 text-frost ${isAr ? 'border-r-2' : 'border-l-2'} border-electric`
+                        : 'text-fg-secondary hover:text-frost hover:bg-white/[0.06]'
                     }`}>
                     <Icon className="w-4 h-4 shrink-0" />
                     <span className="truncate">{item.label}</span>

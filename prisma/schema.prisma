@@ -68,12 +68,13 @@ model Customer {
   inseam           Int?
   onboarded        Boolean   @default(false)
 
-  addresses   Address[]
-  orders      Order[]
-  wishlist    WishlistItem[]
-  cultMember  CultMember?
-  bespokes    BespokeRequest[]
-  madeForOne  MadeForOne[]
+  addresses     Address[]
+  orders        Order[]
+  wishlist      WishlistItem[]
+  cultMember    CultMember?
+  bespokes      BespokeRequest[]
+  madeForOne    MadeForOne[]
+  tierHistory   TierHistory[]
   @@schema("fantasia")
 }
 
@@ -270,20 +271,26 @@ model OrderItem {
 
 // ==================== CULT ====================
 model CultTier {
-  id        String   @id @default(cuid())
-  slug      String   @unique
-  nameAr    String
-  nameEn    String
-  descAr    String?
-  descEn    String?
-  priceIQD  Int
-  priceUSD  Float
-  perks     String
-  color     String?
-  order     Int      @default(0)
-  active    Boolean  @default(true)
-  members   CultMember[]
-  createdAt DateTime @default(now())
+  id              String   @id @default(cuid())
+  slug            String   @unique
+  nameAr          String
+  nameEn          String
+  descAr          String?
+  descEn          String?
+  priceIQD        Int      @default(0)
+  priceUSD        Float    @default(0)
+  pointsThreshold Int      @default(0)
+  multiplier      Float    @default(1.0)
+  perks           String   @default("[]")
+  freeShipping    Boolean  @default(false)
+  discountPct     Int      @default(0)
+  earlyAccess     Boolean  @default(false)
+  color           String?
+  order           Int      @default(0)
+  active          Boolean  @default(true)
+  members         CultMember[]
+  histories       TierHistory[]
+  createdAt       DateTime @default(now())
   @@schema("fantasia")
 }
 
@@ -296,6 +303,21 @@ model CultMember {
   startedAt  DateTime @default(now())
   expiresAt  DateTime?
   active     Boolean  @default(true)
+  @@schema("fantasia")
+}
+
+model TierHistory {
+  id          String   @id @default(cuid())
+  customerId  String
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  tierId      String?
+  tier        CultTier? @relation(fields: [tierId], references: [id], onDelete: SetNull)
+  previousTier String?
+  reason      String   @default("auto")
+  pointsAtChange Int   @default(0)
+  adminId     String?
+  createdAt   DateTime @default(now())
+  @@index([customerId, createdAt])
   @@schema("fantasia")
 }
 

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { requireAdmin } from '@/lib/admin-guard';
 import { prisma } from '@/lib/db';
+import { getTranslations } from 'next-intl/server';
 
 const PAGE_SIZE = 50;
 
@@ -14,6 +15,7 @@ export default async function ActivityAdmin({
   const { locale } = await params;
   const sp = await searchParams;
   await requireAdmin(locale);
+  const t = await getTranslations('admin.activity');
 
   const page = Math.max(1, parseInt(sp.page || '1', 10) || 1);
   const where: any = {};
@@ -47,38 +49,38 @@ export default async function ActivityAdmin({
 
   return (
     <div>
-      <p className="text-xs tracking-cinematic text-muted">— SYSTEM</p>
-      <h1 className="h-display text-4xl mt-2 mb-6">Activity Log ({total})</h1>
+      <p className="text-xs tracking-cinematic text-muted">— {t('eyebrow')}</p>
+      <h1 className="h-display text-4xl mt-2 mb-6">{t('count', { count: total })}</h1>
 
       <form className="glass p-4 mb-6 flex flex-wrap items-end gap-3">
         <div>
-          <label className="text-xs text-muted tracking-cinematic uppercase block mb-1">Action</label>
+          <label className="text-xs text-muted tracking-cinematic uppercase block mb-1">{t('filters.action')}</label>
           <select name="action" defaultValue={sp.action || ''} className="input">
-            <option value="">All</option>
+            <option value="">{t('all')}</option>
             {actions.map((a) => a.action && <option key={a.action} value={a.action}>{a.action}</option>)}
           </select>
         </div>
         <div>
-          <label className="text-xs text-muted tracking-cinematic uppercase block mb-1">Entity</label>
+          <label className="text-xs text-muted tracking-cinematic uppercase block mb-1">{t('filters.entity')}</label>
           <select name="entity" defaultValue={sp.entity || ''} className="input">
-            <option value="">All</option>
+            <option value="">{t('all')}</option>
             {entities.map((e) => e.entity && <option key={e.entity} value={e.entity}>{e.entity}</option>)}
           </select>
         </div>
         <div>
-          <label className="text-xs text-muted tracking-cinematic uppercase block mb-1">Admin</label>
+          <label className="text-xs text-muted tracking-cinematic uppercase block mb-1">{t('filters.admin')}</label>
           <select name="admin" defaultValue={sp.admin || ''} className="input">
-            <option value="">All</option>
+            <option value="">{t('all')}</option>
             {admins.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
           </select>
         </div>
-        <button className="btn-primary">Filter</button>
-        <Link href={`/${locale}/admin/activity`} className="btn-ghost">Reset</Link>
+        <button className="btn-primary">{t('filter')}</button>
+        <Link href={`/${locale}/admin/activity`} className="btn-ghost">{t('reset')}</Link>
       </form>
 
       <div className="glass">
         {logs.length === 0 ? (
-          <p className="p-6 text-muted text-sm">No activity matches.</p>
+          <p className="p-6 text-muted text-sm">{t('empty')}</p>
         ) : logs.map((l) => (
           <div key={l.id} className="border-b border-line/40 p-3 grid grid-cols-12 gap-3 text-sm">
             <span className="col-span-2 font-mono text-xs text-muted">{l.createdAt.toLocaleString()}</span>
@@ -92,10 +94,10 @@ export default async function ActivityAdmin({
 
       {totalPages > 1 && (
         <div className="flex items-center justify-between mt-6 text-xs">
-          <span className="text-muted">Page {page} of {totalPages}</span>
+          <span className="text-muted">{t('pageOf', { page, total: totalPages })}</span>
           <div className="flex gap-2">
-            {page > 1 && <Link href={qs({ page: page - 1 })} className="btn-ghost">Prev</Link>}
-            {page < totalPages && <Link href={qs({ page: page + 1 })} className="btn-ghost">Next</Link>}
+            {page > 1 && <Link href={qs({ page: page - 1 })} className="btn-ghost">{t('prev')}</Link>}
+            {page < totalPages && <Link href={qs({ page: page + 1 })} className="btn-ghost">{t('next')}</Link>}
           </div>
         </div>
       )}

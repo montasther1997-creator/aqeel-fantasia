@@ -2,20 +2,23 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from '@/components/ui/toast';
+import { useTranslations } from 'next-intl';
 
-type Field = { key: string; label: string; type?: 'text' | 'textarea' | 'url' | 'color' };
+type Field = { key: string; labelKey: string; type?: 'text' | 'textarea' | 'url' | 'color' };
 
 const FIELDS: Field[] = [
-  { key: 'appearance.heroVideoUrl', label: 'Hero Video URL', type: 'url' },
-  { key: 'appearance.logoUrl', label: 'Logo URL', type: 'url' },
-  { key: 'appearance.faviconUrl', label: 'Favicon URL', type: 'url' },
-  { key: 'appearance.brandTagline', label: 'Brand Tagline' },
-  { key: 'appearance.brandTaglineAr', label: 'Brand Tagline (Arabic)' },
-  { key: 'appearance.primaryAccent', label: 'Primary Accent', type: 'color' },
-  { key: 'appearance.heroOverlayOpacity', label: 'Hero Overlay Opacity (0–1)' },
+  { key: 'appearance.heroVideoUrl', labelKey: 'heroVideoUrl', type: 'url' },
+  { key: 'appearance.logoUrl', labelKey: 'logoUrl', type: 'url' },
+  { key: 'appearance.faviconUrl', labelKey: 'faviconUrl', type: 'url' },
+  { key: 'appearance.brandTagline', labelKey: 'brandTagline' },
+  { key: 'appearance.brandTaglineAr', labelKey: 'brandTaglineAr' },
+  { key: 'appearance.primaryAccent', labelKey: 'primaryAccent', type: 'color' },
+  { key: 'appearance.heroOverlayOpacity', labelKey: 'heroOverlayOpacity' },
 ];
 
 export function AppearanceForm({ initial }: { initial: Record<string, string> }) {
+  const t = useTranslations('admin.appearance');
+  const tc = useTranslations('admin');
   const [values, setValues] = useState<Record<string, string>>(initial);
   const [savingKey, setSavingKey] = useState<string | null>(null);
   const [, startTransition] = useTransition();
@@ -29,11 +32,11 @@ export function AppearanceForm({ initial }: { initial: Record<string, string> })
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ key, value: values[key] || '', group: 'appearance' }),
       });
-      if (!res.ok) { toast('error', 'Save failed'); return; }
-      toast('success', 'Saved');
+      if (!res.ok) { toast('error', tc('common.saveFailed')); return; }
+      toast('success', tc('common.saved'));
       startTransition(() => router.refresh());
     } catch {
-      toast('error', 'Save failed');
+      toast('error', tc('common.saveFailed'));
     } finally {
       setSavingKey(null);
     }
@@ -43,7 +46,7 @@ export function AppearanceForm({ initial }: { initial: Record<string, string> })
     <div className="glass p-6 space-y-5">
       {FIELDS.map((f) => (
         <div key={f.key} className="grid lg:grid-cols-[1fr_2fr_auto] gap-3 items-center">
-          <label className="text-xs tracking-cinematic text-muted uppercase">{f.label}</label>
+          <label className="text-xs tracking-cinematic text-muted uppercase">{t(`fields.${f.labelKey}` as any)}</label>
           {f.type === 'textarea' ? (
             <textarea
               className="input"
@@ -79,7 +82,7 @@ export function AppearanceForm({ initial }: { initial: Record<string, string> })
             disabled={savingKey === f.key}
             className="btn-primary disabled:opacity-50"
           >
-            {savingKey === f.key ? 'Saving…' : 'Save'}
+            {savingKey === f.key ? t('saving') : t('save')}
           </button>
         </div>
       ))}

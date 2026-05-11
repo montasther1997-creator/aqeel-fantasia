@@ -1,10 +1,12 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, Trash2, Save } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export function ArchiveManager({ initial }: { initial: any[] }) {
   const router = useRouter();
+  const t = useTranslations('admin.archive');
   const [d, setD] = useState({ titleEn: '', titleAr: '', type: 'photo', cover: '' });
   const add = async () => {
     if (!d.titleEn || !d.cover) return;
@@ -14,12 +16,12 @@ export function ArchiveManager({ initial }: { initial: any[] }) {
   return (
     <div className="space-y-4">
       <div className="glass p-4 grid grid-cols-12 gap-2">
-        <input placeholder="Title EN" className="input col-span-3" value={d.titleEn} onChange={(e) => setD({ ...d, titleEn: e.target.value })} />
-        <input placeholder="Title AR" className="input col-span-3" value={d.titleAr} onChange={(e) => setD({ ...d, titleAr: e.target.value })} />
+        <input placeholder={t('titleEn')} className="input col-span-3" value={d.titleEn} onChange={(e) => setD({ ...d, titleEn: e.target.value })} />
+        <input placeholder={t('titleAr')} className="input col-span-3" value={d.titleAr} onChange={(e) => setD({ ...d, titleAr: e.target.value })} />
         <select className="input col-span-2" value={d.type} onChange={(e) => setD({ ...d, type: e.target.value })}>
           {['photo', 'reel', 'edit', 'campaign'].map((x) => <option key={x}>{x}</option>)}
         </select>
-        <input placeholder="cover URL" className="input col-span-3" value={d.cover} onChange={(e) => setD({ ...d, cover: e.target.value })} />
+        <input placeholder={t('coverUrl')} className="input col-span-3" value={d.cover} onChange={(e) => setD({ ...d, cover: e.target.value })} />
         <button onClick={add} className="btn-primary col-span-1"><Plus className="w-4 h-4" /></button>
       </div>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -31,7 +33,9 @@ export function ArchiveManager({ initial }: { initial: any[] }) {
 
 function Card({ it }: any) {
   const router = useRouter();
-  const del = async () => { if (!confirm('Delete?')) return; await fetch(`/api/admin/archive/${it.id}`, { method: 'DELETE' }); router.refresh(); };
+  const t = useTranslations('admin.archive');
+  const tc = useTranslations('admin.common');
+  const del = async () => { if (!confirm(tc('confirmDelete'))) return; await fetch(`/api/admin/archive/${it.id}`, { method: 'DELETE' }); router.refresh(); };
   return (
     <div className="glass overflow-hidden">
       <div className="aspect-square bg-bg-secondary"><img src={it.cover} className="w-full h-full object-cover" /></div>
@@ -39,7 +43,7 @@ function Card({ it }: any) {
         <p className="text-[10px] uppercase text-electric tracking-cinematic">{it.type}</p>
         <p className="text-sm">{it.titleEn}</p>
         <p className="text-xs text-muted">{it.titleAr}</p>
-        <button onClick={del} className="mt-2 text-blood text-xs flex items-center gap-1"><Trash2 className="w-3 h-3" /> Delete</button>
+        <button onClick={del} className="mt-2 text-blood text-xs flex items-center gap-1"><Trash2 className="w-3 h-3" /> {t('delete')}</button>
       </div>
     </div>
   );

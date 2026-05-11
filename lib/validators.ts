@@ -172,12 +172,22 @@ export const CultTierSchema = z.object({
   nameEn: z.string().trim().min(1).max(200),
   descAr: z.string().max(2000).optional().nullable(),
   descEn: z.string().max(2000).optional().nullable(),
-  priceIQD: z.coerce.number().int().min(0).max(1_000_000_000),
-  priceUSD: z.coerce.number().min(0).max(1_000_000),
+  priceIQD: z.coerce.number().int().min(0).max(1_000_000_000).optional(),
+  priceUSD: z.coerce.number().min(0).max(1_000_000).optional(),
+  pointsThreshold: z.coerce.number().int().min(0).max(10_000_000).optional(),
+  multiplier: z.coerce.number().min(0).max(100).optional(),
+  freeShipping: z.boolean().optional(),
+  discountPct: z.coerce.number().int().min(0).max(100).optional(),
+  earlyAccess: z.boolean().optional(),
   perks: z.string().max(10000).optional(),
   color: z.string().max(50).optional().nullable(),
   order: z.coerce.number().int().min(0).max(10000).optional(),
   active: z.boolean().optional(),
+});
+
+export const ManualTierSchema = z.object({
+  tierId: z.string().nullable(),
+  reason: z.string().max(500).optional(),
 });
 export const NoteSchema = z.object({
   number: z.coerce.number().int().min(1).max(99999),

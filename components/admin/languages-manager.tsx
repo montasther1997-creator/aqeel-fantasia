@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Star, Globe2, Power } from 'lucide-react';
 import { toast } from '@/components/ui/toast';
+import { useTranslations } from 'next-intl';
 
 const LANGS = [
   { code: 'ar', name: 'Arabic', native: 'العربية', flag: '🇮🇶', dir: 'RTL' },
@@ -11,6 +12,7 @@ const LANGS = [
 
 export function LanguagesManager({ initial }: { initial: { defaultLang: string; arActive: boolean; enActive: boolean } }) {
   const router = useRouter();
+  const t = useTranslations('admin.languages');
   const [defaultLang, setDefaultLang] = useState(initial.defaultLang);
   const [active, setActive] = useState<Record<string, boolean>>({ ar: initial.arActive, en: initial.enActive });
   const [busy, setBusy] = useState<string | null>(null);
@@ -24,16 +26,16 @@ export function LanguagesManager({ initial }: { initial: { defaultLang: string; 
     setBusy(null);
     if (res.ok) {
       setDefaultLang(code);
-      toast('success', `${code.toUpperCase()} set as default`);
+      toast('success', t('setAsDefault', { code: code.toUpperCase() }));
       router.refresh();
     } else {
-      toast('error', 'Failed to update');
+      toast('error', t('failedToUpdate'));
     }
   };
 
   const toggleActive = async (code: string) => {
     if (code === defaultLang && active[code]) {
-      toast('error', 'Cannot disable the default language');
+      toast('error', t('cannotDisableDefault'));
       return;
     }
     setBusy(code);
@@ -45,17 +47,17 @@ export function LanguagesManager({ initial }: { initial: { defaultLang: string; 
     setBusy(null);
     if (res.ok) {
       setActive({ ...active, [code]: newActive });
-      toast('success', `${code.toUpperCase()} ${newActive ? 'enabled' : 'disabled'}`);
+      toast('success', newActive ? t('languageEnabled', { code: code.toUpperCase() }) : t('languageDisabled', { code: code.toUpperCase() }));
       router.refresh();
     } else {
-      toast('error', 'Failed to update');
+      toast('error', t('failedToUpdate'));
     }
   };
 
   return (
     <div className="glass p-6">
       <h3 className="text-xs tracking-cinematic text-muted mb-4 flex items-center gap-2">
-        <Globe2 className="w-3 h-3" /> AVAILABLE LANGUAGES
+        <Globe2 className="w-3 h-3" /> {t('availableLanguages')}
       </h3>
       <div className="space-y-3">
         {LANGS.map((l) => {
@@ -75,7 +77,7 @@ export function LanguagesManager({ initial }: { initial: { defaultLang: string; 
                 <div className="flex items-center gap-2">
                   {isDefault ? (
                     <span className="inline-flex items-center gap-1 text-[10px] tracking-cinematic text-electric border border-electric/40 px-3 py-1.5">
-                      <Star className="w-3 h-3 fill-electric" /> DEFAULT
+                      <Star className="w-3 h-3 fill-electric" /> {t('default')}
                     </span>
                   ) : (
                     <button
@@ -83,7 +85,7 @@ export function LanguagesManager({ initial }: { initial: { defaultLang: string; 
                       onClick={() => setDefault(l.code)}
                       className="text-[10px] tracking-cinematic text-muted hover:text-electric border border-line hover:border-electric px-3 py-1.5 transition-colors"
                     >
-                      <Star className="w-3 h-3 inline mr-1" /> SET DEFAULT
+                      <Star className="w-3 h-3 inline mr-1" /> {t('setDefault')}
                     </button>
                   )}
 
@@ -96,7 +98,7 @@ export function LanguagesManager({ initial }: { initial: { defaultLang: string; 
                         : 'border-line text-muted hover:border-frost hover:text-frost'
                     }`}
                   >
-                    <Power className="w-3 h-3 inline mr-1" /> {isActive ? 'ACTIVE' : 'DISABLED'}
+                    <Power className="w-3 h-3 inline mr-1" /> {isActive ? t('active') : t('disabled')}
                   </button>
 
                   <a
@@ -105,7 +107,7 @@ export function LanguagesManager({ initial }: { initial: { defaultLang: string; 
                     rel="noopener"
                     className="text-[10px] tracking-cinematic text-muted hover:text-frost border border-line hover:border-frost px-3 py-1.5 transition-colors"
                   >
-                    PREVIEW →
+                    {t('preview')}
                   </a>
                 </div>
               </div>
@@ -115,8 +117,7 @@ export function LanguagesManager({ initial }: { initial: { defaultLang: string; 
       </div>
 
       <p className="mt-6 text-xs text-muted">
-        💡 Languages affect what users see at <code className="text-electric">/ar</code> and <code className="text-electric">/en</code>.
-        The default language is what visitors land on first.
+        {t('languagesHint')}
       </p>
     </div>
   );

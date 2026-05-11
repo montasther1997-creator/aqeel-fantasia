@@ -258,6 +258,561 @@
       "lowStock": "مخزون منخفض",
       "allGood": "كل شيء على ما يرام",
       "left": "متبقية"
+    },
+    "common": {
+      "all": "الكل",
+      "apply": "تطبيق",
+      "reset": "إعادة تعيين",
+      "filter": "تصفية",
+      "search": "بحث",
+      "new": "جديد",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "view": "عرض",
+      "save": "حفظ",
+      "saving": "يحفظ…",
+      "saved": "محفوظ",
+      "loading": "تحميل…",
+      "exportCsv": "تصدير CSV",
+      "prev": "السابق",
+      "next": "التالي",
+      "pageOf": "صفحة {page} من {total}",
+      "active": "مفعّل",
+      "inactive": "غير مفعّل",
+      "enabled": "مُفعَّل",
+      "disabled": "موقوف",
+      "hidden": "مخفي",
+      "yes": "نعم",
+      "no": "لا",
+      "create": "إنشاء",
+      "update": "تحديث",
+      "updateFailed": "فشل التحديث",
+      "deleteFailed": "فشل الحذف",
+      "saveFailed": "فشل الحفظ",
+      "deleted": "تم الحذف",
+      "statusUpdated": "تم تحديث الحالة",
+      "activated": "تم التفعيل",
+      "deactivated": "تم التعطيل",
+      "confirmDelete": "تأكيد الحذف؟",
+      "on": "تشغيل",
+      "off": "إيقاف",
+      "add": "إضافة",
+      "created": "تم الإنشاء",
+      "createFailed": "فشل الإنشاء"
+    },
+    "products": {
+      "eyebrow": "الكتالوج",
+      "title": "المنتجات",
+      "count": "المنتجات ({count})",
+      "new": "منتج جديد",
+      "searchPlaceholder": "ابحث عن المنتجات...",
+      "search": "بحث",
+      "active": "مفعّل",
+      "hidden": "مخفي",
+      "th": {
+        "image": "الصورة",
+        "name": "الاسم",
+        "sku": "الرمز",
+        "category": "الفئة",
+        "priceIQD": "السعر (د.ع)",
+        "stock": "المخزون",
+        "status": "الحالة"
+      }
+    },
+    "productEdit": {
+      "eyebrow": "تعديل · {sku}"
+    },
+    "productNew": {
+      "eyebrow": "جديد",
+      "title": "إنشاء منتج"
+    },
+    "productForm": {
+      "details": "التفاصيل",
+      "pricing": "التسعير",
+      "images": "الصور",
+      "variants": "الخيارات",
+      "organize": "التنظيم",
+      "status": "الحالة",
+      "nameEn": "الاسم (إنجليزي)",
+      "nameAr": "الاسم (عربي)",
+      "taglineEn": "الشعار (إنجليزي)",
+      "taglineAr": "الشعار (عربي)",
+      "slug": "المعرّف",
+      "sku": "الرمز",
+      "descEn": "الوصف (إنجليزي)",
+      "descAr": "الوصف (عربي)",
+      "priceIQD": "السعر (د.ع)",
+      "priceUSD": "السعر ($)",
+      "compareIQD": "سعر المقارنة (د.ع)",
+      "compareUSD": "سعر المقارنة ($)",
+      "stock": "المخزون",
+      "category": "الفئة",
+      "collection": "المجموعة",
+      "addImageUrl": "أو ألصق رابط صورة",
+      "addVariant": "إضافة خيار",
+      "size": "المقاس",
+      "color": "اللون",
+      "active": "مفعّل",
+      "featured": "مميّز",
+      "isNew": "جديد",
+      "isLimited": "محدود",
+      "save": "حفظ",
+      "create": "إنشاء",
+      "delete": "حذف",
+      "confirmDelete": "حذف هذا المنتج؟"
+    },
+    "orders": {
+      "eyebrow": "المبيعات",
+      "title": "الطلبات",
+      "count": "الطلبات ({count})",
+      "filterAll": "الكل",
+      "view": "عرض",
+      "th": {
+        "order": "الطلب",
+        "customer": "العميل",
+        "items": "القطع",
+        "total": "الإجمالي",
+        "status": "الحالة",
+        "date": "التاريخ"
+      }
+    },
+    "orderDetail": {
+      "eyebrow": "طلب · {number}",
+      "sections": {
+        "items": "القطع",
+        "customer": "العميل",
+        "shipping": "الشحن",
+        "totals": "المجاميع",
+        "update": "تحديث الحالة"
+      },
+      "labels": {
+        "subtotal": "المجموع الفرعي",
+        "shipping": "الشحن",
+        "discount": "الخصم",
+        "total": "الإجمالي",
+        "trackingNumber": "رقم التتبع",
+        "tracking": "التتبع",
+        "payment": "الدفع",
+        "status": "الحالة"
+      },
+      "buttons": {
+        "update": "تحديث"
+      }
+    },
+    "customers": {
+      "eyebrow": "المبيعات",
+      "title": "العملاء",
+      "count": "العملاء ({count})",
+      "searchPlaceholder": "ابحث بالاسم، الهاتف، أو البريد...",
+      "view": "عرض",
+      "th": {
+        "name": "الاسم",
+        "phone": "الهاتف",
+        "email": "البريد",
+        "vip": "VIP",
+        "orders": "الطلبات",
+        "spent": "المصروف",
+        "joined": "تاريخ الانضمام"
+      },
+      "blocked": "محظور"
+    },
+    "customerDetail": {
+      "eyebrow": "عميل",
+      "stats": {
+        "orders": "الطلبات",
+        "spent": "المصروف",
+        "loyalty": "الولاء"
+      },
+      "sections": {
+        "orders": "الطلبات"
+      }
+    },
+    "tierChanger": {
+      "title": "تغيير مستوى النادي",
+      "newTier": "المستوى الجديد",
+      "none": "بلا مستوى",
+      "reason": "السبب",
+      "reasonPlaceholder": "ترقية يدوية، تخفيض، تعويض…",
+      "apply": "تطبيق التغيير",
+      "updated": "تم تحديث المستوى",
+      "showHistory": "عرض السجل",
+      "hideHistory": "إخفاء السجل",
+      "historyHeading": "سجل التغييرات",
+      "noHistory": "لا توجد تغييرات سابقة.",
+      "points": "نقطة"
+    },
+    "customerActions": {
+      "vipTier": "فئة VIP",
+      "blocked": "محظور",
+      "notes": "ملاحظات",
+      "save": "حفظ",
+      "yes": "نعم",
+      "no": "لا"
+    },
+    "orderActions": {
+      "status": "الحالة",
+      "payment": "الدفع",
+      "tracking": "التتبع",
+      "update": "تحديث"
+    },
+    "reports": {
+      "eyebrow": "نظرة عامة",
+      "title": "التقارير",
+      "from": "من",
+      "to": "إلى",
+      "range": "النطاق",
+      "orders": "طلبات",
+      "apply": "تطبيق",
+      "exportCsv": "تصدير CSV",
+      "last7d": "آخر 7 أيام",
+      "last30d": "آخر 30 يومًا",
+      "allTime": "كل الفترة",
+      "bestSellers": "الأكثر مبيعًا (النطاق)",
+      "noBestSellers": "لا توجد مبيعات في النطاق.",
+      "sold": "مبيع",
+      "topCustomers": "أعلى العملاء (كل الفترة)",
+      "noTopCustomers": "لا يوجد عملاء بعد.",
+      "ordersByStatus": "الطلبات حسب الحالة (النطاق)"
+    },
+    "bespoke": {
+      "eyebrow": "الدار",
+      "title": "طلبات التفصيل",
+      "count": "طلبات التفصيل ({count})",
+      "empty": "لا توجد طلبات تفصيل بعد.",
+      "deleteConfirm": "حذف طلب التفصيل لـ {name}؟",
+      "labels": {
+        "occasion": "المناسبة",
+        "date": "التاريخ",
+        "fit": "القَصّة",
+        "fabric": "القماش",
+        "budget": "الميزانية",
+        "city": "المدينة",
+        "contactVia": "وسيلة التواصل",
+        "notes": "ملاحظات"
+      }
+    },
+    "madeForOne": {
+      "eyebrow": "الدار",
+      "title": "صُنعت لشخص واحد",
+      "description": "احجز قطعة فريدة لعميل بعينه. بعد التخصيص، تبقى القطعة مرئية للعامة لكنها تُعرض كأنها «صُنعت لشخص واحد» مع اسم العميل.",
+      "reserveTitle": "احجز قطعة",
+      "selectProduct": "— اختر القطعة —",
+      "selectCustomer": "— اختر العميل (أو اتركه فارغًا) —",
+      "unassigned": "— غير مُسنَد —",
+      "editionPlaceholder": "إصدار (مثال: ٠٤٢/١٠٠)",
+      "edition": "إصدار",
+      "personalNotePlaceholder": "ملاحظة شخصية من عقيل (اختياري)...",
+      "reserve": "احجز",
+      "empty": "لا توجد حجوزات بعد.",
+      "confirmRemove": "حذف الحجز؟",
+      "status": {
+        "available": "متاح",
+        "reserved": "محجوز",
+        "claimed": "مُسلَّم"
+      }
+    },
+    "notes": {
+      "eyebrow": "افتتاحية",
+      "title": "ملاحظات الدار",
+      "newNote": "ملاحظة جديدة",
+      "number": "الرقم",
+      "signature": "التوقيع",
+      "signaturePlaceholder": "التوقيع",
+      "linkedProduct": "— منتج مرتبط (اختياري) —",
+      "textArPlaceholder": "نص ع: «...»",
+      "textEnPlaceholder": "النص الإنجليزي: \"...\"",
+      "addNote": "إضافة ملاحظة",
+      "delete": "حذف"
+    },
+    "cult": {
+      "eyebrow": "المجتمع",
+      "title": "النادي الحصري",
+      "intro": "اضبط مستويات النادي والنقاط والمزايا. يترقّى العملاء تلقائيًا عند بلوغ عتبة كل مستوى.",
+      "addTier": "إضافة مستوى",
+      "emptyTiers": "لا توجد مستويات بعد. أضف أول مستوى.",
+      "confirmDelete": "حذف هذا المستوى؟ سيؤثر على الأعضاء الحاليين.",
+      "membersHeading": "الأعضاء",
+      "noMembers": "لا يوجد أعضاء بعد.",
+      "points": "نقطة",
+      "sections": {
+        "scoring": "النقاط والمضاعف",
+        "perks": "المزايا"
+      },
+      "fields": {
+        "nameAr": "الاسم (عربي)",
+        "nameEn": "الاسم (إنجليزي)",
+        "slug": "المعرّف",
+        "slugHint": "بالأحرف الإنجليزية والشرطة فقط",
+        "color": "اللون",
+        "pointsThreshold": "عتبة النقاط",
+        "pointsThresholdHint": "الحد الأدنى للنقاط للوصول إلى هذا المستوى",
+        "multiplier": "مضاعف الكسب",
+        "multiplierHint": "1 = عادي، 1.5 = +50%، 2 = ضعف النقاط",
+        "freeShipping": "شحن مجاني",
+        "earlyAccess": "وصول مبكر",
+        "discountPct": "نسبة الخصم",
+        "customPerks": "مزايا إضافية مخصّصة",
+        "customPerksPlaceholder": "مثال: دعوة لفعالية خاصة، اضغط Enter للإضافة"
+      },
+      "slug": "المعرّف",
+      "nameEn": "الاسم (إنجليزي)",
+      "nameAr": "الاسم (عربي)",
+      "priceIQD": "د.ع",
+      "priceUSD": "$",
+      "perks": "المزايا (مفصولة بفاصلة)",
+      "members": "الأعضاء ({count})"
+    },
+    "newsletter": {
+      "eyebrow": "النشرة",
+      "title": "المشتركون",
+      "count": "النشرة ({count})",
+      "exportCsv": "تصدير CSV",
+      "confirmDelete": "حذف المشترك؟",
+      "active": "✓ مفعّل",
+      "inactive": "— غير مفعّل",
+      "th": {
+        "contact": "جهة الاتصال",
+        "type": "النوع",
+        "status": "الحالة",
+        "joined": "تاريخ الانضمام"
+      }
+    },
+    "categories": {
+      "eyebrow": "الكتالوج",
+      "title": "الفئات",
+      "slug": "المعرّف",
+      "nameEn": "الاسم (إنجليزي)",
+      "nameAr": "الاسم (عربي)"
+    },
+    "collections": {
+      "eyebrow": "الكتالوج",
+      "title": "المجموعات",
+      "slug": "المعرّف",
+      "nameEn": "الاسم (إنجليزي)",
+      "nameAr": "الاسم (عربي)",
+      "productsCount": "{count} منتج"
+    },
+    "discounts": {
+      "eyebrow": "المبيعات",
+      "title": "الخصومات",
+      "code": "الرمز",
+      "type": "النوع",
+      "value": "القيمة",
+      "percent": "نسبة %",
+      "fixed": "ثابت"
+    },
+    "content": {
+      "eyebrow": "إدارة المحتوى",
+      "title": "محتوى الموقع",
+      "keyPlaceholder": "المفتاح (مثال: gate.title)",
+      "groupPlaceholder": "المجموعة",
+      "valueEnPlaceholder": "القيمة (إنجليزي)",
+      "valueArPlaceholder": "القيمة (عربي)"
+    },
+    "archive": {
+      "eyebrow": "المحتوى",
+      "title": "الأرشيف",
+      "titleEn": "العنوان (إنجليزي)",
+      "titleAr": "العنوان (عربي)",
+      "coverUrl": "رابط الغلاف",
+      "type": "النوع",
+      "delete": "حذف"
+    },
+    "media": {
+      "eyebrow": "المحتوى",
+      "title": "مكتبة الوسائط",
+      "count": "مكتبة الوسائط ({count})",
+      "copied": "تم النسخ",
+      "copyUrl": "نسخ الرابط",
+      "delete": "حذف",
+      "empty": "لا توجد وسائط بعد. أسقط الملفات أعلاه للرفع."
+    },
+    "imageUploader": {
+      "uploading": "جارٍ الرفع...",
+      "dropOrClick": "أسقط الملفات أو اضغط"
+    },
+    "appearance": {
+      "eyebrow": "المحتوى",
+      "title": "المظهر",
+      "subtitle": "هوية الدار — الفيديو، الشعار، الألوان، الشعار النصي.",
+      "palette": "لوحة الألوان (مرجع)",
+      "typography": "الخطوط",
+      "displayFont": "العنوان · فرونسس",
+      "bodyFont": "النص · إنتر",
+      "arabicFont": "عربي · IBM Plex / أميري",
+      "fields": {
+        "heroVideoUrl": "رابط فيديو الواجهة",
+        "logoUrl": "رابط الشعار",
+        "faviconUrl": "رابط أيقونة الموقع",
+        "brandTagline": "شعار الدار النصي",
+        "brandTaglineAr": "شعار الدار النصي (عربي)",
+        "primaryAccent": "اللون المميّز الأساسي",
+        "heroOverlayOpacity": "شفافية طبقة الواجهة (0–1)"
+      },
+      "saving": "يحفظ…",
+      "save": "حفظ"
+    },
+    "shipping": {
+      "eyebrow": "المتجر",
+      "title": "مناطق الشحن",
+      "intro": "قسّم العراق إلى مناطق شحن. كل منطقة تجمع عدة محافظات بسعر ومدة وصول موحّدة.",
+      "addZone": "إضافة منطقة",
+      "emptyZones": "لا توجد مناطق بعد. أضف أول منطقة.",
+      "confirmDelete": "حذف هذه المنطقة؟",
+      "generalSettings": "إعدادات شحن عامة",
+      "fields": {
+        "nameAr": "اسم المنطقة (عربي)",
+        "nameEn": "اسم المنطقة (إنجليزي)",
+        "governorates": "المحافظات في هذه المنطقة",
+        "governoratesHint": "اكتب أسماء المحافظات بالعربية مفصولة بفاصلة. مثال: كربلاء، النجف، بابل",
+        "governoratesPlaceholder": "بغداد، كربلاء، النجف…",
+        "priceIQD": "سعر الشحن (د.ع)",
+        "priceUSD": "سعر الشحن (USD)",
+        "eta": "مدة الوصول (أيام)",
+        "etaHint": "صيغة: 2-4 أو 1-2",
+        "freeThreshold": "حد الشحن المجاني",
+        "freeThresholdHint": "إذا تجاوز إجمالي الطلب هذا المبلغ، الشحن مجاني. اجعله 0 لتعطيل الميزة.",
+        "codFee": "رسم الدفع عند الاستلام",
+        "codFeeHint": "رسم إضافي يُضاف عند اختيار COD. اجعله 0 لعدم وجود رسم."
+      },
+      "nameEn": "الاسم (إنجليزي)",
+      "nameAr": "الاسم (عربي)",
+      "governorates": "المحافظات (مفصولة بفاصلة)",
+      "eta": "مدة الوصول (2-4)"
+    },
+    "payments": {
+      "eyebrow": "المتجر",
+      "title": "المدفوعات",
+      "subtitle": "فعّل أو أوقف وسائل الدفع المعروضة في الشراء.",
+      "enabled": "✓ مُفعَّل",
+      "disabled": "— موقوف",
+      "methods": {
+        "cod": "الدفع عند الاستلام",
+        "card": "بطاقة ائتمان / مدى",
+        "bank": "تحويل بنكي",
+        "zaincash": "زين كاش"
+      },
+      "comingSoon": "البوّابة قيد التكامل بعد"
+    },
+    "users": {
+      "eyebrow": "النظام",
+      "title": "المسؤولون",
+      "name": "الاسم",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "role": "الدور"
+    },
+    "activity": {
+      "eyebrow": "النظام",
+      "title": "سجل النشاط",
+      "count": "سجل النشاط ({count})",
+      "filters": {
+        "action": "الإجراء",
+        "entity": "العنصر",
+        "admin": "المسؤول"
+      },
+      "all": "الكل",
+      "filter": "تصفية",
+      "reset": "إعادة تعيين",
+      "prev": "السابق",
+      "next": "التالي",
+      "pageOf": "صفحة {page} من {total}",
+      "empty": "لا توجد سجلات مطابقة."
+    },
+    "languages": {
+      "eyebrow": "النظام",
+      "title": "اللغات",
+      "availableLanguages": "اللغات المتاحة",
+      "default": "افتراضي",
+      "setDefault": "تعيين كافتراضي",
+      "active": "مفعّل",
+      "disabled": "موقوف",
+      "preview": "معاينة",
+      "setAsDefault": "تم تعيين {code} كافتراضي",
+      "languageEnabled": "تم تفعيل {code}",
+      "languageDisabled": "تم إيقاف {code}",
+      "cannotDisableDefault": "لا يمكن إيقاف اللغة الافتراضية",
+      "failedToUpdate": "فشل التحديث",
+      "languagesHint": "تؤثر اللغات على ما يراه المستخدمون في /ar و /en. اللغة الافتراضية هي التي يصل إليها الزائر أولًا.",
+      "translationsTitle": "ترجمات المحتوى",
+      "translationsCount": "لديك {count} مفتاحًا قابلًا للترجمة.",
+      "translationsHint": "كل مفتاح يحتوي على نص عربي وإنجليزي. يمكنك تحريرهم من قسم المحتوى.",
+      "editTranslations": "تحرير الترجمات"
+    },
+    "settings": {
+      "eyebrow": "النظام",
+      "title": "الإعدادات",
+      "key": "المفتاح",
+      "group": "المجموعة",
+      "value": "القيمة"
+    },
+    "smartSettings": {
+      "tabs": {
+        "about": "معلومات الدار",
+        "branches": "الفروع",
+        "social": "التواصل الاجتماعي",
+        "shipping": "الشحن",
+        "loyalty": "نقاط الولاء",
+        "advanced": "متقدّم"
+      },
+      "about": {
+        "heading": "المؤسس وقصة الدار",
+        "founderAr": "اسم المؤسس (عربي)",
+        "founderEn": "اسم المؤسس (إنجليزي)",
+        "storyAr": "قصة الدار (عربي)",
+        "storyEn": "قصة الدار (إنجليزي)",
+        "foundedYear": "سنة التأسيس",
+        "foundedCity": "مدينة التأسيس",
+        "foundedCityPlaceholder": "بغداد"
+      },
+      "branches": {
+        "heading": "الفروع",
+        "addBranch": "إضافة فرع",
+        "branchN": "الفرع {n}",
+        "addressAr": "العنوان (عربي)",
+        "addressEn": "العنوان (إنجليزي)",
+        "phone": "هاتف الفرع",
+        "hours": "ساعات العمل",
+        "hoursPlaceholder": "9 ص — 9 م",
+        "confirmRemove": "حذف هذا الفرع؟"
+      },
+      "social": {
+        "heading": "روابط التواصل الاجتماعي",
+        "instagram": "إنستغرام",
+        "instagramHint": "اكتب اسم المستخدم مع @",
+        "whatsapp": "واتساب",
+        "whatsappHint": "رقم دولي يبدأ بـ +964",
+        "tiktok": "تيك توك",
+        "email": "البريد الإلكتروني للتواصل",
+        "twitter": "تويتر / إكس"
+      },
+      "shipping": {
+        "heading": "إعدادات الشحن العامة",
+        "hint": "هذي إعدادات على مستوى المتجر. أسعار المناطق ذاتها تُحدَّد في صفحة الشحن.",
+        "freeThreshold": "حد الشحن المجاني",
+        "freeThresholdHint": "إذا تجاوز الطلب هذا المبلغ، يصبح الشحن مجانيًا. ضع 0 لتعطيل الميزة.",
+        "codFee": "رسم الدفع عند الاستلام",
+        "codFeeHint": "رسم إضافي يُضاف عند اختيار الدفع عند الاستلام. ضع 0 لعدم وجود رسم."
+      },
+      "loyalty": {
+        "heading": "إعدادات النقاط",
+        "hint": "كيف تُكتسب النقاط مع كل عملية شراء. عتبات المستويات نفسها تُحرَّر في صفحة النادي الحصري.",
+        "iqdPerPoint": "كم دينار = 1 نقطة؟",
+        "iqdPerPointHint": "كلما قلّ الرقم، كسب العميل نقاطًا أكثر. المعدّل الافتراضي 1,000 د.ع.",
+        "pointsPerUSD": "كم نقطة لكل دولار؟",
+        "pointsPerUSDHint": "للطلبات بالدولار. الافتراضي 1 نقطة لكل دولار.",
+        "tierHint": "العميل يترقّى تلقائيًا عند بلوغه عتبة كل مستوى، حسب الإعدادات المحدّدة في النادي الحصري."
+      }
+    },
+    "login": {
+      "eyebrow": "غرفة التحكم",
+      "title": "تسجيل الدخول",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "enter": "دخول",
+      "loading": "...",
+      "invalid": "بيانات غير صحيحة",
+      "hint": "افتراضي: admin@aqeelfantasia.com / Fantasia@2026"
     }
   }
 }

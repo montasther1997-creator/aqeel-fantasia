@@ -2,9 +2,11 @@ import { requireAdmin } from '@/lib/admin-guard';
 import { prisma } from '@/lib/db';
 import { LanguagesManager } from '@/components/admin/languages-manager';
 import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 
 export default async function Languages({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params; await requireAdmin(locale);
+  const t = await getTranslations('admin.languages');
   const settings = await prisma.setting.findMany({ where: { group: 'languages' } });
   const defaultLang = settings.find((s) => s.key === 'languages.default')?.value || 'ar';
   const arActive = settings.find((s) => s.key === 'languages.ar.active')?.value !== 'false';
@@ -14,20 +16,20 @@ export default async function Languages({ params }: { params: Promise<{ locale: 
 
   return (
     <div>
-      <p className="text-xs tracking-cinematic text-muted">— SYSTEM</p>
-      <h1 className="h-display text-4xl mt-2 mb-6">Languages</h1>
+      <p className="text-xs tracking-cinematic text-muted">— {t('eyebrow')}</p>
+      <h1 className="h-display text-4xl mt-2 mb-6">{t('title')}</h1>
       <LanguagesManager initial={{ defaultLang, arActive, enActive }} />
 
       <div className="mt-8 glass p-6">
-        <h3 className="text-xs tracking-cinematic text-muted mb-4">— CONTENT TRANSLATIONS</h3>
+        <h3 className="text-xs tracking-cinematic text-muted mb-4">— {t('translationsTitle')}</h3>
         <p className="text-sm text-frost/80 mb-2">
-          You have <span className="text-electric font-mono">{contentCount}</span> translatable content keys.
+          {t('translationsCount', { count: contentCount })}
         </p>
         <p className="text-xs text-muted mb-4">
-          Each key has both Arabic and English values. Edit them in the Content section.
+          {t('translationsHint')}
         </p>
         <Link href={`/${locale}/admin/content`} className="btn-ghost inline-flex">
-          Edit Translations →
+          {t('editTranslations')} →
         </Link>
       </div>
     </div>
