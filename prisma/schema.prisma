@@ -240,6 +240,10 @@ model Order {
   items         OrderItem[]
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  @@index([customerId, createdAt(sort: Desc)])
+  @@index([status])
+  @@index([paymentStatus])
+  @@index([createdAt(sort: Desc)])
   @@schema("fantasia")
 }
 

@@ -1,14 +1,26 @@
 import { NextResponse } from 'next/server';
 import { registerCustomer } from '@/lib/auth';
+import { RegisterSchema, zodError } from '@/lib/validators';
+import { rateLimit, getIp } from '@/lib/ratelimit';
 
 export async function POST(req: Request) {
+  if (!rateLimit(`register:${getIp(req)}`, 5, 60_000)) {
+    return NextResponse.json({ ok: false, error: 'rate-limit' }, { status: 429 });
+  }
+  const body = await req.json().catch(() => null);
+  const parsed = RegisterSchema.safeParse(body);
+  if (!parsed.success) return NextResponse.json(zodError(parsed), { status: 400 });
+
   try {
-    const { phone, password, name, email } = await req.json();
-    if (!phone || !password || !name) return NextResponse.json({ ok: false, error: 'missing-fields' }, { status: 400 });
-    if (password.length < 6) return NextResponse.json({ ok: false, error: 'password-too-short' }, { status: 400 });
-    await registerCustomer({ phone, password, name, email: email || undefined });
+    await registerCustomer({
+      phone: parsed.data.phone,
+      password: parsed.data.password,
+      name: parsed.data.name,
+      email: parsed.data.email || undefined,
+    });
     return NextResponse.json({ ok: true });
   } catch (e: any) {
-    return NextResponse.json({ ok: false, error: e.message }, { status: 400 });
+    const msg = e?.message === 'phone-exists' || e?.message === 'email-exists' ? e.message : 'register-failed';
+    return NextResponse.json({ ok: false, error: msg }, { status: 400 });
   }
 }

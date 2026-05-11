@@ -1,223 +1,258 @@
-# CLAUDE.md — AQEEL FANTASIA
+# CLAUDE.md — AQEEL FANTASIA · Atelier Digital
 
-> Context file for Claude Code when working on this repository.
-> Read this first before making changes.
-
----
-
-## Project at a glance
-
-**AQEEL FANTASIA** is a luxury Iraqi men's fashion house's flagship digital experience.
-Brand owner: **Aqeel Fantasia** · Two physical branches (Babylon, Baghdad) · IG @shopfantasia1.
-
-The codebase is a full Next.js 14 application that doubles as:
-1. A cinematic, editorial storefront (bilingual AR/EN, RTL/LTR aware)
-2. A complete admin/CMS dashboard for the brand owner to run the store end-to-end
-
-The design language is **dark, gold-accented, editorial couture** — think Maison-style typography (Playfair Display) with strong RTL support and luxe gold (#C9A66B).
+> **Read first.** Project context for Claude/AI sessions.
+> The codebase is a **Next.js 14 (App Router)** luxury menswear storefront + admin CMS, redesigned in May 2026 as an editorial mobile-app/desktop adaptive experience.
 
 ---
 
-## Stack
+## 1. What this is
+
+**شركة عقيل فنتازيا للألبسة الرجالية** — a luxury men's atelier with two physical branches (Babylon — Street 40, Baghdad — Al-Qadisiya District) and Instagram @shopfantasia1.
+
+The digital atelier ships with:
+- **10 customer screens** mirroring a mobile app, but rendered as a full responsive site (mobile = app-like, desktop = full-width editorial)
+- **20+ admin sections** for the brand owner to run the store unaided
+- **7 signature features**: Cinematic Entry, Sound of Cloth, Atelier Notes, Editorial Mix Grid, Personal Stylist, Made for One, Atelier Address Book
+
+---
+
+## 2. Stack
 
 | Layer | Tech |
 |-------|------|
-| Framework | Next.js 14 (App Router) + TypeScript |
-| Styling | TailwindCSS 3 + custom design tokens |
+| Framework | Next.js 14 App Router + TypeScript |
+| Styling | TailwindCSS 3 + custom design tokens (Fraunces + Inter + Amiri + IBM Plex Sans Arabic) |
 | Database | PostgreSQL on Supabase (`fantasia` schema) |
-| ORM | Prisma 5 with `multiSchema` preview feature |
-| Auth | Bcrypt + JWT (jose) in httpOnly SameSite=lax cookies — separate cookies for admin vs customer |
-| i18n | `next-intl` (AR default, EN, full RTL) |
-| State | Zustand for cart (persisted), React state elsewhere |
-| Animation | Framer Motion (page transitions, reveals) + CSS animations |
-| 3D | `@react-three/fiber` (light hero scene) |
-| Sound | Web Audio API (synthesized hover + ambient drones) |
-| Charts | Recharts (admin dashboard) |
-| Deployment | **Vercel** (production) — serverless functions in iad1 |
+| ORM | Prisma 5 with `multiSchema` preview |
+| Auth | Bcrypt + JWT (jose) in httpOnly SameSite=lax cookies — separate cookies for `fantasia_admin` and `fantasia_customer` |
+| Validation | Zod (`lib/validators.ts`) |
+| State | Zustand (cart, persisted) |
+| Animation | Framer Motion (page transitions, intro, hover reveals) |
+| 3D | None currently (removed during redesign) |
+| Sound | Web Audio API synthesized (no mp3 files) |
+| Charts | Recharts (admin) |
+| Storage | Supabase Storage bucket `fantasia-media` (signed URLs) |
+| Rate limiting | In-memory (`lib/ratelimit.ts`) — swap with Upstash for multi-region |
+| Hosting | Vercel (iad1) — auto-deploy from `main` |
 
 ---
 
-## Repo structure (key paths)
+## 3. Actual routes (verified)
 
-```
-app/
-├── [locale]/                    # AR/EN locale segment
-│   ├── (site)/                  # public storefront (route group)
-│   │   ├── page.tsx             # GATE (homepage)
-│   │   ├── identity/, archive/, drops/, drops/[slug]/
-│   │   ├── cart/, checkout/, checkout/success/
-│   │   ├── cult/, signal/
-│   │   └── account/             # customer area (login, register, orders, addresses, wishlist)
-│   ├── admin/                   # admin dashboard (~20 sections)
-│   └── layout.tsx               # html lang/dir, fonts
-├── api/
-│   ├── account/                 # customer endpoints (auth, addresses, wishlist)
-│   ├── admin/                   # admin CRUD endpoints (products, categories, orders, customers, …)
-│   ├── orders/route.ts          # checkout (security-critical: server-authoritative pricing)
-│   ├── search, shipping, signal, discount, health
-└── globals.css                  # design tokens + utility classes
-components/
-├── site/                        # storefront components
-├── admin/                       # admin shell + per-section managers
-├── 3d/                          # Three.js hero scene
-└── ui/                          # generic: Logo, Price, Toast, CurrencySwitch
-lib/
-├── auth.ts                      # JWT + bcrypt for both admin and customer
-├── db.ts                        # Prisma singleton
-├── cart-store.ts                # Zustand (persisted)
-├── sound.ts                     # Web Audio synthesizer
-├── utils.ts, constants.ts
-├── admin-guard.ts               # requireAdmin() helper
-prisma/
-├── schema.prisma                # Postgres + multi-schema (`fantasia`)
-└── seed.ts                      # legacy SQLite seed (not used in prod)
-messages/
-├── ar.json                      # all UI strings (formal Arabic)
-└── en.json
-i18n/                            # next-intl routing config
-```
+### Customer pages — `app/[locale]/(site)/`
+| Route | Purpose |
+|-------|---------|
+| `/` | Welcome — cinematic ceremonial entry |
+| `/auth` | Login + Signup (phone-based, email optional) |
+| `/home` | Home — hero, Personal Stylist, Curated, Atelier Notes, Lookbook, Bespoke CTA |
+| `/collections` | Collections — Editorial Mix Grid (Vogue layout) |
+| `/product/[slug]` | Product detail — 2-col layout, linked note, made-for-one badge |
+| `/bag` | Shopping bag with sticky summary |
+| `/checkout` | Checkout — server-validated, transactional |
+| `/checkout/success` | Order confirmation |
+| `/search` | Live search |
+| `/saved` | Wishlist |
+| `/profile` | Account hub |
+| `/profile/orders` | Order list |
+| `/profile/orders/[id]` | Order tracking with timeline |
+| `/profile/addresses` | Address book |
+| `/profile/bespoke` | My bespoke inquiries |
+| `/profile/atelier-book` | Measurements + style preferences |
+| `/bespoke` | Bespoke inquiry form (writes to DB) |
+| `/made-for-me` | Pieces reserved for this customer |
+| `/settings` | Language/mode/currency/notifications |
+
+### Admin pages — `app/[locale]/admin/`
+| Group | Sections |
+|-------|----------|
+| Overview | Dashboard, Reports |
+| Catalog | Products, Categories, Collections |
+| Sales | Orders, Customers, Discounts |
+| Community | Cult Tiers, Bespoke Requests, **Made for One**, **Atelier Notes**, Newsletter |
+| Content | Site Content, Archive, Media Library, Appearance |
+| Store | Shipping, Payments |
+| System | Admins, Activity Log, Languages, Settings |
 
 ---
 
-## Database schema (`fantasia` schema in Supabase)
+## 4. Database (schema `fantasia` in Supabase)
 
-All tables live in a separate schema `fantasia` to coexist with another app on the same project. Tables: `AdminUser`, `ActivityLog`, `Customer`, `Address`, `Category`, `Collection`, `Product`, `ProductImage`, `ProductVariant`, `WishlistItem`, `Order`, `OrderItem`, `CultTier`, `CultMember`, `SiteContent`, `MediaAsset`, `ArchiveItem`, `NewsletterSub`, `Discount`, `ShippingZone`, `Setting`.
+Core tables: `AdminUser`, `ActivityLog`, `Customer` (with measurements: height/weight/chest/waist/inseam/preferredSize/colors/styles/fabrics), `Address`, `Category`, `Collection`, `Product`, `ProductImage`, `ProductVariant`, `WishlistItem`, `Order`, `OrderItem`, `CultTier`, `CultMember`, `BespokeRequest`, `AtelierNote`, `MadeForOne`, `SiteContent`, `MediaAsset`, `ArchiveItem`, `NewsletterSub`, `Discount`, `ShippingZone`, `Setting`.
 
-Pricing is dual-currency: every product has both `priceIQD` (Int) and `priceUSD` (Float).
+**Indexes** (added in performance migration): `Order(customerId, createdAt)`, `Order(status)`, `Order(paymentStatus)`, `Product(active, featured, order)`, `WishlistItem(customerId)`, `ActivityLog(adminId, createdAt)`, etc. — see `prisma/schema.prisma`.
 
----
-
-## Critical conventions
-
-### 1. Server-authoritative pricing (security)
-`app/api/orders/route.ts` **must** re-fetch product prices from Prisma and recompute totals server-side. Never trust client-supplied `priceIQD` / `priceUSD` / `discount.discount` values. This is the #1 rule — past attacks would allow $0.01 orders.
-
-### 2. Admin role hierarchy
-Routes that mutate other admin users (`POST/DELETE /api/admin/users/...`) require `admin.role === 'superadmin'`. Other admin routes accept any authenticated admin.
-
-### 3. File uploads
-`app/api/admin/upload/route.ts` validates: MIME whitelist, extension whitelist, 25 MB max per file, 10 files max per request. Don't loosen these.
-
-### 4. Address mutations
-`app/api/account/addresses/[id]/route.ts` uses an explicit `ALLOWED` field whitelist. Never spread `req.body` directly into Prisma update — `customerId` is writable.
-
-### 5. JWT secret
-`lib/auth.ts` throws on startup if `JWT_SECRET` is missing in production. Always set it.
-
-### 6. RTL handling
-- The site (`/ar`) renders the entire UI right-to-left — components use `rtl:` Tailwind variants.
-- The admin shell auto-flips: sidebar moves to the right side in Arabic, left in English. Active border uses `border-r-2` vs `border-l-2` based on locale.
-- Body has `dir={locale === 'ar' ? 'rtl' : 'ltr'}` set in `app/[locale]/layout.tsx`.
-
-### 7. Multi-schema Prisma
-DATABASE_URL must NOT contain `?schema=fantasia` — Prisma 5 with `multiSchema` preview reads schemas from the datasource block (`schemas = ["fantasia"]`), not the URL. URL stays vanilla.
-
-### 8. Supabase pooler hostname
-Use `aws-1-ap-southeast-2.pooler.supabase.com` (NOT `aws-0-`). Port 6543 is transaction pooler (require `pgbouncer=true`), port 5432 is direct.
-
-### 9. Server-side data fetching
-Pages in `app/[locale]/(site)/...` are mostly RSC. Use `prisma` directly in `page.tsx` server components. Add `export const revalidate = 60` for ISR where appropriate.
-
-### 10. Image handling
-Local uploads → `/public/uploads/*` (writable in dev only; Vercel serverless filesystem is ephemeral so prefer external URLs in production via the admin's URL-paste field). External: Unsplash and similar are allowed in `next.config.mjs` `remotePatterns`.
+Pricing: dual-currency `priceIQD: Int` + `priceUSD: Float`. Numbers are **always Latin** in UI (use `.num` class).
 
 ---
 
-## Deployment & infrastructure
+## 5. CRITICAL conventions — do NOT break
+
+### 5.1 Server-authoritative everything in checkout
+`app/api/orders/route.ts` runs in a **single `prisma.$transaction`**:
+- Stock decremented atomically (`updateMany` with `stock: { gte: qty }`, fails if 0 rows)
+- Discount usedCount incremented atomically (`updateMany` with `OR: [{ maxUses: null }, { usedCount: { lt } }]`)
+- All prices re-fetched from DB; client prices ignored
+- Customer `totalSpent` updated in same tx
+
+**Never** trust client prices or discount values. Never increment counters outside transactions.
+
+### 5.2 Admin role hierarchy
+- `apiRequireAdmin()` in `lib/admin-guard.ts` — pass role names: `apiRequireAdmin(['admin', 'superadmin'])`
+- Mutations on Settings, Customers, Admin Users require explicit role gate
+- Default routes accept any authenticated admin
+
+### 5.3 Input validation
+- Zod schemas in `lib/validators.ts`
+- Every POST/PATCH on critical routes uses `safeParse` → return `zodError(parsed)` on failure
+- Don't add a route without validation
+
+### 5.4 Rate limiting
+- `lib/ratelimit.ts` — in-memory, keyed by IP + identifier (email/phone)
+- Applied: orders, login (admin + customer), register, bespoke
+- 10/min per IP for orders; 5-10/min for login attempts
+
+### 5.5 File uploads
+- **Supabase Storage** (`lib/storage.ts`) — bucket `fantasia-media`
+- `app/api/admin/upload/route.ts` validates MIME + extension whitelist, 25 MB max, 10 files max
+- No local filesystem (Vercel ephemeral)
+
+### 5.6 Customer auth = phone-based
+- Phone is the unique identifier (not email)
+- Email is **optional** — only set if user provides
+- Cookie: `fantasia_customer`
+
+### 5.7 RTL / bilingual
+- `/ar` is the default locale; `dir="rtl"` on `<html>`
+- Components use `rtl:` Tailwind variants
+- **Numbers always Latin** — wrap numeric output in `<span className="num">` for direction isolation
+- Admin shell auto-flips: sidebar moves to right in Arabic, active border switches `border-r-2` ↔ `border-l-2`
+
+### 5.8 Multi-schema Prisma
+- `DATABASE_URL` MUST NOT contain `?schema=fantasia`
+- Schema is declared in datasource block as `schemas = ["fantasia"]`
+- Each model has `@@schema("fantasia")`
+
+### 5.9 Supabase pooler hostname
+Use `aws-1-ap-southeast-2.pooler.supabase.com` (NOT `aws-0-`).
+- Port 6543 → transaction pooler (require `pgbouncer=true`)
+- Port 5432 → direct/session (used by Prisma migrations)
+
+### 5.10 Product mutations
+- **Never** `deleteMany` variants on PATCH — they're FK'd by `OrderItem` (`onDelete: Restrict`)
+- Use the diff pattern in `app/api/admin/products/[id]/route.ts`: keep variants that have orders, soft-zero their stock, delete only the orphans
+- Same for product DELETE: soft-delete (set `active=false`) if there are referencing orders
+
+---
+
+## 6. Signature features (where they live)
+
+| Feature | UI | Backend |
+|---------|-----|---------|
+| Atelier Entry (intro) | `components/atelier/atelier-entry.tsx` | — |
+| Sound of Cloth | `lib/sound.ts` + `components/atelier/sound-toggle.tsx` (sounds called inline by components) | — |
+| Atelier Notes | `components/atelier/notes-section.tsx` + `app/[locale]/admin/notes/` | `AtelierNote` table; API: `/api/admin/notes` |
+| Editorial Mix Grid | `components/atelier/editorial-grid.tsx` | — |
+| Personal Stylist | `components/atelier/stylist-section.tsx` | `lib/stylist.ts` — heuristic ranking on history + wishlist + categories + price band |
+| Made for One | `app/[locale]/(site)/made-for-me/` + admin page | `MadeForOne` table; API: `/api/admin/made-for-one` |
+| Atelier Address Book | `app/[locale]/(site)/profile/atelier-book/` | Extended `Customer` table fields; API: `/api/account/preferences` |
+
+---
+
+## 7. Deployment
 
 | Resource | Where |
 |----------|-------|
 | Live URL | https://aqeel-fantasia-45cl.vercel.app |
-| GitHub repo | https://github.com/montasther1997-creator/aqeel-fantasia |
-| Vercel project | `aqeel-fantasia-45cl` (team `AL3KED's projects`) |
-| Supabase project | `iixuvhjhhtfsioqhmqkx` (region ap-southeast-2 — Sydney) |
-| DB schema | `fantasia` |
-| Auto-deploy | Every push to `main` → Vercel build & deploy |
+| GitHub | https://github.com/montasther1997-creator/aqeel-fantasia |
+| Vercel project | `aqeel-fantasia-45cl` (team AL3KED) |
+| Supabase project | `iixuvhjhhtfsioqhmqkx` (ap-southeast-2) |
+| Schema | `fantasia` |
+| Storage bucket | `fantasia-media` (public) |
 
-Environment variables (set in Vercel dashboard, encrypted):
-- `DATABASE_URL` — pooler (port 6543) with `pgbouncer=true&connection_limit=1`
-- `DIRECT_URL` — direct port 5432 (used by Prisma migrations)
-- `JWT_SECRET` — random 32+ char string
+### Required environment variables
+- `DATABASE_URL` — pooler 6543 with `pgbouncer=true&connection_limit=1`
+- `DIRECT_URL` — direct port 5432 (for migrations)
+- `JWT_SECRET` — random 32+ chars (auth throws if missing in production)
 - `ADMIN_EMAIL`, `ADMIN_PASSWORD` — seeded admin
 - `NEXT_PUBLIC_SITE_URL`
+- `NEXT_PUBLIC_SUPABASE_URL` — `https://iixuvhjhhtfsioqhmqkx.supabase.co`
+- `SUPABASE_SERVICE_KEY` — service_role JWT (for storage uploads)
 
-Do **not** commit `.env`. It is gitignored. Local dev uses `.env` for the same vars.
+`.env` is gitignored.
 
 ---
 
-## Auth model
-
-Two parallel systems:
+## 8. Auth model
 
 **Admin** (`lib/auth.ts`)
-- Cookie: `fantasia_admin` (httpOnly, sameSite=lax, secure in prod, 30 day max-age)
-- Login: email + password against `AdminUser` table
-- Role: `admin` | `superadmin` | `editor` (only `superadmin` can manage other admins)
-- Protected pages: use `requireAdmin(locale)` from `lib/admin-guard.ts`
+- Cookie: `fantasia_admin` (httpOnly, sameSite=lax, secure in prod, 30-day max-age)
+- Roles: `admin` | `superadmin` | `editor` — only `superadmin` can manage other admins, mutate customers, hit settings
+- Pages: `requireAdmin(locale)` from `lib/admin-guard.ts`
+- API routes: `apiRequireAdmin([roles])` from same file
 
 **Customer** (`lib/auth.ts`)
 - Cookie: `fantasia_customer`
-- Login: **phone + password** (email is optional, only collected if provided at registration)
-- No role hierarchy. Customer scope is enforced by `customerId` ownership checks.
+- Login: phone + password (email optional at registration)
+- Scope: enforced by `customerId` ownership checks per route
 
 ---
 
-## When making changes
+## 9. Arabic terminology (formal Fusha)
 
-1. **Schema changes** → update `prisma/schema.prisma`, run `npx prisma migrate diff --from-empty --to-schema-datamodel ./prisma/schema.prisma --script` to get SQL, apply via the Supabase MCP `apply_migration` tool, then `npx prisma generate`.
-2. **New page** → if `app/[locale]/(site)/...`, it inherits the site nav/footer + page transition automatically. Add `export const revalidate = 60` for static-with-revalidation.
-3. **New admin section** → add a route under `app/[locale]/admin/[section]/page.tsx`, then add an entry to the `NAV` array in `components/admin/shell.tsx` with translated labels in `messages/{ar,en}.json` under `admin.nav.*`.
-4. **Translations** → ALL user-facing strings go through `messages/{ar,en}.json` (`useTranslations` hook). Use **formal Arabic (Fusha)** — see "Arabic terminology" section below.
-5. **Currency** → never display raw integers. Use the `<Price>` component from `components/ui/price.tsx`.
-6. **Don't change pooler hostname** without verifying via Supabase Management API (`config/database/pooler` endpoint).
-
----
-
-## Arabic terminology (formal/Fusha)
-
-The brand demands formal, global Arabic. Avoid colloquialisms.
+The brand demands formal global Arabic. Avoid colloquialisms.
 
 | ❌ Avoid | ✅ Use |
 |---------|--------|
-| القطرات | **المجموعات** (collections) |
-| البوابة | **الواجهة** (front / entrance) |
-| الإشارة | **النشرة** (newsletter) |
-| الطائفة | **النادي / النادي الحصري** (the club) |
-| ادخل | **اكتشف / استكشف** (discover) |
-| الزبائن | **العملاء** (customers) |
+| القطرات | **المجموعات** |
+| البوابة | **الواجهة** |
+| الإشارة | **النشرة** |
+| الطائفة | **النادي / النادي الحصري** |
+| الزبائن | **العملاء** |
+| ادخل | **اكتشف / استكشف** |
+| مفصّل | **التفصيل (bespoke)** |
 
 ---
 
-## Known gaps (intentional, do not "fix" without asking)
+## 10. Known gaps (intentional, do not "fix" without asking)
 
-- **No rate limiting** on public APIs. Acceptable for MVP, would add in production hardening pass.
-- **No CSRF tokens** beyond SameSite=lax cookies. Logout endpoints are POST-only and protected by SameSite.
-- **No real payment gateway** — only COD (Cash on Delivery). Stripe/ZainCash slots exist in the UI as placeholders.
-- **Vercel ephemeral filesystem** for uploads — local upload to `/public/uploads` won't persist across deployments. The admin UI also accepts URL-paste for stable image hosting.
-- **No SMS for password reset** — customers contact admin manually.
-- **Cult membership** is read-only (tier definitions exist but the public can't subscribe through the site yet).
+- **No CSRF tokens** beyond SameSite=lax — acceptable for current threat model
+- **No payment gateway** — only COD; Stripe/ZainCash placeholders only
+- **No SMS for password reset** — manual via concierge
+- **No real-time** — orders/admin updates require refresh
+- **In-memory rate limit** — works per-lambda only; swap with Upstash Redis for production-grade
+- **No tests** — manual QA only
+- **Cult membership** is read-only (tier definitions exist; public subscribe flow not yet shipped)
 
 ---
 
-## How to run locally
+## 11. When making changes
+
+1. **DB schema** → edit `prisma/schema.prisma`, generate SQL via `npx prisma migrate diff --from-empty --to-schema-datamodel ./prisma/schema.prisma --script`, apply via Supabase MCP `apply_migration`, then `npx prisma generate`.
+2. **New customer page** → drop under `app/[locale]/(site)/...` → inherits DesktopNav + BottomNav + atelier shell automatically. Add `export const revalidate = 60` if cacheable.
+3. **New admin section** → page under `app/[locale]/admin/[section]/page.tsx`, then add to `NAV` array in `components/admin/shell.tsx` with translated labels in `messages/{ar,en}.json` → `admin.nav.*`.
+4. **API route** → always Zod-validate, always rate-limit if public, always check auth/role for admin/customer routes.
+5. **Translations** → `messages/{ar,en}.json`. Formal Arabic (section 9).
+6. **Currency** → never display raw integers; use `<Price>` from `components/ui/price.tsx`.
+7. **Sound** → call `playWood/playFabric/playDing/playBell` directly from event handlers (NOT global listeners — performance).
+
+---
+
+## 12. How to run locally
 
 ```bash
 npm install
-# Set DATABASE_URL, DIRECT_URL, JWT_SECRET in .env
+# Set DATABASE_URL, DIRECT_URL, JWT_SECRET, SUPABASE_SERVICE_KEY, NEXT_PUBLIC_SUPABASE_URL in .env
 npx prisma generate
 npm run dev
 ```
 
-Default admin: `admin@aqeelfantasia.com` / `Fantasia@2026` (change in production!).
+Default admin: `admin@aqeelfantasia.com` / `Fantasia@2026` (change in production).
 
 ---
 
-## Last major changes (2026-05)
+## 13. Recent major work (May 2026)
 
-- Editorial redesign with Playfair Display + Cormorant Garamond + gold (#C9A66B) accent
-- Page transitions (Framer Motion AnimatePresence)
-- Product card: hover-reveal name with elegant gold underline
-- Formal Arabic terminology pass (entire UI + DB content)
-- Security audit fixes: 3 critical (server-side pricing, server-side discount, address mass-assignment), 3 high (admin role check, upload validation, JWT secret enforcement), 3 medium (search length cap, etc.)
-- Founder section + Branches section (Babylon, Baghdad)
-- Languages page made interactive (set default, toggle active)
+- **Atelier Digital redesign**: 10 mobile-app-mirroring screens with adaptive desktop (full-bleed, multi-col, Editorial Mix on collections)
+- **Brand identity**: Fraunces serif + Inter sans + Amiri/IBM Plex for Arabic; Onyx/Pearl/Champagne palette
+- **Cinematic Entry, Sound of Cloth, Atelier Notes (CMS), Editorial Mix, Personal Stylist (heuristic), Made for One (admin-assigned), Atelier Address Book (measurements + style profile)** — all live
+- **Architecture audit fixes**: atomic order transactions, role-gated admin mutations, Zod validation, in-memory rate limiting, Supabase Storage uploads, performance indexes (15+), variant-safe product PATCH, missing profile pages

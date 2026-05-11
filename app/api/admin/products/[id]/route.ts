@@ -1,43 +1,99 @@
 import { NextResponse } from 'next/server';
-import { getAdmin } from '@/lib/auth';
+import { apiRequireAdmin, isAdminResponse } from '@/lib/admin-guard';
 import { prisma } from '@/lib/db';
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const admin = await getAdmin();
-  if (!admin) return NextResponse.json({ ok: false }, { status: 401 });
+  const admin = await apiRequireAdmin();
+  if (isAdminResponse(admin)) return admin;
   const { id } = await params;
   try {
     const b = await req.json();
-    await prisma.productImage.deleteMany({ where: { productId: id } });
-    await prisma.productVariant.deleteMany({ where: { productId: id } });
-    await prisma.product.update({
-      where: { id },
-      data: {
-        slug: b.slug, sku: b.sku || null,
-        nameAr: b.nameAr, nameEn: b.nameEn,
-        taglineAr: b.taglineAr || null, taglineEn: b.taglineEn || null,
-        descAr: b.descAr || null, descEn: b.descEn || null,
-        priceIQD: b.priceIQD, priceUSD: b.priceUSD,
-        compareIQD: b.compareIQD || null, compareUSD: b.compareUSD || null,
-        stock: b.stock || 0,
-        categoryId: b.categoryId || null, collectionId: b.collectionId || null,
-        active: !!b.active, featured: !!b.featured, isNew: !!b.isNew, isLimited: !!b.isLimited,
-        images: { create: (b.images || []).map((img: any, i: number) => ({ url: img.url, alt: img.alt, order: i })) },
-        variants: { create: (b.variants || []).map((v: any) => ({ size: v.size || null, color: v.color || null, stock: v.stock || 0 })) },
-      },
+
+    // 1) Diff variants: only delete those NOT in incoming list and NOT referenced by any OrderItem
+    const incomingVariants: any[] = Array.isArray(b.variants) ? b.variants : [];
+    const incomingVariantIds = new Set(incomingVariants.map((v) => v.id).filter(Boolean));
+    const existingVariants = await prisma.productVariant.findMany({
+      where: { productId: id },
+      select: { id: true, _count: { select: { orderItems: true } } },
     });
+
+    const variantsToDelete = existingVariants.filter((v) => !incomingVariantIds.has(v.id) && v._count.orderItems === 0).map((v) => v.id);
+    const variantsToOrphan = existingVariants.filter((v) => !incomingVariantIds.has(v.id) && v._count.orderItems > 0);
+
+    // 2) Diff images: just rebuild (no FKs)
+    await prisma.productImage.deleteMany({ where: { productId: id } });
+
+    // 3) Apply variant changes within a transaction
+    await prisma.$transaction(async (tx) => {
+      // Delete unused variants
+      if (variantsToDelete.length) {
+        await tx.productVariant.deleteMany({ where: { id: { in: variantsToDelete } } });
+      }
+      // Set orphan variants stock=0 to hide from selection (keeping FK integrity)
+      for (const v of variantsToOrphan) {
+        await tx.productVariant.update({ where: { id: v.id }, data: { stock: 0 } });
+      }
+      // Update or create
+      for (const v of incomingVariants) {
+        if (v.id && existingVariants.find((e) => e.id === v.id)) {
+          await tx.productVariant.update({
+            where: { id: v.id },
+            data: { size: v.size || null, color: v.color || null, stock: v.stock || 0, priceIQD: v.priceIQD || null, priceUSD: v.priceUSD || null },
+          });
+        } else {
+          await tx.productVariant.create({
+            data: { productId: id, size: v.size || null, color: v.color || null, stock: v.stock || 0 },
+          });
+        }
+      }
+
+      // Update product + recreate images
+      await tx.product.update({
+        where: { id },
+        data: {
+          slug: b.slug,
+          sku: b.sku || null,
+          nameAr: b.nameAr,
+          nameEn: b.nameEn,
+          taglineAr: b.taglineAr || null,
+          taglineEn: b.taglineEn || null,
+          descAr: b.descAr || null,
+          descEn: b.descEn || null,
+          priceIQD: b.priceIQD,
+          priceUSD: b.priceUSD,
+          compareIQD: b.compareIQD || null,
+          compareUSD: b.compareUSD || null,
+          stock: b.stock || 0,
+          categoryId: b.categoryId || null,
+          collectionId: b.collectionId || null,
+          active: !!b.active,
+          featured: !!b.featured,
+          isNew: !!b.isNew,
+          isLimited: !!b.isLimited,
+          images: { create: (b.images || []).map((img: any, i: number) => ({ url: img.url, alt: img.alt, order: i })) },
+        },
+      });
+    });
+
     await prisma.activityLog.create({ data: { adminId: admin.id, action: 'update', entity: 'product', entityId: id } });
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, orphaned: variantsToOrphan.length });
   } catch (e: any) {
-    return NextResponse.json({ ok: false, error: e.message }, { status: 400 });
+    console.error('product PATCH:', e.message);
+    return NextResponse.json({ ok: false, error: 'update-failed' }, { status: 400 });
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const admin = await getAdmin();
-  if (!admin) return NextResponse.json({ ok: false }, { status: 401 });
+export async function DELETE(_: Request, { params }: { params: Promise<{ id: string }> }) {
+  const admin = await apiRequireAdmin();
+  if (isAdminResponse(admin)) return admin;
   const { id } = await params;
-  await prisma.product.delete({ where: { id } });
-  await prisma.activityLog.create({ data: { adminId: admin.id, action: 'delete', entity: 'product', entityId: id } });
-  return NextResponse.json({ ok: true });
+  // Soft-delete if there are orders referencing this product
+  const count = await prisma.orderItem.count({ where: { productId: id } });
+  if (count > 0) {
+    await prisma.product.update({ where: { id }, data: { active: false, featured: false } });
+  } else {
+    await prisma.product.delete({ where: { id } });
+  }
+  await prisma.activityLog.create({ data: { adminId: admin.id, action: count > 0 ? 'soft-delete' : 'delete', entity: 'product', entityId: id } });
+  return NextResponse.json({ ok: true, archived: count > 0 });
 }
