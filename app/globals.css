@@ -278,6 +278,20 @@
   .field-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--fg-tertiary); }
   [lang="ar"] .field-label { letter-spacing: 0; text-transform: none; }
 
+  /* Native <select> dropdown panel — force dark theme so options stay readable */
+  select.field { color-scheme: dark; }
+  [data-mode="light"] select.field { color-scheme: light; }
+  select.field option {
+    background: var(--bg-elevated);
+    color: var(--fg);
+    padding: 8px 12px;
+  }
+  select.field option:checked,
+  select.field option:hover {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
   /* === Soft background (stage) === */
   .stage-bg {
     background: #0e0d0c;
