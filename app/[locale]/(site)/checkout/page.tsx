@@ -1,10 +1,14 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useCart } from '@/lib/cart-store';
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
 import { fmtNumber } from '@/lib/utils';
 import { IRAQ_GOVERNORATES_AR, IRAQ_GOVERNORATES_EN } from '@/lib/constants';
+import { toast } from '@/components/ui/toast';
+
+type FormKey = 'name' | 'phone' | 'email' | 'governorate' | 'city' | 'area' | 'street' | 'details' | 'notes';
+const REQUIRED_FIELDS: FormKey[] = ['name', 'phone', 'governorate', 'city', 'street'];
 
 export default function CheckoutPage() {
   const t = useTranslations('checkout');
@@ -16,8 +20,15 @@ export default function CheckoutPage() {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({ name: '', phone: '', email: '', country: isAr ? 'العراق' : 'Iraq', governorate: '', city: '', area: '', street: '', details: '', notes: '' });
+  const [errors, setErrors] = useState<Partial<Record<FormKey, boolean>>>({});
   const [shipping, setShipping] = useState<{ name: string; priceIQD: number } | null>(null);
   const govs = isAr ? IRAQ_GOVERNORATES_AR : IRAQ_GOVERNORATES_EN;
+  const fieldRefs = useRef<Partial<Record<FormKey, HTMLElement | null>>>({});
+
+  const setField = (key: FormKey, v: string) => {
+    setForm((f) => ({ ...f, [key]: v }));
+    if (errors[key] && v.trim()) setErrors((e) => ({ ...e, [key]: false }));
+  };
 
   useEffect(() => {
     if (!form.governorate) return;
@@ -33,11 +44,44 @@ export default function CheckoutPage() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!items.length) return;
+
+    const nextErrors: Partial<Record<FormKey, boolean>> = {};
+    for (const key of REQUIRED_FIELDS) {
+      if (!String(form[key] || '').trim()) nextErrors[key] = true;
+    }
+    if (Object.keys(nextErrors).length) {
+      setErrors(nextErrors);
+      toast('error', isAr ? 'يرجى تعبئة جميع الحقول المطلوبة' : 'Please fill all required fields');
+      const firstKey = REQUIRED_FIELDS.find((k) => nextErrors[k]);
+      if (firstKey) {
+        const el = fieldRefs.current[firstKey];
+        el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        (el as HTMLInputElement | HTMLSelectElement | null)?.focus?.();
+      }
+      return;
+    }
+
+    if (!shipping) {
+      toast('error', isAr ? 'يرجى اختيار المحافظة لاحتساب الشحن' : 'Select a governorate to compute shipping');
+      return;
+    }
+
     setBusy(true);
-    const res = await fetch('/api/orders', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ...form, currency: 'IQD', items, discount }) });
-    const d = await res.json();
-    if (d.ok) { clear(); router.push(`/checkout/success?o=${d.number}` as any); }
-    setBusy(false);
+    try {
+      const res = await fetch('/api/orders', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ...form, currency: 'IQD', items, discount }) });
+      const d = await res.json();
+      if (d.ok) {
+        clear();
+        toast('success', isAr ? 'تم تأكيد الطلب' : 'Order placed');
+        router.push(`/checkout/success?o=${d.number}` as any);
+      } else {
+        toast('error', d.error || (isAr ? 'تعذّر تأكيد الطلب' : 'Could not place order'));
+      }
+    } catch {
+      toast('error', isAr ? 'حدث خطأ في الشبكة' : 'Network error');
+    } finally {
+      setBusy(false);
+    }
   };
 
   if (!items.length) {
@@ -56,27 +100,33 @@ export default function CheckoutPage() {
           <div className="lg:col-span-7 xl:col-span-8 space-y-8">
             <Section label={t('contact')}>
               <div className="grid sm:grid-cols-2 gap-6">
-                <Field label={t('name')} value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
-                <Field label={t('phone')} value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} required dir="ltr" placeholder="+964..." />
-                <Field label={t('email')} value={form.email} onChange={(v) => setForm({ ...form, email: v })} dir="ltr" />
+                <Field label={t('name')} value={form.name} onChange={(v) => setField('name', v)} required error={errors.name} isAr={isAr} inputRef={(el) => (fieldRefs.current.name = el)} />
+                <Field label={t('phone')} value={form.phone} onChange={(v) => setField('phone', v)} required dir="ltr" placeholder="+964..." error={errors.phone} isAr={isAr} inputRef={(el) => (fieldRefs.current.phone = el)} />
+                <Field label={`${t('email')}${isAr ? ' (اختياري)' : ' (optional)'}`} value={form.email} onChange={(v) => setField('email', v)} dir="ltr" isAr={isAr} />
               </div>
             </Section>
 
             <Section label={t('shipping')}>
               <div className="grid sm:grid-cols-2 gap-6">
                 <div>
-                  <div className="field-label">{t('governorate')}</div>
-                  <select required className="field" value={form.governorate} onChange={(e) => setForm({ ...form, governorate: e.target.value })}>
+                  <div className={`field-label ${errors.governorate ? 'text-burgundy' : ''}`}>{t('governorate')} <span className="text-burgundy">*</span></div>
+                  <select
+                    ref={(el) => { fieldRefs.current.governorate = el; }}
+                    className={`field ${errors.governorate ? 'border-burgundy ring-1 ring-burgundy' : ''}`}
+                    value={form.governorate}
+                    onChange={(e) => setField('governorate', e.target.value)}
+                  >
                     <option value="">—</option>
                     {govs.map((g) => <option key={g} value={g}>{g}</option>)}
                   </select>
+                  {errors.governorate && <div className="text-burgundy text-xs mt-1">{isAr ? 'يرجى اختيار المحافظة' : 'Please select governorate'}</div>}
                 </div>
-                <Field label={t('city')} value={form.city} onChange={(v) => setForm({ ...form, city: v })} required />
-                <Field label={t('area')} value={form.area} onChange={(v) => setForm({ ...form, area: v })} />
-                <Field label={t('street')} value={form.street} onChange={(v) => setForm({ ...form, street: v })} />
+                <Field label={t('city')} value={form.city} onChange={(v) => setField('city', v)} required error={errors.city} isAr={isAr} inputRef={(el) => (fieldRefs.current.city = el)} />
+                <Field label={t('area')} value={form.area} onChange={(v) => setField('area', v)} isAr={isAr} />
+                <Field label={t('street')} value={form.street} onChange={(v) => setField('street', v)} required error={errors.street} isAr={isAr} inputRef={(el) => (fieldRefs.current.street = el)} />
               </div>
               <div className="mt-6">
-                <Field label={t('details')} value={form.details} onChange={(v) => setForm({ ...form, details: v })} />
+                <Field label={t('details')} value={form.details} onChange={(v) => setField('details', v)} isAr={isAr} />
               </div>
             </Section>
           </div>
@@ -110,7 +160,7 @@ export default function CheckoutPage() {
                 </div>
               </div>
               <p className="text-xs text-fg-tertiary mt-6">{t('cod')}</p>
-              <button type="submit" disabled={busy || !shipping} className="btn btn-champagne w-full mt-6">{busy ? '…' : t('place')}</button>
+              <button type="submit" disabled={busy} className="btn btn-champagne w-full mt-6">{busy ? '…' : t('place')}</button>
             </div>
           </div>
         </form>
@@ -128,11 +178,37 @@ function Section({ label, children }: { label: string; children: React.ReactNode
   );
 }
 
-function Field({ label, value, onChange, required, dir, placeholder }: { label: string; value: string; onChange: (v: string) => void; required?: boolean; dir?: string; placeholder?: string }) {
+function Field({
+  label, value, onChange, required, dir, placeholder, error, isAr, inputRef,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  required?: boolean;
+  dir?: string;
+  placeholder?: string;
+  error?: boolean;
+  isAr?: boolean;
+  inputRef?: (el: HTMLInputElement | null) => void;
+}) {
   return (
     <div>
-      <div className="field-label">{label}</div>
-      <input value={value} onChange={(e) => onChange(e.target.value)} required={required} dir={dir as any} placeholder={placeholder} className="field" />
+      <div className={`field-label ${error ? 'text-burgundy' : ''}`}>
+        {label}{required && <span className="text-burgundy"> *</span>}
+      </div>
+      <input
+        ref={inputRef}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        dir={dir as any}
+        placeholder={placeholder}
+        className={`field ${error ? 'border-burgundy ring-1 ring-burgundy' : ''}`}
+      />
+      {error && (
+        <div className="text-burgundy text-xs mt-1">
+          {isAr ? 'هذا الحقل مطلوب' : 'This field is required'}
+        </div>
+      )}
     </div>
   );
 }

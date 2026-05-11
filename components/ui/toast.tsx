@@ -23,7 +23,7 @@ export function ToastHost() {
   }, []);
 
   return (
-    <div className="fixed top-24 md:top-28 left-1/2 -translate-x-1/2 z-[150] space-y-2 pointer-events-none" dir="ltr">
+    <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[150] space-y-2 pointer-events-none flex flex-col items-center" dir="ltr">
       <AnimatePresence>
         {toasts.map((t) => (
           <motion.div
