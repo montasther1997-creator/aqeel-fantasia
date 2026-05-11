@@ -20,11 +20,11 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     const variantsToDelete = existingVariants.filter((v) => !incomingVariantIds.has(v.id) && v._count.orderItems === 0).map((v) => v.id);
     const variantsToOrphan = existingVariants.filter((v) => !incomingVariantIds.has(v.id) && v._count.orderItems > 0);
 
-    // 2) Diff images: just rebuild (no FKs)
-    await prisma.productImage.deleteMany({ where: { productId: id } });
-
-    // 3) Apply variant changes within a transaction
+    // 2) Apply all changes (images rebuild + variant diff + product update) in ONE transaction
     await prisma.$transaction(async (tx) => {
+      // Rebuild images
+      await tx.productImage.deleteMany({ where: { productId: id } });
+
       // Delete unused variants
       if (variantsToDelete.length) {
         await tx.productVariant.deleteMany({ where: { id: { in: variantsToDelete } } });

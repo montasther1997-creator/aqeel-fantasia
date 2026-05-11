@@ -75,6 +75,31 @@ export const AddressSchema = z.object({
   isDefault: z.boolean().optional(),
 });
 
+/** Product create/update (admin) */
+export const ProductSchema = z.object({
+  slug: z.string().trim().min(1).max(200).regex(/^[a-z0-9-]+$/i, 'slug-must-be-kebab'),
+  sku: z.string().max(100).optional().or(z.literal('')),
+  nameAr: z.string().trim().min(1).max(300),
+  nameEn: z.string().trim().min(1).max(300),
+  taglineAr: z.string().max(500).optional().or(z.literal('')),
+  taglineEn: z.string().max(500).optional().or(z.literal('')),
+  descAr: z.string().max(5000).optional().or(z.literal('')),
+  descEn: z.string().max(5000).optional().or(z.literal('')),
+  priceIQD: z.number().int().min(0).max(1_000_000_000),
+  priceUSD: z.number().min(0).max(1_000_000),
+  compareIQD: z.number().int().min(0).optional().nullable(),
+  compareUSD: z.number().min(0).optional().nullable(),
+  stock: z.number().int().min(0).max(100_000).optional(),
+  categoryId: z.string().max(50).optional().or(z.literal('')).nullable(),
+  collectionId: z.string().max(50).optional().or(z.literal('')).nullable(),
+  active: z.boolean().optional(),
+  featured: z.boolean().optional(),
+  isNew: z.boolean().optional(),
+  isLimited: z.boolean().optional(),
+  images: z.array(z.object({ id: z.string().optional(), url: z.string().url().max(1000), alt: z.string().max(200).optional().nullable() })).max(20).optional(),
+  variants: z.array(z.object({ id: z.string().optional(), size: z.string().max(50).optional().nullable(), color: z.string().max(50).optional().nullable(), stock: z.number().int().min(0).max(10000).optional(), priceIQD: z.number().int().min(0).optional().nullable(), priceUSD: z.number().min(0).optional().nullable() })).max(50).optional(),
+});
+
 /** Helper to convert Zod errors to a flat shape */
 export function zodError(result: z.SafeParseError<any>) {
   const issues = result.error.issues.map((i) => ({ path: i.path.join('.'), msg: i.message }));

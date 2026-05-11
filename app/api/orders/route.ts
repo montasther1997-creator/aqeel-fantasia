@@ -4,6 +4,7 @@ import { genOrderNumber } from '@/lib/utils';
 import { getCustomer } from '@/lib/auth';
 import { Prisma } from '@prisma/client';
 import { rateLimit } from '@/lib/ratelimit';
+import { OrderSchema, zodError } from '@/lib/validators';
 
 /**
  * Order creation — fully atomic.
@@ -20,15 +21,10 @@ export async function POST(req: Request) {
   }
 
   try {
-    const body = await req.json();
-    const { name, phone, email, country, governorate, city, area, street, details, notes, currency, items, discount: clientDiscount } = body;
-
-    if (!Array.isArray(items) || !items.length || !name || !phone || !governorate || !city) {
-      return NextResponse.json({ ok: false, error: 'missing-fields' }, { status: 400 });
-    }
-    if (items.length > 100) {
-      return NextResponse.json({ ok: false, error: 'too-many-items' }, { status: 400 });
-    }
+    const raw = await req.json().catch(() => null);
+    const parsed = OrderSchema.safeParse(raw);
+    if (!parsed.success) return NextResponse.json(zodError(parsed), { status: 400 });
+    const { name, phone, email, country, governorate, city, area, street, details, notes, currency, items, discount: clientDiscount } = parsed.data;
 
     const productIds = Array.from(new Set(items.map((it: any) => String(it.productId))));
     const products = await prisma.product.findMany({
