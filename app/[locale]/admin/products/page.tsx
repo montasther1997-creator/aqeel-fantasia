@@ -13,6 +13,7 @@ export default async function ProductsAdmin({
   const sp = await searchParams;
   await requireAdmin(locale);
   const t = await getTranslations('admin.products');
+  const isAr = locale === 'ar';
   const where = sp.q ? {
     OR: [
       { nameEn: { contains: sp.q } },
@@ -25,57 +26,84 @@ export default async function ProductsAdmin({
   });
 
   return (
-    <div>
-      <div className="flex items-end justify-between mb-8">
+    <div className="space-y-10">
+      <header className="flex items-end justify-between gap-6 pb-6 border-b border-line">
         <div>
-          <p className="text-xs tracking-cinematic text-muted">— {t('eyebrow')}</p>
-          <h1 className="h-display text-4xl mt-2">{t('count', { count: products.length })}</h1>
+          <p className="ed-eye mb-3">— {t('eyebrow')}</p>
+          <h1 className="ed-title text-5xl md:text-6xl">{t('title')}</h1>
+          <p className="ed-caption text-muted num mt-3">{products.length}</p>
         </div>
-        <Link href={`/${locale}/admin/products/new`} className="btn-primary"><Plus className="w-4 h-4" /> {t('new')}</Link>
-      </div>
+        <Link
+          href={`/${locale}/admin/products/new`}
+          className="btn-primary inline-flex items-center gap-2"
+        >
+          <Plus className="w-4 h-4" /> {t('new')}
+        </Link>
+      </header>
 
-      <form className="mb-6 flex gap-2">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
-          <input name="q" defaultValue={sp.q} placeholder={t('searchPlaceholder')} className="input pl-10" />
-        </div>
-        <button className="btn-ghost">{t('search')}</button>
+      <form className="relative max-w-md">
+        <Search className="absolute top-1/2 -translate-y-1/2 start-3 w-4 h-4 text-muted pointer-events-none" />
+        <input name="q" defaultValue={sp.q} placeholder={t('searchPlaceholder')} className="input ps-10" />
       </form>
 
-      <div className="glass overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="border-b border-line text-xs tracking-cinematic text-muted">
+      <div className="ed-card overflow-x-auto p-0">
+        <table className="ed-table">
+          <thead>
             <tr>
-              <th className="p-3 text-left">{t('th.image')}</th>
-              <th className="p-3 text-left">{t('th.name')}</th>
-              <th className="p-3 text-left">{t('th.sku')}</th>
-              <th className="p-3 text-left">{t('th.category')}</th>
-              <th className="p-3 text-left">{t('th.priceIQD')}</th>
-              <th className="p-3 text-left">{t('th.stock')}</th>
-              <th className="p-3 text-left">{t('th.status')}</th>
-              <th className="p-3"></th>
+              <th>{t('th.image')}</th>
+              <th>{t('th.name')}</th>
+              <th>{t('th.sku')}</th>
+              <th>{t('th.category')}</th>
+              <th>{t('th.priceIQD')}</th>
+              <th>{t('th.stock')}</th>
+              <th>{t('th.status')}</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
+            {products.length === 0 && (
+              <tr><td colSpan={8}><p className="ed-caption text-muted text-center py-8">{t('empty')}</p></td></tr>
+            )}
             {products.map((p) => (
-              <tr key={p.id} className="border-b border-line/40 hover:bg-white/5">
-                <td className="p-3"><div className="w-12 h-12 bg-bg-secondary">{p.images[0] && <img src={p.images[0].url} className="w-full h-full object-cover" />}</div></td>
-                <td className="p-3">
-                  <p className="text-frost">{p.nameEn}</p>
-                  <p className="text-xs text-muted">{p.nameAr}</p>
+              <tr key={p.id}>
+                <td>
+                  <div className="w-14 h-14 bg-bg overflow-hidden">
+                    {p.images[0] && <img src={p.images[0].url} alt={p.nameEn} className="w-full h-full object-cover" />}
+                  </div>
                 </td>
-                <td className="p-3 font-mono text-xs">{p.sku}</td>
-                <td className="p-3 text-muted">{p.category?.nameEn || '—'}</td>
-                <td className="p-3">{p.priceIQD.toLocaleString()}</td>
-                <td className={`p-3 ${p.stock < 5 ? 'text-blood' : ''}`}>{p.stock}</td>
-                <td className="p-3">
-                  <span className={`text-[10px] tracking-cinematic uppercase ${p.active ? 'text-electric' : 'text-muted'}`}>
+                <td>
+                  <div className="serif text-base text-frost" style={isAr ? { fontFamily: 'var(--serif-ar)' } : {}}>
+                    {isAr ? p.nameAr : p.nameEn}
+                  </div>
+                  <div className="muted text-xs mt-0.5">
+                    {isAr ? p.nameEn : p.nameAr}
+                  </div>
+                </td>
+                <td className="font-mono text-xs num-col">{p.sku}</td>
+                <td className="muted">{(isAr ? p.category?.nameAr : p.category?.nameEn) || '—'}</td>
+                <td className="num-col">
+                  <span className="serif text-base text-frost" style={isAr ? { fontFamily: 'var(--serif-ar)' } : {}}>
+                    {p.priceIQD.toLocaleString()}
+                  </span>
+                  <span className="text-[10px] text-muted ms-1">{isAr ? 'د.ع' : 'IQD'}</span>
+                </td>
+                <td className="num-col">
+                  <span className={p.stock < 5 ? 'text-burgundy' : ''}>{p.stock}</span>
+                </td>
+                <td>
+                  <span className={`ed-pill ${p.active ? 'accent' : ''}`}>
                     {p.active ? t('active') : t('hidden')}
                   </span>
                 </td>
-                <td className="p-3 flex gap-2">
-                  <Link href={`/${locale}/product/${p.slug}`} target="_blank" className="text-muted hover:text-frost"><Eye className="w-4 h-4" /></Link>
-                  <Link href={`/${locale}/admin/products/${p.id}`} className="text-muted hover:text-frost"><Edit className="w-4 h-4" /></Link>
+                <td>
+                  <div className="flex gap-3">
+                    <Link href={`/${locale}/product/${p.slug}`} target="_blank" className="text-muted hover:text-accent transition-colors" aria-label="view">
+                      <Eye className="w-4 h-4" />
+                    </Link>
+                    <Link href={`/${locale}/admin/products/${p.id}`} className="text-muted hover:text-accent transition-colors" aria-label="edit">
+                      <Edit className="w-4 h-4" />
+                    </Link>
+                  </div>
                 </td>
               </tr>
             ))}

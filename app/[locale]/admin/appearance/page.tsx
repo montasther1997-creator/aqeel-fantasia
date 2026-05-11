@@ -11,14 +11,18 @@ export default async function Appearance({ params }: { params: Promise<{ locale:
   for (const s of settings) initial[s.key] = s.value;
 
   return (
-    <div>
-      <p className="text-xs tracking-cinematic text-muted">— {t('eyebrow')}</p>
-      <h1 className="h-display text-4xl mt-2 mb-2">{t('title')}</h1>
-      <p className="text-muted text-sm mb-6">{t('subtitle')}</p>
+    <div className="space-y-10">
+      <header className="flex items-end justify-between gap-6 pb-6 border-b border-line">
+        <div>
+          <p className="ed-eye mb-3">— {t('eyebrow')}</p>
+          <h1 className="ed-title text-5xl md:text-6xl">{t('title')}</h1>
+          <p className="ed-caption text-muted mt-3">{t('subtitle')}</p>
+        </div>
+      </header>
 
       <AppearanceForm initial={initial} />
 
-      <div className="glass p-6 mt-8 grid lg:grid-cols-2 gap-6">
+      <div className="glass p-6 grid lg:grid-cols-2 gap-6">
         <div>
           <h3 className="text-xs tracking-cinematic text-muted mb-3">— {t('palette')}</h3>
           <div className="space-y-2">

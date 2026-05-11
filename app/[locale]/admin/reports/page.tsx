@@ -21,6 +21,7 @@ export default async function ReportsAdmin({
   await requireAdmin(locale);
   const t = await getTranslations('admin.reports');
   const ts = await getTranslations('admin.orderActions.statusOpts');
+  const isAr = locale === 'ar';
 
   const today = new Date();
   const monthAgo = new Date(Date.now() - 30 * 86400000);
@@ -60,90 +61,118 @@ export default async function ReportsAdmin({
 
   const csvQuery = `?from=${fromStr}&to=${toStr}`;
 
-  const buckets: [string, any][] = [
-    [t('last7d'), r7],
-    [t('last30d'), r30],
-    [t('allTime'), all],
+  const buckets: { label: string; data: any }[] = [
+    { label: `${t('range')} (${fromStr} → ${toStr})`, data: range },
+    { label: t('last7d'), data: r7 },
+    { label: t('last30d'), data: r30 },
+    { label: t('allTime'), data: all },
   ];
 
   return (
-    <div>
-      <p className="text-xs tracking-cinematic text-muted">— {t('eyebrow')}</p>
-      <h1 className="h-display text-4xl mt-2 mb-6">{t('title')}</h1>
-
-      <form className="glass p-4 mb-8 flex flex-wrap items-end gap-3">
+    <div className="space-y-10">
+      <header className="flex items-end justify-between gap-6 pb-6 border-b border-line">
         <div>
-          <label className="text-xs text-muted tracking-cinematic uppercase block mb-1">{t('from')}</label>
-          <input type="date" name="from" defaultValue={fromStr} className="input" />
+          <p className="ed-eye mb-3">— {t('eyebrow')}</p>
+          <h1 className="ed-title text-5xl md:text-6xl">{t('title')}</h1>
+        </div>
+      </header>
+
+      <form className="ed-card flex flex-wrap items-end gap-4">
+        <div>
+          <label className="ed-eye block mb-2">{t('from')}</label>
+          <input type="date" name="from" defaultValue={fromStr} className="input num" />
         </div>
         <div>
-          <label className="text-xs text-muted tracking-cinematic uppercase block mb-1">{t('to')}</label>
-          <input type="date" name="to" defaultValue={toStr} className="input" />
+          <label className="ed-eye block mb-2">{t('to')}</label>
+          <input type="date" name="to" defaultValue={toStr} className="input num" />
         </div>
         <button className="btn-primary">{t('apply')}</button>
-        <a href={`/api/admin/reports/export${csvQuery}`} className="btn-ghost inline-flex items-center gap-2 ml-auto">
+        <a href={`/api/admin/reports/export${csvQuery}`} className="btn-ghost inline-flex items-center gap-2 ms-auto">
           <Download className="w-4 h-4" /> {t('exportCsv')}
         </a>
       </form>
 
-      <div className="grid lg:grid-cols-4 gap-4 mb-10">
-        <div className="glass p-6">
-          <p className="text-xs tracking-cinematic text-muted mb-2">{t('range')} ({fromStr} → {toStr})</p>
-          <p className="font-display text-3xl">{(range._sum.total || 0).toLocaleString()}</p>
-          <p className="text-xs text-muted mt-1">{range._count} {t('orders')}</p>
-        </div>
-        {buckets.map(([label, data]) => (
-          <div key={label} className="glass p-6">
-            <p className="text-xs tracking-cinematic text-muted mb-2">{label}</p>
-            <p className="font-display text-3xl">{(data._sum.total || 0).toLocaleString()}</p>
-            <p className="text-xs text-muted mt-1">{data._count} {t('orders')}</p>
+      <section className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-line">
+        {buckets.map((b, i) => (
+          <div key={i} className="ed-stat">
+            <span className="label">{b.label}</span>
+            <span className="value num">{(b.data._sum.total || 0).toLocaleString()}</span>
+            <div className="trend">
+              <span className="num">{b.data._count} {t('orders')}</span>
+            </div>
           </div>
         ))}
-      </div>
+      </section>
 
-      <div className="grid lg:grid-cols-2 gap-6">
-        <div className="glass p-6">
-          <h3 className="text-xs tracking-cinematic text-muted mb-4">— {t('bestSellers')}</h3>
-          {bestSellers.length === 0 ? <p className="text-muted text-sm">{t('noBestSellers')}</p> :
-            <div className="divide-y divide-line">
+      <section className="grid lg:grid-cols-2 gap-px bg-line">
+        <div className="bg-bg-elevated p-8">
+          <div className="ed-section-head">
+            <span className="em-dash" />
+            <span className="title">{t('bestSellers')}</span>
+          </div>
+          {bestSellers.length === 0 ? (
+            <p className="ed-caption text-muted py-6">{t('noBestSellers')}</p>
+          ) : (
+            <ul className="divide-y divide-line">
               {bestSellers.map((b) => (
-                <div key={b.productId} className="py-3 flex justify-between items-center">
-                  <span className="text-sm">{b.product?.nameEn || b.productId}</span>
-                  <span className="text-xs text-muted">{b._sum.qty} {t('sold')} · {b._sum.totalIQD?.toLocaleString()} IQD</span>
-                </div>
+                <li key={b.productId} className="py-4 flex justify-between items-baseline gap-4">
+                  <span className="serif text-base text-frost" style={isAr ? { fontFamily: 'var(--serif-ar)' } : {}}>
+                    {(isAr ? b.product?.nameAr : b.product?.nameEn) || b.productId}
+                  </span>
+                  <span className="text-xs text-muted whitespace-nowrap">
+                    <span className="num">{b._sum.qty}</span> {t('sold')} · <span className="num">{b._sum.totalIQD?.toLocaleString()}</span>
+                  </span>
+                </li>
               ))}
-            </div>
-          }
+            </ul>
+          )}
         </div>
-        <div className="glass p-6">
-          <h3 className="text-xs tracking-cinematic text-muted mb-4">— {t('topCustomers')}</h3>
-          {topCustomers.length === 0 ? <p className="text-muted text-sm">{t('noTopCustomers')}</p> :
-            <div className="divide-y divide-line">
+
+        <div className="bg-bg-elevated p-8">
+          <div className="ed-section-head">
+            <span className="em-dash" />
+            <span className="title">{t('topCustomers')}</span>
+          </div>
+          {topCustomers.length === 0 ? (
+            <p className="ed-caption text-muted py-6">{t('noTopCustomers')}</p>
+          ) : (
+            <ul className="divide-y divide-line">
               {topCustomers.map((c) => (
-                <div key={c.id} className="py-3 flex justify-between items-center">
-                  <div>
-                    <span className="text-sm">{c.name}</span>
-                    <span className="text-xs text-muted block">{c.phone}</span>
+                <li key={c.id} className="py-4 flex justify-between items-center gap-4">
+                  <div className="min-w-0">
+                    <p className="serif text-base text-frost" style={isAr ? { fontFamily: 'var(--serif-ar)' } : {}}>{c.name}</p>
+                    <p className="text-xs text-muted font-mono num">{c.phone}</p>
                   </div>
-                  <span className="text-xs text-muted">{c._count.orders} {t('orders')} · ${c.totalSpent.toLocaleString()}</span>
-                </div>
+                  <div className="text-end shrink-0">
+                    <p className="serif text-base text-frost num" style={isAr ? { fontFamily: 'var(--serif-ar)' } : {}}>
+                      ${c.totalSpent.toLocaleString()}
+                    </p>
+                    <p className="text-xs text-muted num">{c._count.orders} {t('orders')}</p>
+                  </div>
+                </li>
               ))}
-            </div>
-          }
+            </ul>
+          )}
         </div>
-        <div className="glass p-6 lg:col-span-2">
-          <h3 className="text-xs tracking-cinematic text-muted mb-4">— {t('ordersByStatus')}</h3>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+
+        <div className="bg-bg-elevated p-8 lg:col-span-2">
+          <div className="ed-section-head">
+            <span className="em-dash" />
+            <span className="title">{t('ordersByStatus')}</span>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-line">
             {byStatus.map((s) => (
-              <div key={s.status} className="border border-line p-4">
-                <p className="text-[10px] tracking-cinematic uppercase text-electric">{ts(s.status as any)}</p>
-                <p className="font-display text-2xl mt-1">{s._count}</p>
-                <p className="text-xs text-muted">{(s._sum.total || 0).toLocaleString()}</p>
+              <div key={s.status} className="bg-bg-elevated p-5">
+                <p className="ed-pill accent">{ts(s.status as any)}</p>
+                <p className="serif font-light text-3xl mt-3 num" style={isAr ? { fontFamily: 'var(--serif-ar)' } : {}}>
+                  {s._count}
+                </p>
+                <p className="text-xs text-muted mt-1 num">{(s._sum.total || 0).toLocaleString()}</p>
               </div>
             ))}
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

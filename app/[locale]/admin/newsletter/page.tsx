@@ -7,37 +7,44 @@ import { getTranslations } from 'next-intl/server';
 export default async function Newsletter({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params; await requireAdmin(locale);
   const t = await getTranslations('admin.newsletter');
+  const isAr = locale === 'ar';
   const subs = await prisma.newsletterSub.findMany({ orderBy: { createdAt: 'desc' } });
+
   return (
-    <div>
-      <div className="flex items-end justify-between mb-6">
+    <div className="space-y-10">
+      <header className="flex items-end justify-between gap-6 pb-6 border-b border-line">
         <div>
-          <p className="text-xs tracking-cinematic text-muted">— {t('eyebrow')}</p>
-          <h1 className="h-display text-4xl mt-2">{t('count', { count: subs.length })}</h1>
+          <p className="ed-eye mb-3">— {t('eyebrow')}</p>
+          <h1 className="ed-title text-5xl md:text-6xl">{t('title')}</h1>
+          <p className="ed-caption text-muted num mt-3">{subs.length}</p>
         </div>
         <a href="/api/admin/newsletter/export" className="btn-ghost inline-flex items-center gap-2">
           <Download className="w-4 h-4" /> {t('exportCsv')}
         </a>
-      </div>
-      <div className="glass overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="border-b border-line text-xs text-muted tracking-cinematic">
+      </header>
+
+      <div className="ed-card overflow-x-auto p-0">
+        <table className="ed-table">
+          <thead>
             <tr>
-              <th className="p-3 text-left">{t('th.contact')}</th>
-              <th className="p-3 text-left">{t('th.type')}</th>
-              <th className="p-3 text-left">{t('th.status')}</th>
-              <th className="p-3 text-left">{t('th.joined')}</th>
-              <th className="p-3"></th>
+              <th>{t('th.contact')}</th>
+              <th>{t('th.type')}</th>
+              <th>{t('th.status')}</th>
+              <th>{t('th.joined')}</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
+            {subs.length === 0 && (
+              <tr><td colSpan={5}><p className="ed-caption text-muted text-center py-8">{t('empty')}</p></td></tr>
+            )}
             {subs.map((s) => (
-              <tr key={s.id} className="border-b border-line/40">
-                <td className="p-3 font-mono">{s.contact}</td>
-                <td className="p-3 text-xs uppercase">{s.type}</td>
-                <td className="p-3"><NewsletterRow id={s.id} initialActive={s.active} /></td>
-                <td className="p-3 text-xs text-muted">{s.createdAt.toLocaleString()}</td>
-                <td className="p-3"></td>
+              <tr key={s.id}>
+                <td className="font-mono num-col">{s.contact}</td>
+                <td><span className="ed-pill">{s.type}</span></td>
+                <td><NewsletterRow id={s.id} initialActive={s.active} /></td>
+                <td className="muted num-col">{s.createdAt.toLocaleDateString(isAr ? 'ar-IQ' : 'en-US')}</td>
+                <td></td>
               </tr>
             ))}
           </tbody>

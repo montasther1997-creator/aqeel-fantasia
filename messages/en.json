@@ -257,7 +257,9 @@
       "items": "items",
       "lowStock": "Low Stock",
       "allGood": "All good",
-      "left": "left"
+      "left": "left",
+      "viewDetails": "View details",
+      "trends": "Month trends"
     },
     "mediaInput": {
       "upload": "Upload",
@@ -317,6 +319,7 @@
       "eyebrow": "Catalog",
       "title": "Products",
       "count": "Products ({count})",
+      "empty": "No products.",
       "new": "New",
       "searchPlaceholder": "Search products...",
       "search": "Search",
@@ -397,6 +400,7 @@
       "eyebrow": "Sales",
       "title": "Orders",
       "count": "Orders ({count})",
+      "empty": "No orders.",
       "filterAll": "All",
       "view": "VIEW",
       "th": {
@@ -435,6 +439,7 @@
       "eyebrow": "Sales",
       "title": "Customers",
       "count": "Customers ({count})",
+      "empty": "No customers.",
       "searchPlaceholder": "Search name, phone, email...",
       "view": "VIEW",
       "th": {
@@ -634,6 +639,7 @@
       "eyebrow": "Signal",
       "title": "Newsletter",
       "count": "Newsletter ({count})",
+      "empty": "No subscribers.",
       "exportCsv": "Export CSV",
       "confirmDelete": "Delete subscriber?",
       "active": "✓ ACTIVE",
@@ -844,7 +850,14 @@
       "prev": "Prev",
       "next": "Next",
       "pageOf": "Page {page} of {total}",
-      "empty": "No activity matches."
+      "empty": "No activity matches.",
+      "th": {
+        "time": "Time",
+        "admin": "Admin",
+        "action": "Action",
+        "entity": "Entity",
+        "details": "Details"
+      }
     },
     "languages": {
       "eyebrow": "System",

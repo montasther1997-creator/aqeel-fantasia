@@ -11,9 +11,14 @@ export default async function CultAdmin({ params }: { params: Promise<{ locale: 
     prisma.cultMember.findMany({ include: { customer: true, tier: true } }),
   ]);
   return (
-    <div>
-      <p className="text-xs tracking-cinematic text-muted">— {t('eyebrow')}</p>
-      <h1 className="h-display text-4xl mt-2 mb-6">{t('title')}</h1>
+    <div className="space-y-10">
+      <header className="flex items-end justify-between gap-6 pb-6 border-b border-line">
+        <div>
+          <p className="ed-eye mb-3">— {t('eyebrow')}</p>
+          <h1 className="ed-title text-5xl md:text-6xl">{t('title')}</h1>
+          <p className="ed-caption text-muted num mt-3">{members.length}</p>
+        </div>
+      </header>
       <CultManager tiers={tiers} members={members} />
     </div>
   );

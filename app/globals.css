@@ -199,6 +199,196 @@
   .bg-bg-secondary { background: var(--bg-elevated); }
   .border-line { border-color: var(--border); }
 
+  /* ============================================================ */
+  /* EDITORIAL ADMIN — magazine-inspired design system             */
+  /* ============================================================ */
+
+  .ed-eye {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--fg-tertiary);
+    font-weight: 400;
+  }
+  [lang="ar"] .ed-eye { letter-spacing: 0; text-transform: none; font-family: var(--sans-ar); font-size: 11px; }
+
+  .ed-title {
+    font-family: var(--serif);
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    color: var(--fg);
+  }
+  [lang="ar"] .ed-title { font-family: var(--serif-ar); letter-spacing: 0; }
+
+  .ed-display {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: 56px;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--fg);
+  }
+  [lang="ar"] .ed-display { font-family: var(--serif-ar); letter-spacing: 0; }
+
+  .ed-caption {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--fg-secondary);
+    letter-spacing: 0.005em;
+  }
+  [lang="ar"] .ed-caption { font-family: var(--serif-ar); font-style: normal; }
+
+  /* Stat card — editorial style */
+  .ed-stat {
+    position: relative;
+    padding: 32px 28px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    transition: border-color var(--d-default) var(--ease-editorial),
+                background var(--d-default) var(--ease-editorial);
+    display: block;
+    overflow: hidden;
+  }
+  .ed-stat:hover { border-color: var(--accent); }
+  .ed-stat::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 28px; right: 28px;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.5;
+  }
+  .ed-stat .label {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--fg-tertiary);
+    margin-bottom: 20px;
+    display: block;
+  }
+  [lang="ar"] .ed-stat .label { letter-spacing: 0; text-transform: none; font-size: 11px; }
+  .ed-stat .value {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: 42px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+    display: block;
+  }
+  .ed-stat .trend {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    color: var(--fg-tertiary);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .ed-stat .trend.up { color: #6FAF73; }
+  .ed-stat .trend.down { color: var(--burgundy); }
+
+  /* Section header — magazine-style */
+  .ed-section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .ed-section-head .em-dash {
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+  .ed-section-head .title {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--fg-secondary);
+    font-weight: 500;
+  }
+  [lang="ar"] .ed-section-head .title { letter-spacing: 0; text-transform: none; font-family: var(--sans-ar); font-size: 12px; }
+  .ed-section-head .count {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--fg-tertiary);
+    margin-inline-start: auto;
+  }
+
+  /* Editorial table */
+  .ed-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .ed-table thead th {
+    text-align: start;
+    padding: 14px 16px;
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--fg-tertiary);
+    font-weight: 500;
+    border-bottom: 1px solid var(--border);
+    background: transparent;
+  }
+  [lang="ar"] .ed-table thead th { letter-spacing: 0; text-transform: none; font-family: var(--sans-ar); font-size: 12px; }
+  .ed-table tbody td {
+    padding: 18px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--fg);
+    vertical-align: middle;
+    transition: background var(--d-instant) var(--ease-editorial);
+  }
+  .ed-table tbody tr:last-child td { border-bottom: none; }
+  .ed-table tbody tr:hover td { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+  .ed-table .num-col { font-family: var(--sans); font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: embed; }
+  .ed-table .muted { color: var(--fg-tertiary); font-size: 12px; }
+
+  /* Pill (status badge) */
+  .ed-pill {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    color: var(--fg-secondary);
+    background: transparent;
+  }
+  [lang="ar"] .ed-pill { letter-spacing: 0; text-transform: none; font-size: 11px; padding: 4px 12px; }
+  .ed-pill.accent { color: var(--accent); border-color: var(--accent); }
+  .ed-pill.danger { color: var(--burgundy); border-color: var(--burgundy); }
+  .ed-pill.success { color: #6FAF73; border-color: #6FAF73; }
+
+  /* Editorial card — wraps tables and sections */
+  .ed-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    padding: 28px;
+    transition: border-color var(--d-default) var(--ease-editorial);
+  }
+  .ed-card:hover { border-color: color-mix(in srgb, var(--accent) 50%, var(--border)); }
+
+  /* Thin gold rule */
+  .ed-rule {
+    height: 1px;
+    background: var(--accent);
+    border: none;
+    opacity: 0.6;
+  }
+
   /* Atelier shell — full viewport, responsive */
   .atelier-shell {
     background: var(--bg);

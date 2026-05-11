@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { requireAdmin } from '@/lib/admin-guard';
 import { prisma } from '@/lib/db';
-import { ShoppingBag, Users, Package, DollarSign } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { DashboardCharts } from '@/components/admin/dashboard-charts';
-import { getTranslations, getLocale } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 
 export default async function AdminHome({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -37,73 +37,112 @@ export default async function AdminHome({ params }: { params: Promise<{ locale: 
   const chart = Object.entries(days).map(([d, v]) => ({ day: d.slice(5), orders: v.count, revenue: v.total }));
 
   const stats = [
-    { label: t('labels.revenue'), value: `$${(revenueAgg._sum.total || 0).toLocaleString()}`, icon: DollarSign, href: `/${locale}/admin/reports` },
-    { label: t('labels.orders'), value: ordersCount, icon: ShoppingBag, href: `/${locale}/admin/orders` },
-    { label: t('labels.customers'), value: customersCount, icon: Users, href: `/${locale}/admin/customers` },
-    { label: t('labels.products'), value: productsCount, icon: Package, href: `/${locale}/admin/products` },
+    { label: t('labels.revenue'), value: `$${(revenueAgg._sum.total || 0).toLocaleString()}`, href: `/${locale}/admin/reports` },
+    { label: t('labels.orders'), value: String(ordersCount), href: `/${locale}/admin/orders` },
+    { label: t('labels.customers'), value: String(customersCount), href: `/${locale}/admin/customers` },
+    { label: t('labels.products'), value: String(productsCount), href: `/${locale}/admin/products` },
   ];
 
+  const today = new Date().toLocaleDateString(isAr ? 'ar-IQ' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+
   return (
-    <div>
-      <div className="flex items-end justify-between mb-8">
+    <div className="space-y-12">
+      {/* Editorial Header */}
+      <header className="flex items-end justify-between gap-6 pb-6 border-b border-line">
         <div>
-          <p className="text-xs tracking-cinematic text-muted">— {t('groups.overview').toUpperCase()}</p>
-          <h1 className="h-display text-4xl mt-2">{t('nav.dashboard')}</h1>
+          <p className="ed-eye mb-3">— {t('groups.overview')}</p>
+          <h1 className="ed-title text-5xl md:text-6xl">{t('nav.dashboard')}</h1>
         </div>
-        <p className="text-xs text-muted">{new Date().toLocaleDateString(isAr ? 'ar-IQ' : 'en-US')}</p>
-      </div>
+        <p className="ed-caption text-xs text-muted hidden md:block num">{today}</p>
+      </header>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-        {stats.map((s) => {
-          const Icon = s.icon;
-          return (
-            <Link key={s.label} href={s.href} className="glass p-6 hover:bg-white/5 transition-colors block">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs text-muted tracking-cinematic uppercase">{s.label}</span>
-                <Icon className="w-4 h-4 text-electric" />
-              </div>
-              <p className="text-3xl font-display">{s.value}</p>
-            </Link>
-          );
-        })}
-      </div>
+      {/* Stat Cards — Editorial */}
+      <section className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-line">
+        {stats.map((s) => (
+          <Link key={s.label} href={s.href} className="ed-stat group">
+            <span className="label">{s.label}</span>
+            <span className="value num">{s.value}</span>
+            <div className="trend">
+              <span>{t('labels.viewDetails')}</span>
+              <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-accent" />
+            </div>
+          </Link>
+        ))}
+      </section>
 
-      <DashboardCharts data={chart} ordersLabel={t('labels.ordersChart')} revenueLabel={t('labels.revenueChart')} />
+      {/* Charts */}
+      <section>
+        <div className="ed-section-head">
+          <span className="em-dash" />
+          <span className="title">{t('labels.trends')}</span>
+        </div>
+        <DashboardCharts data={chart} ordersLabel={t('labels.ordersChart')} revenueLabel={t('labels.revenueChart')} />
+      </section>
 
-      <div className="grid lg:grid-cols-2 gap-6 mt-10">
-        <div className="glass p-6">
-          <h3 className="text-xs tracking-cinematic text-muted mb-4">— {t('labels.recentOrders')}</h3>
-          {recentOrders.length === 0 ? <p className="text-muted text-sm">{t('labels.noOrders')}</p> :
-            <div className="divide-y divide-line">
+      {/* Recent Orders + Low Stock */}
+      <section className="grid lg:grid-cols-2 gap-px bg-line">
+        <div className="bg-bg-elevated p-8">
+          <div className="ed-section-head">
+            <span className="em-dash" />
+            <span className="title">{t('labels.recentOrders')}</span>
+            <span className="count num">{recentOrders.length}</span>
+          </div>
+          {recentOrders.length === 0 ? (
+            <p className="ed-caption text-muted py-6">{t('labels.noOrders')}</p>
+          ) : (
+            <ul className="divide-y divide-line">
               {recentOrders.map((o) => (
-                <Link key={o.id} href={`/${locale}/admin/orders/${o.id}`} className="py-3 flex justify-between items-center text-sm gap-3 hover:bg-white/5 -mx-2 px-2 transition-colors">
-                  <div className="min-w-0">
-                    <p className="font-mono text-xs">{o.number}</p>
-                    <p className="text-xs text-muted mt-1">{new Date(o.createdAt).toLocaleString(isAr ? 'ar-IQ' : 'en-US')} · {o.items.length} {t('labels.items')}</p>
-                  </div>
-                  <div className={isAr ? 'text-left' : 'text-right'}>
-                    <p>{o.currency} {o.total.toLocaleString()}</p>
-                    <p className="text-[10px] uppercase tracking-cinematic text-electric">{ts(o.status as any)}</p>
-                  </div>
-                </Link>
+                <li key={o.id}>
+                  <Link
+                    href={`/${locale}/admin/orders/${o.id}`}
+                    className="flex items-center justify-between gap-4 py-4 -mx-3 px-3 hover:bg-bg/40 transition-colors"
+                  >
+                    <div className="min-w-0">
+                      <p className="font-mono text-sm text-frost">{o.number}</p>
+                      <p className="text-[11px] text-muted mt-1.5 num">
+                        {new Date(o.createdAt).toLocaleDateString(isAr ? 'ar-IQ' : 'en-US')} · {o.items.length} {t('labels.items')}
+                      </p>
+                    </div>
+                    <div className="text-end shrink-0">
+                      <p className="num text-frost serif text-lg" style={isAr ? { fontFamily: 'var(--serif-ar)' } : {}}>
+                        {o.total.toLocaleString()} <span className="text-[10px] text-muted">{o.currency}</span>
+                      </p>
+                      <span className="ed-pill accent mt-1.5 inline-block">{ts(o.status as any)}</span>
+                    </div>
+                  </Link>
+                </li>
               ))}
-            </div>
-          }
+            </ul>
+          )}
         </div>
-        <div className="glass p-6">
-          <h3 className="text-xs tracking-cinematic text-muted mb-4">— {t('labels.lowStock')}</h3>
-          {lowStock.length === 0 ? <p className="text-muted text-sm">{t('labels.allGood')}</p> :
-            <div className="divide-y divide-line">
+
+        <div className="bg-bg-elevated p-8">
+          <div className="ed-section-head">
+            <span className="em-dash" />
+            <span className="title">{t('labels.lowStock')}</span>
+            <span className="count num">{lowStock.length}</span>
+          </div>
+          {lowStock.length === 0 ? (
+            <p className="ed-caption text-muted py-6">{t('labels.allGood')}</p>
+          ) : (
+            <ul className="divide-y divide-line">
               {lowStock.map((p) => (
-                <Link key={p.id} href={`/${locale}/admin/products/${p.id}`} className="py-3 flex justify-between text-sm hover:bg-white/5 -mx-2 px-2 transition-colors">
-                  <span>{isAr ? p.nameAr : p.nameEn}</span>
-                  <span className="text-blood">{p.stock} {t('labels.left')}</span>
-                </Link>
+                <li key={p.id}>
+                  <Link
+                    href={`/${locale}/admin/products/${p.id}`}
+                    className="flex items-center justify-between gap-4 py-4 -mx-3 px-3 hover:bg-bg/40 transition-colors"
+                  >
+                    <span className="serif text-base text-frost" style={isAr ? { fontFamily: 'var(--serif-ar)' } : {}}>
+                      {isAr ? p.nameAr : p.nameEn}
+                    </span>
+                    <span className="ed-pill danger num">{p.stock} {t('labels.left')}</span>
+                  </Link>
+                </li>
               ))}
-            </div>
-          }
+            </ul>
+          )}
         </div>
-      </div>
+      </section>
     </div>
   );
 }

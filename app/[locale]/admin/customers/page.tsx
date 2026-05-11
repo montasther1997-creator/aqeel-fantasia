@@ -1,6 +1,7 @@
 import { requireAdmin } from '@/lib/admin-guard';
 import { prisma } from '@/lib/db';
 import Link from 'next/link';
+import { ArrowUpRight, Search } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 
 export default async function CustomersAdmin({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ q?: string }> }) {
@@ -8,6 +9,7 @@ export default async function CustomersAdmin({ params, searchParams }: { params:
   const sp = await searchParams;
   await requireAdmin(locale);
   const t = await getTranslations('admin.customers');
+  const isAr = locale === 'ar';
   const customers = await prisma.customer.findMany({
     where: sp.q ? { OR: [{ name: { contains: sp.q } }, { phone: { contains: sp.q } }, { email: { contains: sp.q } }] } : {},
     include: { _count: { select: { orders: true, addresses: true } } },
@@ -15,26 +17,68 @@ export default async function CustomersAdmin({ params, searchParams }: { params:
   });
 
   return (
-    <div>
-      <p className="text-xs tracking-cinematic text-muted">— {t('eyebrow')}</p>
-      <h1 className="h-display text-4xl mt-2 mb-6">{t('count', { count: customers.length })}</h1>
-      <form className="mb-6"><input name="q" defaultValue={sp.q} className="input" placeholder={t('searchPlaceholder')} /></form>
-      <div className="glass overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="border-b border-line text-xs tracking-cinematic text-muted">
-            <tr><th className="p-3 text-left">{t('th.name')}</th><th className="p-3 text-left">{t('th.phone')}</th><th className="p-3 text-left">{t('th.email')}</th><th className="p-3 text-left">{t('th.vip')}</th><th className="p-3 text-left">{t('th.orders')}</th><th className="p-3 text-left">{t('th.spent')}</th><th className="p-3 text-left">{t('th.joined')}</th><th></th></tr>
+    <div className="space-y-10">
+      <header className="flex items-end justify-between gap-6 pb-6 border-b border-line">
+        <div>
+          <p className="ed-eye mb-3">— {t('eyebrow')}</p>
+          <h1 className="ed-title text-5xl md:text-6xl">{t('title')}</h1>
+        </div>
+        <p className="ed-caption text-muted num hidden md:block">{customers.length}</p>
+      </header>
+
+      <form className="relative max-w-md">
+        <Search className="absolute top-1/2 -translate-y-1/2 start-3 w-4 h-4 text-muted pointer-events-none" />
+        <input name="q" defaultValue={sp.q} className="input ps-10" placeholder={t('searchPlaceholder')} />
+      </form>
+
+      <div className="ed-card overflow-x-auto p-0">
+        <table className="ed-table">
+          <thead>
+            <tr>
+              <th>{t('th.name')}</th>
+              <th>{t('th.phone')}</th>
+              <th>{t('th.email')}</th>
+              <th>{t('th.vip')}</th>
+              <th>{t('th.orders')}</th>
+              <th>{t('th.spent')}</th>
+              <th>{t('th.joined')}</th>
+              <th></th>
+            </tr>
           </thead>
           <tbody>
+            {customers.length === 0 && (
+              <tr><td colSpan={8}><p className="ed-caption text-muted text-center py-8">{t('empty')}</p></td></tr>
+            )}
             {customers.map((c) => (
-              <tr key={c.id} className="border-b border-line/40 hover:bg-white/5">
-                <td className="p-3">{c.name}{c.blocked && <span className="ml-2 text-blood text-[10px]">{t('blocked')}</span>}</td>
-                <td className="p-3 font-mono text-xs">{c.phone}</td>
-                <td className="p-3 text-xs text-muted">{c.email || '—'}</td>
-                <td className="p-3 text-[10px] tracking-cinematic uppercase">{c.vipTier}</td>
-                <td className="p-3">{c._count.orders}</td>
-                <td className="p-3">${c.totalSpent.toLocaleString()}</td>
-                <td className="p-3 text-xs text-muted">{c.createdAt.toLocaleDateString()}</td>
-                <td className="p-3"><Link href={`/${locale}/admin/customers/${c.id}`} className="text-electric text-xs">{t('view')} →</Link></td>
+              <tr key={c.id}>
+                <td>
+                  <div className="serif text-base text-frost" style={isAr ? { fontFamily: 'var(--serif-ar)' } : {}}>
+                    {c.name}
+                  </div>
+                  {c.blocked && <span className="ed-pill danger mt-1 inline-block">{t('blocked')}</span>}
+                </td>
+                <td className="num-col text-xs font-mono">{c.phone}</td>
+                <td className="muted">{c.email || '—'}</td>
+                <td>
+                  {c.vipTier && c.vipTier !== 'none'
+                    ? <span className="ed-pill accent">{c.vipTier}</span>
+                    : <span className="text-muted text-xs">—</span>}
+                </td>
+                <td className="num-col">{c._count.orders}</td>
+                <td className="num-col">
+                  <span className="serif text-base text-frost" style={isAr ? { fontFamily: 'var(--serif-ar)' } : {}}>
+                    ${c.totalSpent.toLocaleString()}
+                  </span>
+                </td>
+                <td className="muted num-col">{c.createdAt.toLocaleDateString(isAr ? 'ar-IQ' : 'en-US')}</td>
+                <td>
+                  <Link
+                    href={`/${locale}/admin/customers/${c.id}`}
+                    className="inline-flex items-center gap-1 text-xs text-accent hover:underline"
+                  >
+                    {t('view')} <ArrowUpRight className="w-3 h-3" />
+                  </Link>
+                </td>
               </tr>
             ))}
           </tbody>

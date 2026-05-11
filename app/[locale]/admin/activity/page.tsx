@@ -16,6 +16,7 @@ export default async function ActivityAdmin({
   const sp = await searchParams;
   await requireAdmin(locale);
   const t = await getTranslations('admin.activity');
+  const isAr = locale === 'ar';
 
   const page = Math.max(1, parseInt(sp.page || '1', 10) || 1);
   const where: any = {};
@@ -48,28 +49,33 @@ export default async function ActivityAdmin({
   };
 
   return (
-    <div>
-      <p className="text-xs tracking-cinematic text-muted">— {t('eyebrow')}</p>
-      <h1 className="h-display text-4xl mt-2 mb-6">{t('count', { count: total })}</h1>
-
-      <form className="glass p-4 mb-6 flex flex-wrap items-end gap-3">
+    <div className="space-y-10">
+      <header className="flex items-end justify-between gap-6 pb-6 border-b border-line">
         <div>
-          <label className="text-xs text-muted tracking-cinematic uppercase block mb-1">{t('filters.action')}</label>
-          <select name="action" defaultValue={sp.action || ''} className="input">
+          <p className="ed-eye mb-3">— {t('eyebrow')}</p>
+          <h1 className="ed-title text-5xl md:text-6xl">{t('title')}</h1>
+          <p className="ed-caption text-muted num mt-3">{total}</p>
+        </div>
+      </header>
+
+      <form className="ed-card flex flex-wrap items-end gap-4">
+        <div>
+          <label className="ed-eye block mb-2">{t('filters.action')}</label>
+          <select name="action" defaultValue={sp.action || ''} className="input min-w-[160px]">
             <option value="">{t('all')}</option>
             {actions.map((a) => a.action && <option key={a.action} value={a.action}>{a.action}</option>)}
           </select>
         </div>
         <div>
-          <label className="text-xs text-muted tracking-cinematic uppercase block mb-1">{t('filters.entity')}</label>
-          <select name="entity" defaultValue={sp.entity || ''} className="input">
+          <label className="ed-eye block mb-2">{t('filters.entity')}</label>
+          <select name="entity" defaultValue={sp.entity || ''} className="input min-w-[160px]">
             <option value="">{t('all')}</option>
             {entities.map((e) => e.entity && <option key={e.entity} value={e.entity}>{e.entity}</option>)}
           </select>
         </div>
         <div>
-          <label className="text-xs text-muted tracking-cinematic uppercase block mb-1">{t('filters.admin')}</label>
-          <select name="admin" defaultValue={sp.admin || ''} className="input">
+          <label className="ed-eye block mb-2">{t('filters.admin')}</label>
+          <select name="admin" defaultValue={sp.admin || ''} className="input min-w-[160px]">
             <option value="">{t('all')}</option>
             {admins.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
           </select>
@@ -78,23 +84,37 @@ export default async function ActivityAdmin({
         <Link href={`/${locale}/admin/activity`} className="btn-ghost">{t('reset')}</Link>
       </form>
 
-      <div className="glass">
-        {logs.length === 0 ? (
-          <p className="p-6 text-muted text-sm">{t('empty')}</p>
-        ) : logs.map((l) => (
-          <div key={l.id} className="border-b border-line/40 p-3 grid grid-cols-12 gap-3 text-sm">
-            <span className="col-span-2 font-mono text-xs text-muted">{l.createdAt.toLocaleString()}</span>
-            <span className="col-span-2 text-frost">{l.admin?.name || '—'}</span>
-            <span className="col-span-2 text-electric uppercase tracking-cinematic text-xs">{l.action}</span>
-            <span className="col-span-2 text-muted">{l.entity}</span>
-            <span className="col-span-4 text-xs text-muted truncate">{l.details}</span>
-          </div>
-        ))}
+      <div className="ed-card overflow-x-auto p-0">
+        <table className="ed-table">
+          <thead>
+            <tr>
+              <th>{t('th.time')}</th>
+              <th>{t('th.admin')}</th>
+              <th>{t('th.action')}</th>
+              <th>{t('th.entity')}</th>
+              <th>{t('th.details')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {logs.length === 0 && (
+              <tr><td colSpan={5}><p className="ed-caption text-muted text-center py-8">{t('empty')}</p></td></tr>
+            )}
+            {logs.map((l) => (
+              <tr key={l.id}>
+                <td className="muted num-col font-mono text-xs">{l.createdAt.toLocaleString(isAr ? 'ar-IQ' : 'en-US')}</td>
+                <td>{l.admin?.name || '—'}</td>
+                <td><span className="ed-pill accent">{l.action}</span></td>
+                <td className="muted">{l.entity || '—'}</td>
+                <td className="muted text-xs truncate max-w-[280px]">{l.details}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {totalPages > 1 && (
-        <div className="flex items-center justify-between mt-6 text-xs">
-          <span className="text-muted">{t('pageOf', { page, total: totalPages })}</span>
+        <div className="flex items-center justify-between pt-2 text-xs">
+          <span className="text-muted num">{t('pageOf', { page, total: totalPages })}</span>
           <div className="flex gap-2">
             {page > 1 && <Link href={qs({ page: page - 1 })} className="btn-ghost">{t('prev')}</Link>}
             {page < totalPages && <Link href={qs({ page: page + 1 })} className="btn-ghost">{t('next')}</Link>}

@@ -1,6 +1,7 @@
 import { requireAdmin } from '@/lib/admin-guard';
 import { prisma } from '@/lib/db';
 import Link from 'next/link';
+import { ArrowUpRight } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 
 export default async function OrdersAdmin({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ status?: string }> }) {
@@ -9,6 +10,7 @@ export default async function OrdersAdmin({ params, searchParams }: { params: Pr
   await requireAdmin(locale);
   const t = await getTranslations('admin.orders');
   const ts = await getTranslations('admin.orderActions.statusOpts');
+  const isAr = locale === 'ar';
   const orders = await prisma.order.findMany({
     where: sp.status ? { status: sp.status } : {},
     include: { items: true, customer: true },
@@ -18,38 +20,83 @@ export default async function OrdersAdmin({ params, searchParams }: { params: Pr
   const statuses = ['pending', 'paid', 'processing', 'shipped', 'delivered', 'cancelled'];
 
   return (
-    <div>
-      <p className="text-xs tracking-cinematic text-muted">— {t('eyebrow')}</p>
-      <h1 className="h-display text-4xl mt-2 mb-6">{t('count', { count: orders.length })}</h1>
-      <div className="flex gap-2 flex-wrap mb-6">
-        <Link href={`/${locale}/admin/orders`} className={`text-xs tracking-cinematic uppercase px-3 py-1 border ${!sp.status ? 'border-frost text-frost' : 'border-line text-muted'}`}>{t('filterAll')}</Link>
+    <div className="space-y-10">
+      <header className="flex items-end justify-between gap-6 pb-6 border-b border-line">
+        <div>
+          <p className="ed-eye mb-3">— {t('eyebrow')}</p>
+          <h1 className="ed-title text-5xl md:text-6xl">{t('title')}</h1>
+        </div>
+        <p className="ed-caption text-muted num hidden md:block">{orders.length} {t('th.order').toLowerCase()}</p>
+      </header>
+
+      <div className="flex gap-2 flex-wrap">
+        <Link
+          href={`/${locale}/admin/orders`}
+          className={`px-4 py-2 text-[10px] tracking-[0.25em] uppercase border transition-colors ${!sp.status ? 'border-accent text-accent' : 'border-line text-muted hover:text-frost'}`}
+          style={isAr ? { letterSpacing: 0, textTransform: 'none', fontSize: 12 } : {}}
+        >
+          {t('filterAll')}
+        </Link>
         {statuses.map((s) => (
-          <Link key={s} href={`/${locale}/admin/orders?status=${s}`} className={`text-xs tracking-cinematic uppercase px-3 py-1 border ${sp.status === s ? 'border-frost text-frost' : 'border-line text-muted'}`}>{ts(s)}</Link>
+          <Link
+            key={s}
+            href={`/${locale}/admin/orders?status=${s}`}
+            className={`px-4 py-2 text-[10px] tracking-[0.25em] uppercase border transition-colors ${sp.status === s ? 'border-accent text-accent' : 'border-line text-muted hover:text-frost'}`}
+            style={isAr ? { letterSpacing: 0, textTransform: 'none', fontSize: 12 } : {}}
+          >
+            {ts(s as any)}
+          </Link>
         ))}
       </div>
-      <div className="glass overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="border-b border-line text-xs tracking-cinematic text-muted">
+
+      <div className="ed-card overflow-x-auto p-0">
+        <table className="ed-table">
+          <thead>
             <tr>
-              <th className="p-3 text-left">{t('th.order')}</th>
-              <th className="p-3 text-left">{t('th.customer')}</th>
-              <th className="p-3 text-left">{t('th.items')}</th>
-              <th className="p-3 text-left">{t('th.total')}</th>
-              <th className="p-3 text-left">{t('th.status')}</th>
-              <th className="p-3 text-left">{t('th.date')}</th>
+              <th>{t('th.order')}</th>
+              <th>{t('th.customer')}</th>
+              <th>{t('th.items')}</th>
+              <th>{t('th.total')}</th>
+              <th>{t('th.status')}</th>
+              <th>{t('th.date')}</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
+            {orders.length === 0 && (
+              <tr>
+                <td colSpan={7}>
+                  <p className="ed-caption text-muted text-center py-8">{t('empty')}</p>
+                </td>
+              </tr>
+            )}
             {orders.map((o) => (
-              <tr key={o.id} className="border-b border-line/40 hover:bg-white/5">
-                <td className="p-3 font-mono text-xs">{o.number}</td>
-                <td className="p-3">{o.customer?.name || o.guestName} <span className="text-xs text-muted block">{o.customer?.phone || o.guestPhone}</span></td>
-                <td className="p-3">{o.items.length}</td>
-                <td className="p-3">{o.currency} {o.total.toLocaleString()}</td>
-                <td className="p-3"><span className="text-[10px] tracking-cinematic uppercase text-electric">{ts(o.status as any)}</span></td>
-                <td className="p-3 text-xs text-muted">{new Date(o.createdAt).toLocaleString()}</td>
-                <td className="p-3"><Link href={`/${locale}/admin/orders/${o.id}`} className="text-electric text-xs">{t('view')} →</Link></td>
+              <tr key={o.id}>
+                <td className="font-mono text-xs text-frost num-col">{o.number}</td>
+                <td>
+                  <div>{o.customer?.name || o.guestName}</div>
+                  <div className="muted num-col">{o.customer?.phone || o.guestPhone}</div>
+                </td>
+                <td className="num-col">{o.items.length}</td>
+                <td className="num-col">
+                  <span className="serif text-base text-frost" style={isAr ? { fontFamily: 'var(--serif-ar)' } : {}}>
+                    {o.total.toLocaleString()}
+                  </span>
+                  <span className="text-[10px] text-muted ms-1">{o.currency}</span>
+                </td>
+                <td>
+                  <span className="ed-pill accent">{ts(o.status as any)}</span>
+                </td>
+                <td className="muted num-col">{new Date(o.createdAt).toLocaleDateString(isAr ? 'ar-IQ' : 'en-US')}</td>
+                <td>
+                  <Link
+                    href={`/${locale}/admin/orders/${o.id}`}
+                    className="inline-flex items-center gap-1 text-xs text-accent hover:underline"
+                  >
+                    {t('view')}
+                    <ArrowUpRight className="w-3 h-3" />
+                  </Link>
+                </td>
               </tr>
             ))}
           </tbody>

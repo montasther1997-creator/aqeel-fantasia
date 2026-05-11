@@ -25,12 +25,16 @@ export default async function CustomerDetail({ params }: { params: Promise<{ loc
   ]);
   if (!customer) notFound();
   return (
-    <div>
-      <p className="text-xs tracking-cinematic text-muted">— {t('eyebrow')}</p>
-      <h1 className="h-display text-4xl mt-2">{customer.name}</h1>
-      <p className="text-muted font-mono text-sm">{customer.phone}{customer.email && ` · ${customer.email}`}</p>
-      <div className="mt-6"><CustomerActions id={customer.id} vipTier={customer.vipTier} blocked={customer.blocked} notes={customer.notes || ''} /></div>
-      <div className="mt-6">
+    <div className="space-y-10">
+      <header className="flex items-end justify-between gap-6 pb-6 border-b border-line">
+        <div>
+          <p className="ed-eye mb-3">— {t('eyebrow')}</p>
+          <h1 className="ed-title text-5xl md:text-6xl">{customer.name}</h1>
+          <p className="text-muted font-mono text-sm mt-3">{customer.phone}{customer.email && ` · ${customer.email}`}</p>
+        </div>
+      </header>
+      <div><CustomerActions id={customer.id} vipTier={customer.vipTier} blocked={customer.blocked} notes={customer.notes || ''} /></div>
+      <div>
         <TierChanger
           customerId={customer.id}
           currentTierId={customer.cultMember?.tierId || null}
@@ -46,12 +50,12 @@ export default async function CustomerDetail({ params }: { params: Promise<{ loc
           }))}
         />
       </div>
-      <div className="grid lg:grid-cols-3 gap-6 mt-6">
+      <div className="grid lg:grid-cols-3 gap-6">
         <div className="glass p-6"><p className="text-xs tracking-cinematic text-muted">{t('stats.orders')}</p><p className="h-display text-3xl mt-2">{customer.orders.length}</p></div>
         <div className="glass p-6"><p className="text-xs tracking-cinematic text-muted">{t('stats.spent')}</p><p className="h-display text-3xl mt-2">${customer.totalSpent.toLocaleString()}</p></div>
         <div className="glass p-6"><p className="text-xs tracking-cinematic text-muted">{t('stats.loyalty')}</p><p className="h-display text-3xl mt-2">{customer.loyaltyPts}</p></div>
       </div>
-      <div className="glass p-6 mt-6">
+      <div className="glass p-6">
         <h3 className="text-xs tracking-cinematic text-muted mb-4">— {t('sections.orders')}</h3>
         {customer.orders.length === 0 ? <p className="text-muted text-sm">—</p> :
           <div className="divide-y divide-line">
