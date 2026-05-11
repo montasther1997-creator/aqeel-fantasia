@@ -9,6 +9,7 @@ export default async function AdminHome({ params }: { params: Promise<{ locale: 
   const { locale } = await params;
   await requireAdmin(locale);
   const t = await getTranslations('admin');
+  const ts = await getTranslations('admin.orderActions.statusOpts');
   const isAr = locale === 'ar';
 
   const [productsCount, ordersCount, customersCount, revenueAgg, recentOrders, lowStock] = await Promise.all([
@@ -82,7 +83,7 @@ export default async function AdminHome({ params }: { params: Promise<{ locale: 
                   </div>
                   <div className={isAr ? 'text-left' : 'text-right'}>
                     <p>{o.currency} {o.total.toLocaleString()}</p>
-                    <p className="text-[10px] uppercase tracking-cinematic text-electric">{o.status}</p>
+                    <p className="text-[10px] uppercase tracking-cinematic text-electric">{ts(o.status as any)}</p>
                   </div>
                 </Link>
               ))}

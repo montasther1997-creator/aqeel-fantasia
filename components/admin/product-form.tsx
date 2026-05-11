@@ -69,25 +69,25 @@ export function ProductForm({ product, categories, collections }: { product?: an
         <div className="glass p-6 space-y-4">
           <h3 className="text-xs tracking-cinematic text-muted">— {t('details')}</h3>
           <div className="grid sm:grid-cols-2 gap-3">
-            <div><label className="label">{t('nameEn')}</label><input required className="input" value={form.nameEn} onChange={(e) => setForm({ ...form, nameEn: e.target.value })} /></div>
-            <div><label className="label">{t('nameAr')}</label><input required className="input" value={form.nameAr} onChange={(e) => setForm({ ...form, nameAr: e.target.value })} /></div>
-            <div><label className="label">{t('taglineEn')}</label><input className="input" value={form.taglineEn} onChange={(e) => setForm({ ...form, taglineEn: e.target.value })} /></div>
-            <div><label className="label">{t('taglineAr')}</label><input className="input" value={form.taglineAr} onChange={(e) => setForm({ ...form, taglineAr: e.target.value })} /></div>
-            <div className="sm:col-span-2"><label className="label">{t('slug')}</label><input required className="input" value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} /></div>
-            <div className="sm:col-span-2"><label className="label">{t('sku')}</label><input className="input" value={form.sku} onChange={(e) => setForm({ ...form, sku: e.target.value })} /></div>
-            <div className="sm:col-span-2"><label className="label">{t('descEn')}</label><textarea className="input min-h-[100px]" value={form.descEn} onChange={(e) => setForm({ ...form, descEn: e.target.value })} /></div>
-            <div className="sm:col-span-2"><label className="label">{t('descAr')}</label><textarea className="input min-h-[100px]" value={form.descAr} onChange={(e) => setForm({ ...form, descAr: e.target.value })} /></div>
+            <div><label className="label">{t('nameEn')}</label><input required placeholder={t('placeholders.nameEn')} className="input" value={form.nameEn} onChange={(e) => setForm({ ...form, nameEn: e.target.value })} /></div>
+            <div><label className="label">{t('nameAr')}</label><input required placeholder={t('placeholders.nameAr')} className="input" value={form.nameAr} onChange={(e) => setForm({ ...form, nameAr: e.target.value })} /></div>
+            <div><label className="label">{t('taglineEn')}</label><input placeholder={t('placeholders.taglineEn')} className="input" value={form.taglineEn} onChange={(e) => setForm({ ...form, taglineEn: e.target.value })} /></div>
+            <div><label className="label">{t('taglineAr')}</label><input placeholder={t('placeholders.taglineAr')} className="input" value={form.taglineAr} onChange={(e) => setForm({ ...form, taglineAr: e.target.value })} /></div>
+            <div className="sm:col-span-2"><label className="label">{t('slug')}</label><input required placeholder={t('placeholders.slug')} className="input" value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} /></div>
+            <div className="sm:col-span-2"><label className="label">{t('sku')}</label><input placeholder={t('placeholders.sku')} className="input" value={form.sku} onChange={(e) => setForm({ ...form, sku: e.target.value })} /></div>
+            <div className="sm:col-span-2"><label className="label">{t('descEn')}</label><textarea placeholder={t('placeholders.descEn')} className="input min-h-[100px]" value={form.descEn} onChange={(e) => setForm({ ...form, descEn: e.target.value })} /></div>
+            <div className="sm:col-span-2"><label className="label">{t('descAr')}</label><textarea placeholder={t('placeholders.descAr')} className="input min-h-[100px]" value={form.descAr} onChange={(e) => setForm({ ...form, descAr: e.target.value })} /></div>
           </div>
         </div>
 
         <div className="glass p-6 space-y-4">
           <h3 className="text-xs tracking-cinematic text-muted">— {t('pricing')}</h3>
           <div className="grid sm:grid-cols-2 gap-3">
-            <div><label className="label">{t('priceIQD')}</label><input required type="number" className="input" value={form.priceIQD} onChange={(e) => setForm({ ...form, priceIQD: +e.target.value })} /></div>
-            <div><label className="label">{t('priceUSD')}</label><input required type="number" step="0.01" className="input" value={form.priceUSD} onChange={(e) => setForm({ ...form, priceUSD: +e.target.value })} /></div>
-            <div><label className="label">{t('compareIQD')}</label><input type="number" className="input" value={form.compareIQD} onChange={(e) => setForm({ ...form, compareIQD: e.target.value ? +e.target.value : '' })} /></div>
-            <div><label className="label">{t('compareUSD')}</label><input type="number" step="0.01" className="input" value={form.compareUSD} onChange={(e) => setForm({ ...form, compareUSD: e.target.value ? +e.target.value : '' })} /></div>
-            <div><label className="label">{t('stock')}</label><input type="number" className="input" value={form.stock} onChange={(e) => setForm({ ...form, stock: +e.target.value })} /></div>
+            <div><label className="label">{t('priceIQD')}</label><input required type="number" placeholder={t('placeholders.priceIQD')} className="input" value={form.priceIQD} onChange={(e) => setForm({ ...form, priceIQD: +e.target.value })} /></div>
+            <div><label className="label">{t('priceUSD')}</label><input required type="number" step="0.01" placeholder={t('placeholders.priceUSD')} className="input" value={form.priceUSD} onChange={(e) => setForm({ ...form, priceUSD: +e.target.value })} /></div>
+            <div><label className="label">{t('compareIQD')}</label><input type="number" placeholder={t('placeholders.compareIQD')} className="input" value={form.compareIQD} onChange={(e) => setForm({ ...form, compareIQD: e.target.value ? +e.target.value : '' })} /></div>
+            <div><label className="label">{t('compareUSD')}</label><input type="number" step="0.01" placeholder={t('placeholders.compareUSD')} className="input" value={form.compareUSD} onChange={(e) => setForm({ ...form, compareUSD: e.target.value ? +e.target.value : '' })} /></div>
+            <div><label className="label">{t('stock')}</label><input type="number" placeholder={t('placeholders.stock')} className="input" value={form.stock} onChange={(e) => setForm({ ...form, stock: +e.target.value })} /></div>
           </div>
         </div>
 
@@ -95,7 +95,7 @@ export function ProductForm({ product, categories, collections }: { product?: an
           <h3 className="text-xs tracking-cinematic text-muted">— {t('images')}</h3>
           <ImageUploader onUpload={(urls) => setImages([...images, ...urls.map((url) => ({ url }))])} />
           <div className="flex gap-2">
-            <input className="input flex-1" placeholder={t('addImageUrl')} value={imgUrl} onChange={(e) => setImgUrl(e.target.value)} />
+            <input className="input flex-1" placeholder={t('placeholders.addImageUrl')} value={imgUrl} onChange={(e) => setImgUrl(e.target.value)} />
             <button type="button" className="btn-ghost" onClick={() => { if (imgUrl) { setImages([...images, { url: imgUrl }]); setImgUrl(''); } }}><Plus className="w-4 h-4" /></button>
           </div>
           <div className="grid grid-cols-4 gap-2">
@@ -112,9 +112,9 @@ export function ProductForm({ product, categories, collections }: { product?: an
           <h3 className="text-xs tracking-cinematic text-muted">— {t('variants')}</h3>
           {variants.map((v, i) => (
             <div key={i} className="grid grid-cols-12 gap-2">
-              <input className="input col-span-3" placeholder={t('size')} value={v.size || ''} onChange={(e) => { const c = [...variants]; c[i].size = e.target.value; setVariants(c); }} />
-              <input className="input col-span-4" placeholder={t('color')} value={v.color || ''} onChange={(e) => { const c = [...variants]; c[i].color = e.target.value; setVariants(c); }} />
-              <input className="input col-span-3" type="number" placeholder={t('stock')} value={v.stock} onChange={(e) => { const c = [...variants]; c[i].stock = +e.target.value; setVariants(c); }} />
+              <input className="input col-span-3" placeholder={t('placeholders.variantSize')} value={v.size || ''} onChange={(e) => { const c = [...variants]; c[i].size = e.target.value; setVariants(c); }} />
+              <input className="input col-span-4" placeholder={t('placeholders.variantColor')} value={v.color || ''} onChange={(e) => { const c = [...variants]; c[i].color = e.target.value; setVariants(c); }} />
+              <input className="input col-span-3" type="number" placeholder={t('placeholders.variantStock')} value={v.stock} onChange={(e) => { const c = [...variants]; c[i].stock = +e.target.value; setVariants(c); }} />
               <button type="button" className="col-span-2 btn-ghost" onClick={() => setVariants(variants.filter((_, j) => j !== i))}><X className="w-4 h-4" /></button>
             </div>
           ))}

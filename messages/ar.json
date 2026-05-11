@@ -259,6 +259,18 @@
       "allGood": "كل شيء على ما يرام",
       "left": "متبقية"
     },
+    "mediaInput": {
+      "upload": "رفع ملف",
+      "url": "رابط",
+      "chooseFile": "اختر ملفًا من جهازك",
+      "uploading": "جارٍ الرفع…",
+      "uploaded": "تم الرفع",
+      "tooLarge": "الملف كبير جدًا",
+      "imageSize": "حد أقصى 25 ميجا · JPG / PNG / WEBP / GIF",
+      "videoSize": "حد أقصى 50 ميجا · MP4 / WEBM",
+      "urlPlaceholderImage": "https://example.com/image.jpg",
+      "urlPlaceholderVideo": "https://example.com/video.mp4"
+    },
     "common": {
       "all": "الكل",
       "apply": "تطبيق",
@@ -298,7 +310,8 @@
       "off": "إيقاف",
       "add": "إضافة",
       "created": "تم الإنشاء",
-      "createFailed": "فشل الإنشاء"
+      "createFailed": "فشل الإنشاء",
+      "clear": "مسح"
     },
     "products": {
       "eyebrow": "الكتالوج",
@@ -359,7 +372,26 @@
       "save": "حفظ",
       "create": "إنشاء",
       "delete": "حذف",
-      "confirmDelete": "حذف هذا المنتج؟"
+      "confirmDelete": "حذف هذا المنتج؟",
+      "placeholders": {
+        "nameEn": "Void Hoodie",
+        "nameAr": "هودي القراغ",
+        "taglineEn": "Cut from the rooftop air.",
+        "taglineAr": "من نسيج هواء السطح.",
+        "slug": "void-hoodie",
+        "sku": "FNT-1024",
+        "descEn": "A modern cut classic piece blending elegance with comfort, finished in Italian wool.",
+        "descAr": "قطعة كلاسيكية بقصّة عصرية تجمع الأناقة بالراحة، مصنوعة من الصوف الإيطالي.",
+        "priceIQD": "75000",
+        "priceUSD": "55",
+        "compareIQD": "95000",
+        "compareUSD": "70",
+        "stock": "30",
+        "addImageUrl": "https://example.com/image.jpg",
+        "variantSize": "M",
+        "variantColor": "أونيكس",
+        "variantStock": "10"
+      }
     },
     "orders": {
       "eyebrow": "المبيعات",
@@ -447,13 +479,32 @@
       "notes": "ملاحظات",
       "save": "حفظ",
       "yes": "نعم",
-      "no": "لا"
+      "no": "لا",
+      "placeholders": {
+        "notes": "عميل VIP — يفضّل القماش الإيطالي، يتسوّق عادةً قبل العيد."
+      }
     },
     "orderActions": {
-      "status": "الحالة",
-      "payment": "الدفع",
-      "tracking": "التتبع",
-      "update": "تحديث"
+      "status": "حالة الطلب",
+      "payment": "حالة الدفع",
+      "tracking": "رقم التتبّع (اختياري)",
+      "trackingPlaceholder": "اكتب رقم الشحنة من شركة الشحن…",
+      "trackingHint": "إن لم تكن تستخدم شركة شحن بنظام تتبّع، اتركه فارغًا.",
+      "update": "حفظ التغييرات",
+      "statusOpts": {
+        "pending": "قيد الانتظار",
+        "paid": "مدفوع",
+        "processing": "قيد التجهيز",
+        "shipped": "تم الشحن",
+        "delivered": "تم التسليم",
+        "cancelled": "ملغى",
+        "refunded": "مُسترد"
+      },
+      "paymentOpts": {
+        "unpaid": "غير مدفوع",
+        "paid": "مدفوع",
+        "refunded": "مُسترد"
+      }
     },
     "reports": {
       "eyebrow": "نظرة عامة",
@@ -509,6 +560,10 @@
         "available": "متاح",
         "reserved": "محجوز",
         "claimed": "مُسلَّم"
+      },
+      "placeholders": {
+        "edition": "٠٤٢/١٠٠",
+        "personalNote": "صُنعت لك خصيصًا، بإضافة الحرف الأوّل من اسمك على الأسوار الداخلي."
       }
     },
     "notes": {
@@ -519,10 +574,14 @@
       "signature": "التوقيع",
       "signaturePlaceholder": "التوقيع",
       "linkedProduct": "— منتج مرتبط (اختياري) —",
-      "textArPlaceholder": "نص ع: «...»",
-      "textEnPlaceholder": "النص الإنجليزي: \"...\"",
+      "textArPlaceholder": "«في الخياطة: البدلة جملة. اقطعها أقصر مما تظن.»",
+      "textEnPlaceholder": "“On tailoring: a suit is a sentence. Cut it shorter than you think.”",
       "addNote": "إضافة ملاحظة",
-      "delete": "حذف"
+      "delete": "حذف",
+      "placeholders": {
+        "number": "04",
+        "signature": "ع. / A."
+      }
     },
     "cult": {
       "eyebrow": "المجتمع",
@@ -554,6 +613,15 @@
         "customPerks": "مزايا إضافية مخصّصة",
         "customPerksPlaceholder": "مثال: دعوة لفعالية خاصة، اضغط Enter للإضافة"
       },
+      "placeholders": {
+        "nameAr": "ذهبي",
+        "nameEn": "Gold",
+        "slug": "gold",
+        "color": "#C9A961",
+        "pointsThreshold": "500",
+        "multiplier": "1.5",
+        "discountPct": "10"
+      },
       "slug": "المعرّف",
       "nameEn": "الاسم (إنجليزي)",
       "nameAr": "الاسم (عربي)",
@@ -582,7 +650,12 @@
       "title": "الفئات",
       "slug": "المعرّف",
       "nameEn": "الاسم (إنجليزي)",
-      "nameAr": "الاسم (عربي)"
+      "nameAr": "الاسم (عربي)",
+      "placeholders": {
+        "slug": "outerwear",
+        "nameEn": "Outerwear",
+        "nameAr": "المعاطف"
+      }
     },
     "collections": {
       "eyebrow": "الكتالوج",
@@ -590,7 +663,12 @@
       "slug": "المعرّف",
       "nameEn": "الاسم (إنجليزي)",
       "nameAr": "الاسم (عربي)",
-      "productsCount": "{count} منتج"
+      "productsCount": "{count} منتج",
+      "placeholders": {
+        "slug": "spring-2026",
+        "nameEn": "Of the Rooftop",
+        "nameAr": "من السطح"
+      }
     },
     "discounts": {
       "eyebrow": "المبيعات",
@@ -599,15 +677,27 @@
       "type": "النوع",
       "value": "القيمة",
       "percent": "نسبة %",
-      "fixed": "ثابت"
+      "fixed": "ثابت",
+      "placeholders": {
+        "code": "WELCOME10",
+        "value": "10"
+      }
     },
     "content": {
       "eyebrow": "إدارة المحتوى",
       "title": "محتوى الموقع",
-      "keyPlaceholder": "المفتاح (مثال: gate.title)",
-      "groupPlaceholder": "المجموعة",
-      "valueEnPlaceholder": "القيمة (إنجليزي)",
-      "valueArPlaceholder": "القيمة (عربي)"
+      "addNew": "إضافة مفتاح محتوى جديد",
+      "empty": "لا توجد محتويات بعد.",
+      "keyRequired": "المفتاح مطلوب",
+      "confirmDelete": "حذف هذا المفتاح؟ سيؤثر على ظهور النص في الموقع.",
+      "keyLabel": "المفتاح التقني",
+      "groupLabel": "القسم",
+      "valueEnLabel": "النص (English)",
+      "valueArLabel": "النص (عربي)",
+      "keyPlaceholder": "مثال: gate.title",
+      "groupPlaceholder": "مثال: gate أو cult أو archive",
+      "valueEnPlaceholder": "النص الإنجليزي…",
+      "valueArPlaceholder": "النص العربي…"
     },
     "archive": {
       "eyebrow": "المحتوى",
@@ -616,7 +706,12 @@
       "titleAr": "العنوان (عربي)",
       "coverUrl": "رابط الغلاف",
       "type": "النوع",
-      "delete": "حذف"
+      "delete": "حذف",
+      "placeholders": {
+        "titleEn": "Of the Rooftop, Hour 17",
+        "titleAr": "من السطح، الساعة ١٧",
+        "coverUrl": "https://example.com/archive-cover.jpg"
+      }
     },
     "media": {
       "eyebrow": "المحتوى",
@@ -640,14 +735,32 @@
       "displayFont": "العنوان · فرونسس",
       "bodyFont": "النص · إنتر",
       "arabicFont": "عربي · IBM Plex / أميري",
+      "sections": {
+        "visual": "الهوية البصرية",
+        "text": "الشعار النصي",
+        "colors": "الألوان والتأثيرات"
+      },
+      "saveVisual": "حفظ الهوية البصرية",
+      "saveText": "حفظ النصوص",
+      "saveColors": "حفظ الألوان",
       "fields": {
-        "heroVideoUrl": "رابط فيديو الواجهة",
-        "logoUrl": "رابط الشعار",
-        "faviconUrl": "رابط أيقونة الموقع",
-        "brandTagline": "شعار الدار النصي",
-        "brandTaglineAr": "شعار الدار النصي (عربي)",
+        "heroVideoUrl": "فيديو الواجهة",
+        "heroVideoUrlHint": "الفيديو الذي يظهر في صفحة الترحيب. ينصح بفيديو قصير (15-30 ثانية) بصيغة MP4.",
+        "logoUrl": "شعار الدار",
+        "logoUrlHint": "يظهر في رأس الموقع وتسجيل الدخول. ينصح بـ PNG شفّاف.",
+        "faviconUrl": "أيقونة الموقع",
+        "faviconUrlHint": "الأيقونة الصغيرة في تبويب المتصفّح. حجم 32×32 أو 64×64.",
+        "brandTagline": "الشعار النصي (English)",
+        "brandTaglineAr": "الشعار النصي (عربي)",
+        "brandTaglineHint": "السطر التحت اسم الدار في الـ header وصفحات الترحيب.",
         "primaryAccent": "اللون المميّز الأساسي",
-        "heroOverlayOpacity": "شفافية طبقة الواجهة (0–1)"
+        "primaryAccentHint": "اللون المستخدم للأزرار الذهبية وأبرز عناصر التصميم. الافتراضي #C9A961.",
+        "heroOverlayOpacity": "شفافية طبقة الواجهة فوق الفيديو",
+        "heroOverlayOpacityHint": "0 = الفيديو واضح بدون طبقة، 1 = الفيديو مخفي بالكامل خلف اللون. ينصح بـ 0.5 أو 0.6."
+      },
+      "placeholders": {
+        "brandTagline": "Atelier Digital",
+        "brandTaglineAr": "أتيليه رقمي"
       },
       "saving": "يحفظ…",
       "save": "حفظ"
@@ -678,7 +791,16 @@
       "nameEn": "الاسم (إنجليزي)",
       "nameAr": "الاسم (عربي)",
       "governorates": "المحافظات (مفصولة بفاصلة)",
-      "eta": "مدة الوصول (2-4)"
+      "eta": "مدة الوصول (2-4)",
+      "placeholders": {
+        "nameAr": "وسط العراق",
+        "nameEn": "Central Iraq",
+        "priceIQD": "5000",
+        "priceUSD": "5",
+        "eta": "2-4",
+        "freeThreshold": "100000",
+        "codFee": "2000"
+      }
     },
     "payments": {
       "eyebrow": "المتجر",
@@ -700,7 +822,12 @@
       "name": "الاسم",
       "email": "البريد الإلكتروني",
       "password": "كلمة المرور",
-      "role": "الدور"
+      "role": "الدور",
+      "placeholders": {
+        "name": "عقيل فنتازيا",
+        "email": "contact@aqeelfantasia.com",
+        "password": "••••••••"
+      }
     },
     "activity": {
       "eyebrow": "النظام",
@@ -744,7 +871,12 @@
       "title": "الإعدادات",
       "key": "المفتاح",
       "group": "المجموعة",
-      "value": "القيمة"
+      "value": "القيمة",
+      "placeholders": {
+        "key": "about.foundedYear",
+        "group": "general",
+        "value": "2024"
+      }
     },
     "smartSettings": {
       "tabs": {
@@ -763,7 +895,14 @@
         "storyEn": "قصة الدار (إنجليزي)",
         "foundedYear": "سنة التأسيس",
         "foundedCity": "مدينة التأسيس",
-        "foundedCityPlaceholder": "بغداد"
+        "foundedCityPlaceholder": "بغداد",
+        "placeholders": {
+          "founderAr": "عقيل فنتازيا",
+          "founderEn": "Aqeel Fantasia",
+          "storyAr": "وُلدت الدار في بغداد عام ٢٠٢٤، لتجمع بين خياطة الأناقة الكلاسيكية ولحظة فنتازيا واحدة في كل قطعة.",
+          "storyEn": "Born in Baghdad in 2024, the house brings classical tailoring together with a single moment of fantasy in every piece.",
+          "foundedYear": "2024"
+        }
       },
       "branches": {
         "heading": "الفروع",
@@ -774,7 +913,12 @@
         "phone": "هاتف الفرع",
         "hours": "ساعات العمل",
         "hoursPlaceholder": "9 ص — 9 م",
-        "confirmRemove": "حذف هذا الفرع؟"
+        "confirmRemove": "حذف هذا الفرع؟",
+        "placeholders": {
+          "addressAr": "بابل، شارع 40",
+          "addressEn": "Babylon, Street 40",
+          "phone": "+9647700000000"
+        }
       },
       "social": {
         "heading": "روابط التواصل الاجتماعي",
@@ -792,7 +936,11 @@
         "freeThreshold": "حد الشحن المجاني",
         "freeThresholdHint": "إذا تجاوز الطلب هذا المبلغ، يصبح الشحن مجانيًا. ضع 0 لتعطيل الميزة.",
         "codFee": "رسم الدفع عند الاستلام",
-        "codFeeHint": "رسم إضافي يُضاف عند اختيار الدفع عند الاستلام. ضع 0 لعدم وجود رسم."
+        "codFeeHint": "رسم إضافي يُضاف عند اختيار الدفع عند الاستلام. ضع 0 لعدم وجود رسم.",
+        "placeholders": {
+          "freeThreshold": "100000",
+          "codFee": "2000"
+        }
       },
       "loyalty": {
         "heading": "إعدادات النقاط",
@@ -801,7 +949,11 @@
         "iqdPerPointHint": "كلما قلّ الرقم، كسب العميل نقاطًا أكثر. المعدّل الافتراضي 1,000 د.ع.",
         "pointsPerUSD": "كم نقطة لكل دولار؟",
         "pointsPerUSDHint": "للطلبات بالدولار. الافتراضي 1 نقطة لكل دولار.",
-        "tierHint": "العميل يترقّى تلقائيًا عند بلوغه عتبة كل مستوى، حسب الإعدادات المحدّدة في النادي الحصري."
+        "tierHint": "العميل يترقّى تلقائيًا عند بلوغه عتبة كل مستوى، حسب الإعدادات المحدّدة في النادي الحصري.",
+        "placeholders": {
+          "iqdPerPoint": "1000",
+          "pointsPerUSD": "1"
+        }
       }
     },
     "login": {

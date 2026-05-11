@@ -118,13 +118,13 @@ function GeneralSettings({ initial }: { initial: SettingsBag }) {
       <div className="grid sm:grid-cols-2 gap-4">
         <Field label={t('fields.freeThreshold')} hint={t('fields.freeThresholdHint')}>
           <div className="flex items-center gap-2">
-            <input type="number" min={0} className="input num flex-1" value={free} onChange={(e) => setFree(Math.max(0, +e.target.value || 0))} />
+            <input type="number" min={0} placeholder={t('placeholders.freeThreshold')} className="input num flex-1" value={free} onChange={(e) => setFree(Math.max(0, +e.target.value || 0))} />
             <span className="text-xs text-muted">د.ع</span>
           </div>
         </Field>
         <Field label={t('fields.codFee')} hint={t('fields.codFeeHint')}>
           <div className="flex items-center gap-2">
-            <input type="number" min={0} className="input num flex-1" value={cod} onChange={(e) => setCod(Math.max(0, +e.target.value || 0))} />
+            <input type="number" min={0} placeholder={t('placeholders.codFee')} className="input num flex-1" value={cod} onChange={(e) => setCod(Math.max(0, +e.target.value || 0))} />
             <span className="text-xs text-muted">د.ع</span>
           </div>
         </Field>
@@ -194,10 +194,10 @@ function ZoneCard({ z }: { z: Zone }) {
 
       <div className="grid grid-cols-2 gap-3">
         <Field label={t('fields.nameAr')}>
-          <input className="input" value={d.nameAr} onChange={(e) => setD({ ...d, nameAr: e.target.value })} />
+          <input className="input" placeholder={t('placeholders.nameAr')} value={d.nameAr} onChange={(e) => setD({ ...d, nameAr: e.target.value })} />
         </Field>
         <Field label={t('fields.nameEn')}>
-          <input className="input" value={d.nameEn} onChange={(e) => setD({ ...d, nameEn: e.target.value })} />
+          <input className="input" placeholder={t('placeholders.nameEn')} value={d.nameEn} onChange={(e) => setD({ ...d, nameEn: e.target.value })} />
         </Field>
       </div>
 
@@ -212,13 +212,13 @@ function ZoneCard({ z }: { z: Zone }) {
 
       <div className="grid grid-cols-3 gap-3">
         <Field label={t('fields.priceIQD')}>
-          <input type="number" min={0} className="input num" value={d.priceIQD} onChange={(e) => setD({ ...d, priceIQD: Math.max(0, +e.target.value || 0) })} />
+          <input type="number" min={0} placeholder={t('placeholders.priceIQD')} className="input num" value={d.priceIQD} onChange={(e) => setD({ ...d, priceIQD: Math.max(0, +e.target.value || 0) })} />
         </Field>
         <Field label={t('fields.priceUSD')}>
-          <input type="number" min={0} step={0.5} className="input num" value={d.priceUSD} onChange={(e) => setD({ ...d, priceUSD: Math.max(0, +e.target.value || 0) })} />
+          <input type="number" min={0} step={0.5} placeholder={t('placeholders.priceUSD')} className="input num" value={d.priceUSD} onChange={(e) => setD({ ...d, priceUSD: Math.max(0, +e.target.value || 0) })} />
         </Field>
         <Field label={t('fields.eta')} hint={t('fields.etaHint')}>
-          <input className="input num" value={d.etaDays} onChange={(e) => setD({ ...d, etaDays: e.target.value })} placeholder="2-4" />
+          <input className="input num" value={d.etaDays} onChange={(e) => setD({ ...d, etaDays: e.target.value })} placeholder={t('placeholders.eta')} />
         </Field>
       </div>
 

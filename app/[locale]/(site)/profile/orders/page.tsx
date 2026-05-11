@@ -9,6 +9,7 @@ import { Icon } from '@/components/atelier/icons';
 export default async function MyOrdersPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   await getTranslations('order');
+  const ts = await getTranslations('admin.orderActions.statusOpts');
   const isAr = locale === 'ar';
 
   const me = await getCustomer();
@@ -38,7 +39,7 @@ export default async function MyOrdersPage({ params }: { params: Promise<{ local
                 <div>
                   <div className="font-mono text-xs text-fg-tertiary num">{o.number}</div>
                   <div className="text-sm md:text-base mt-1 num">{new Date(o.createdAt).toLocaleDateString(isAr ? 'ar-IQ' : 'en-US')}</div>
-                  <div className="text-[10px] tracking-[0.3em] text-accent uppercase mt-1" style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>{o.status}</div>
+                  <div className="text-[10px] tracking-[0.3em] text-accent uppercase mt-1" style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>{ts(o.status as any)}</div>
                 </div>
                 <div className={isAr ? 'text-left' : 'text-right'}>
                   <div className="text-base md:text-lg"><span className="num">{fmtNumber(o.total)}</span> <span className="text-xs text-fg-tertiary">{o.currency === 'IQD' ? (isAr ? 'د.ع' : 'IQD') : '$'}</span></div>

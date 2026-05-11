@@ -93,21 +93,21 @@ function AboutTab({ map }: { map: Map<string, string> }) {
       <h3 className="text-xs tracking-cinematic text-muted">{t('heading')}</h3>
       <div className="grid sm:grid-cols-2 gap-4">
         <Field label={t('founderAr')}>
-          <input className="input" value={d.founder_ar} onChange={(e) => setD({ ...d, founder_ar: e.target.value })} />
+          <input className="input" placeholder={t('placeholders.founderAr')} value={d.founder_ar} onChange={(e) => setD({ ...d, founder_ar: e.target.value })} />
         </Field>
         <Field label={t('founderEn')}>
-          <input className="input" value={d.founder_en} onChange={(e) => setD({ ...d, founder_en: e.target.value })} />
+          <input className="input" placeholder={t('placeholders.founderEn')} value={d.founder_en} onChange={(e) => setD({ ...d, founder_en: e.target.value })} />
         </Field>
       </div>
       <Field label={t('storyAr')}>
-        <textarea className="input min-h-[100px]" value={d.story_ar} onChange={(e) => setD({ ...d, story_ar: e.target.value })} />
+        <textarea className="input min-h-[100px]" placeholder={t('placeholders.storyAr')} value={d.story_ar} onChange={(e) => setD({ ...d, story_ar: e.target.value })} />
       </Field>
       <Field label={t('storyEn')}>
-        <textarea className="input min-h-[100px]" value={d.story_en} onChange={(e) => setD({ ...d, story_en: e.target.value })} />
+        <textarea className="input min-h-[100px]" placeholder={t('placeholders.storyEn')} value={d.story_en} onChange={(e) => setD({ ...d, story_en: e.target.value })} />
       </Field>
       <div className="grid sm:grid-cols-2 gap-4">
         <Field label={t('foundedYear')}>
-          <input className="input num" value={d.foundedYear} onChange={(e) => setD({ ...d, foundedYear: e.target.value })} placeholder="2024" />
+          <input className="input num" value={d.foundedYear} onChange={(e) => setD({ ...d, foundedYear: e.target.value })} placeholder={t('placeholders.foundedYear')} />
         </Field>
         <Field label={t('foundedCity')}>
           <input className="input" value={d.foundedCity} onChange={(e) => setD({ ...d, foundedCity: e.target.value })} placeholder={t('foundedCityPlaceholder')} />
@@ -199,13 +199,13 @@ function BranchesTab({ map }: { map: Map<string, string> }) {
           </div>
           <div className="grid sm:grid-cols-2 gap-3">
             <Field label={t('addressAr')}>
-              <input className="input" value={b.addressAr} onChange={(e) => update(i, { addressAr: e.target.value })} />
+              <input className="input" placeholder={t('placeholders.addressAr')} value={b.addressAr} onChange={(e) => update(i, { addressAr: e.target.value })} />
             </Field>
             <Field label={t('addressEn')}>
-              <input className="input" value={b.addressEn} onChange={(e) => update(i, { addressEn: e.target.value })} />
+              <input className="input" placeholder={t('placeholders.addressEn')} value={b.addressEn} onChange={(e) => update(i, { addressEn: e.target.value })} />
             </Field>
             <Field label={t('phone')}>
-              <input className="input num font-mono" value={b.phone} onChange={(e) => update(i, { phone: e.target.value })} placeholder="07700000000" dir="ltr" />
+              <input className="input num font-mono" value={b.phone} onChange={(e) => update(i, { phone: e.target.value })} placeholder={t('placeholders.phone')} dir="ltr" />
             </Field>
             <Field label={t('hours')}>
               <input className="input" value={b.hours} onChange={(e) => update(i, { hours: e.target.value })} placeholder={t('hoursPlaceholder')} />
@@ -280,13 +280,13 @@ function ShippingTab({ map }: { map: Map<string, string> }) {
       <div className="grid sm:grid-cols-2 gap-4">
         <Field label={t('freeThreshold')} hint={t('freeThresholdHint')}>
           <div className="flex items-center gap-2">
-            <input type="number" min={0} className="input num flex-1" value={free} onChange={(e) => setFree(e.target.value)} />
+            <input type="number" min={0} placeholder={t('placeholders.freeThreshold')} className="input num flex-1" value={free} onChange={(e) => setFree(e.target.value)} />
             <span className="text-xs text-muted">د.ع</span>
           </div>
         </Field>
         <Field label={t('codFee')} hint={t('codFeeHint')}>
           <div className="flex items-center gap-2">
-            <input type="number" min={0} className="input num flex-1" value={cod} onChange={(e) => setCod(e.target.value)} />
+            <input type="number" min={0} placeholder={t('placeholders.codFee')} className="input num flex-1" value={cod} onChange={(e) => setCod(e.target.value)} />
             <span className="text-xs text-muted">د.ع</span>
           </div>
         </Field>
@@ -317,14 +317,14 @@ function LoyaltyTab({ map }: { map: Map<string, string> }) {
       <div className="grid sm:grid-cols-2 gap-4">
         <Field label={t('iqdPerPoint')} hint={t('iqdPerPointHint')}>
           <div className="flex items-center gap-2">
-            <input type="number" min={1} className="input num flex-1" value={iqdPer} onChange={(e) => setIqdPer(e.target.value)} />
+            <input type="number" min={1} placeholder={t('placeholders.iqdPerPoint')} className="input num flex-1" value={iqdPer} onChange={(e) => setIqdPer(e.target.value)} />
             <span className="text-xs text-muted">د.ع = 1</span>
           </div>
         </Field>
         <Field label={t('pointsPerUSD')} hint={t('pointsPerUSDHint')}>
           <div className="flex items-center gap-2">
             <span className="text-xs text-muted">1 USD =</span>
-            <input type="number" min={0} step={0.1} className="input num flex-1" value={usdPer} onChange={(e) => setUsdPer(e.target.value)} />
+            <input type="number" min={0} step={0.1} placeholder={t('placeholders.pointsPerUSD')} className="input num flex-1" value={usdPer} onChange={(e) => setUsdPer(e.target.value)} />
           </div>
         </Field>
       </div>

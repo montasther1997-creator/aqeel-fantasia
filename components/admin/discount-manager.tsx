@@ -18,12 +18,12 @@ export function DiscountManager({ initial }: { initial: any[] }) {
   return (
     <div className="space-y-4">
       <div className="glass p-4 grid grid-cols-12 gap-2">
-        <input placeholder={t('code')} className="input col-span-4 uppercase" value={d.code} onChange={(e) => setD({ ...d, code: e.target.value.toUpperCase() })} />
+        <input placeholder={t('placeholders.code')} className="input col-span-4 uppercase" value={d.code} onChange={(e) => setD({ ...d, code: e.target.value.toUpperCase() })} />
         <select className="input col-span-3" value={d.type} onChange={(e) => setD({ ...d, type: e.target.value })}>
           <option value="percent">{t('percent')}</option>
           <option value="fixed">{t('fixed')}</option>
         </select>
-        <input type="number" className="input col-span-4" value={d.value} onChange={(e) => setD({ ...d, value: +e.target.value })} />
+        <input type="number" placeholder={t('placeholders.value')} className="input col-span-4" value={d.value} onChange={(e) => setD({ ...d, value: +e.target.value })} />
         <button onClick={add} className="btn-primary col-span-1"><Plus className="w-4 h-4" /></button>
       </div>
       <div className="glass">

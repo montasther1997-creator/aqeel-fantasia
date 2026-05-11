@@ -9,6 +9,7 @@ export default async function CustomerDetail({ params }: { params: Promise<{ loc
   const { locale, id } = await params;
   await requireAdmin(locale);
   const t = await getTranslations('admin.customerDetail');
+  const ts = await getTranslations('admin.orderActions.statusOpts');
   const [customer, tiers, history] = await Promise.all([
     prisma.customer.findUnique({
       where: { id },
@@ -57,7 +58,7 @@ export default async function CustomerDetail({ params }: { params: Promise<{ loc
             {customer.orders.map((o) => (
               <div key={o.id} className="py-3 flex justify-between text-sm">
                 <span className="font-mono text-xs">{o.number}</span>
-                <span className="text-electric text-[10px] uppercase tracking-cinematic">{o.status}</span>
+                <span className="text-electric text-[10px] uppercase tracking-cinematic">{ts(o.status as any)}</span>
                 <span>{o.currency} {o.total.toLocaleString()}</span>
               </div>
             ))}

@@ -32,9 +32,9 @@ export function MadeForOneManager({ initial, products, customers }: { initial: a
             <option value="">{t('selectCustomer')}</option>
             {customers.map((c) => <option key={c.id} value={c.id}>{c.name} · {c.phone}</option>)}
           </select>
-          <input placeholder={t('editionPlaceholder')} className="input col-span-3" value={d.edition} onChange={(e) => setD({ ...d, edition: e.target.value })} />
+          <input placeholder={t('placeholders.edition')} className="input col-span-3" value={d.edition} onChange={(e) => setD({ ...d, edition: e.target.value })} />
         </div>
-        <textarea placeholder={t('personalNotePlaceholder')} className="input min-h-[60px]" value={d.personalNote} onChange={(e) => setD({ ...d, personalNote: e.target.value })} />
+        <textarea placeholder={t('placeholders.personalNote')} className="input min-h-[60px]" value={d.personalNote} onChange={(e) => setD({ ...d, personalNote: e.target.value })} />
         <button onClick={add} className="btn-primary"><Plus className="w-4 h-4" /> {t('reserve')}</button>
       </div>
 
@@ -68,7 +68,7 @@ function Row({ m, customers }: { m: any; customers: any[] }) {
           <option value="">{t('unassigned')}</option>
           {customers.map((c) => <option key={c.id} value={c.id}>{c.name} · {c.phone}</option>)}
         </select>
-        <input placeholder={t('edition')} className="input col-span-3" value={d.edition} onChange={(e) => setD({ ...d, edition: e.target.value })} />
+        <input placeholder={t('placeholders.edition')} className="input col-span-3" value={d.edition} onChange={(e) => setD({ ...d, edition: e.target.value })} />
         <select className="input col-span-2" value={d.status} onChange={(e) => setD({ ...d, status: e.target.value })}>
           <option value="available">{t('status.available')}</option>
           <option value="reserved">{t('status.reserved')}</option>
@@ -77,7 +77,7 @@ function Row({ m, customers }: { m: any; customers: any[] }) {
         <button onClick={save} className="col-span-1 btn-ghost"><Save className="w-4 h-4" /></button>
         <button onClick={del} className="col-span-1 btn-danger"><Trash2 className="w-4 h-4" /></button>
       </div>
-      <textarea className="input min-h-[50px] text-xs" value={d.personalNote} onChange={(e) => setD({ ...d, personalNote: e.target.value })} />
+      <textarea placeholder={t('placeholders.personalNote')} className="input min-h-[50px] text-xs" value={d.personalNote} onChange={(e) => setD({ ...d, personalNote: e.target.value })} />
     </div>
   );
 }

@@ -20,6 +20,7 @@ export default async function ReportsAdmin({
   const sp = await searchParams;
   await requireAdmin(locale);
   const t = await getTranslations('admin.reports');
+  const ts = await getTranslations('admin.orderActions.statusOpts');
 
   const today = new Date();
   const monthAgo = new Date(Date.now() - 30 * 86400000);
@@ -135,7 +136,7 @@ export default async function ReportsAdmin({
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {byStatus.map((s) => (
               <div key={s.status} className="border border-line p-4">
-                <p className="text-[10px] tracking-cinematic uppercase text-electric">{s.status}</p>
+                <p className="text-[10px] tracking-cinematic uppercase text-electric">{ts(s.status as any)}</p>
                 <p className="font-display text-2xl mt-1">{s._count}</p>
                 <p className="text-xs text-muted">{(s._sum.total || 0).toLocaleString()}</p>
               </div>

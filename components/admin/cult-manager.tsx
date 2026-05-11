@@ -185,18 +185,18 @@ function TierCard({ tier }: { tier: Tier }) {
 
       <div className="grid grid-cols-2 gap-3">
         <Field label={t('fields.nameAr')}>
-          <input className="input" value={d.nameAr} onChange={(e) => setD({ ...d, nameAr: e.target.value })} />
+          <input className="input" placeholder={t('placeholders.nameAr')} value={d.nameAr} onChange={(e) => setD({ ...d, nameAr: e.target.value })} />
         </Field>
         <Field label={t('fields.nameEn')}>
-          <input className="input" value={d.nameEn} onChange={(e) => setD({ ...d, nameEn: e.target.value })} />
+          <input className="input" placeholder={t('placeholders.nameEn')} value={d.nameEn} onChange={(e) => setD({ ...d, nameEn: e.target.value })} />
         </Field>
         <Field label={t('fields.slug')} hint={t('fields.slugHint')}>
-          <input className="input font-mono text-xs" value={d.slug} onChange={(e) => setD({ ...d, slug: e.target.value })} />
+          <input className="input font-mono text-xs" placeholder={t('placeholders.slug')} value={d.slug} onChange={(e) => setD({ ...d, slug: e.target.value })} />
         </Field>
         <Field label={t('fields.color')}>
           <div className="flex gap-2">
             <input type="color" className="w-12 h-10 bg-bg-secondary border border-line cursor-pointer" value={d.color} onChange={(e) => setD({ ...d, color: e.target.value })} />
-            <input className="input flex-1 font-mono text-xs" value={d.color} onChange={(e) => setD({ ...d, color: e.target.value })} />
+            <input className="input flex-1 font-mono text-xs" placeholder={t('placeholders.color')} value={d.color} onChange={(e) => setD({ ...d, color: e.target.value })} />
           </div>
         </Field>
       </div>
@@ -207,10 +207,10 @@ function TierCard({ tier }: { tier: Tier }) {
         </h4>
         <div className="grid grid-cols-2 gap-3">
           <Field label={t('fields.pointsThreshold')} hint={t('fields.pointsThresholdHint')}>
-            <input type="number" min={0} className="input num" value={d.pointsThreshold} onChange={(e) => setD({ ...d, pointsThreshold: Math.max(0, +e.target.value || 0) })} />
+            <input type="number" min={0} placeholder={t('placeholders.pointsThreshold')} className="input num" value={d.pointsThreshold} onChange={(e) => setD({ ...d, pointsThreshold: Math.max(0, +e.target.value || 0) })} />
           </Field>
           <Field label={t('fields.multiplier')} hint={t('fields.multiplierHint')}>
-            <input type="number" min={0} step={0.05} className="input num" value={d.multiplier} onChange={(e) => setD({ ...d, multiplier: Math.max(0, +e.target.value || 1) })} />
+            <input type="number" min={0} step={0.05} placeholder={t('placeholders.multiplier')} className="input num" value={d.multiplier} onChange={(e) => setD({ ...d, multiplier: Math.max(0, +e.target.value || 1) })} />
           </Field>
         </div>
       </div>
@@ -232,7 +232,7 @@ function TierCard({ tier }: { tier: Tier }) {
           />
           <Field label={t('fields.discountPct')}>
             <div className="flex items-center gap-1">
-              <input type="number" min={0} max={100} className="input num" value={d.discountPct} onChange={(e) => setD({ ...d, discountPct: Math.max(0, Math.min(100, +e.target.value || 0)) })} />
+              <input type="number" min={0} max={100} placeholder={t('placeholders.discountPct')} className="input num" value={d.discountPct} onChange={(e) => setD({ ...d, discountPct: Math.max(0, Math.min(100, +e.target.value || 0)) })} />
               <Percent className="w-3 h-3 text-muted" />
             </div>
           </Field>

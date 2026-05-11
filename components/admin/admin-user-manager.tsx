@@ -18,9 +18,9 @@ export function AdminUserManager({ initial }: { initial: any[] }) {
   return (
     <div className="space-y-4">
       <div className="glass p-4 grid grid-cols-12 gap-2">
-        <input placeholder={t('name')} className="input col-span-2" value={d.name} onChange={(e) => setD({ ...d, name: e.target.value })} />
-        <input placeholder={t('email')} type="email" className="input col-span-3" value={d.email} onChange={(e) => setD({ ...d, email: e.target.value })} />
-        <input placeholder={t('password')} type="password" className="input col-span-3" value={d.password} onChange={(e) => setD({ ...d, password: e.target.value })} />
+        <input placeholder={t('placeholders.name')} className="input col-span-2" value={d.name} onChange={(e) => setD({ ...d, name: e.target.value })} />
+        <input placeholder={t('placeholders.email')} type="email" className="input col-span-3" value={d.email} onChange={(e) => setD({ ...d, email: e.target.value })} />
+        <input placeholder={t('placeholders.password')} type="password" className="input col-span-3" value={d.password} onChange={(e) => setD({ ...d, password: e.target.value })} />
         <select className="input col-span-3" value={d.role} onChange={(e) => setD({ ...d, role: e.target.value })}>
           <option>admin</option><option>superadmin</option><option>editor</option>
         </select>

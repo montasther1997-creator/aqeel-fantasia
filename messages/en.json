@@ -259,6 +259,18 @@
       "allGood": "All good",
       "left": "left"
     },
+    "mediaInput": {
+      "upload": "Upload",
+      "url": "URL",
+      "chooseFile": "Choose a file",
+      "uploading": "Uploading…",
+      "uploaded": "Uploaded",
+      "tooLarge": "File too large",
+      "imageSize": "Max 25 MB · JPG / PNG / WEBP / GIF",
+      "videoSize": "Max 50 MB · MP4 / WEBM",
+      "urlPlaceholderImage": "https://example.com/image.jpg",
+      "urlPlaceholderVideo": "https://example.com/video.mp4"
+    },
     "common": {
       "all": "All",
       "apply": "Apply",
@@ -298,7 +310,8 @@
       "off": "off",
       "add": "Add",
       "created": "Created",
-      "createFailed": "Create failed"
+      "createFailed": "Create failed",
+      "clear": "Clear"
     },
     "products": {
       "eyebrow": "Catalog",
@@ -359,7 +372,26 @@
       "save": "Save",
       "create": "Create",
       "delete": "Delete",
-      "confirmDelete": "Delete this product?"
+      "confirmDelete": "Delete this product?",
+      "placeholders": {
+        "nameEn": "Void Hoodie",
+        "nameAr": "هودي القراغ",
+        "taglineEn": "Cut from the rooftop air.",
+        "taglineAr": "من نسيج هواء السطح.",
+        "slug": "void-hoodie",
+        "sku": "FNT-1024",
+        "descEn": "A modern cut classic piece blending elegance with comfort, finished in Italian wool.",
+        "descAr": "قطعة كلاسيكية بقصّة عصرية تجمع الأناقة بالراحة، مصنوعة من الصوف الإيطالي.",
+        "priceIQD": "75000",
+        "priceUSD": "55",
+        "compareIQD": "95000",
+        "compareUSD": "70",
+        "stock": "30",
+        "addImageUrl": "https://example.com/image.jpg",
+        "variantSize": "M",
+        "variantColor": "Onyx",
+        "variantStock": "10"
+      }
     },
     "orders": {
       "eyebrow": "Sales",
@@ -447,13 +479,32 @@
       "notes": "Notes",
       "save": "Save",
       "yes": "Yes",
-      "no": "No"
+      "no": "No",
+      "placeholders": {
+        "notes": "VIP — prefers Italian wool, usually shops before Eid."
+      }
     },
     "orderActions": {
-      "status": "Status",
-      "payment": "Payment",
-      "tracking": "Tracking",
-      "update": "Update"
+      "status": "Order status",
+      "payment": "Payment status",
+      "tracking": "Tracking number (optional)",
+      "trackingPlaceholder": "Carrier tracking number…",
+      "trackingHint": "Leave empty if you are not using a shipping carrier with tracking.",
+      "update": "Save changes",
+      "statusOpts": {
+        "pending": "Pending",
+        "paid": "Paid",
+        "processing": "Processing",
+        "shipped": "Shipped",
+        "delivered": "Delivered",
+        "cancelled": "Cancelled",
+        "refunded": "Refunded"
+      },
+      "paymentOpts": {
+        "unpaid": "Unpaid",
+        "paid": "Paid",
+        "refunded": "Refunded"
+      }
     },
     "reports": {
       "eyebrow": "Overview",
@@ -509,6 +560,10 @@
         "available": "available",
         "reserved": "reserved",
         "claimed": "claimed"
+      },
+      "placeholders": {
+        "edition": "N°042/100",
+        "personalNote": "Made just for you — monogrammed on the inner placket."
       }
     },
     "notes": {
@@ -522,7 +577,11 @@
       "textArPlaceholder": "نص ع: «...»",
       "textEnPlaceholder": "English text: \"...\"",
       "addNote": "Add Note",
-      "delete": "Delete"
+      "delete": "Delete",
+      "placeholders": {
+        "number": "04",
+        "signature": "ع. / A."
+      }
     },
     "cult": {
       "eyebrow": "Community",
@@ -560,6 +619,15 @@
         "discountPct": "Discount %",
         "customPerks": "Custom perks",
         "customPerksPlaceholder": "e.g. Private event invite, press Enter to add"
+      },
+      "placeholders": {
+        "nameAr": "ذهبي",
+        "nameEn": "Gold",
+        "slug": "gold",
+        "color": "#C9A961",
+        "pointsThreshold": "500",
+        "multiplier": "1.5",
+        "discountPct": "10"
       }
     },
     "newsletter": {
@@ -582,7 +650,12 @@
       "title": "Categories",
       "slug": "slug",
       "nameEn": "Name EN",
-      "nameAr": "Name AR"
+      "nameAr": "Name AR",
+      "placeholders": {
+        "slug": "outerwear",
+        "nameEn": "Outerwear",
+        "nameAr": "المعاطف"
+      }
     },
     "collections": {
       "eyebrow": "Catalog",
@@ -590,7 +663,12 @@
       "slug": "slug",
       "nameEn": "Name EN",
       "nameAr": "Name AR",
-      "productsCount": "{count} prod"
+      "productsCount": "{count} prod",
+      "placeholders": {
+        "slug": "spring-2026",
+        "nameEn": "Of the Rooftop",
+        "nameAr": "من السطح"
+      }
     },
     "discounts": {
       "eyebrow": "Sales",
@@ -599,15 +677,27 @@
       "type": "Type",
       "value": "Value",
       "percent": "Percent %",
-      "fixed": "Fixed"
+      "fixed": "Fixed",
+      "placeholders": {
+        "code": "WELCOME10",
+        "value": "10"
+      }
     },
     "content": {
       "eyebrow": "CMS",
       "title": "Site Content",
-      "keyPlaceholder": "key (e.g. gate.title)",
-      "groupPlaceholder": "group",
-      "valueEnPlaceholder": "value EN",
-      "valueArPlaceholder": "value AR"
+      "addNew": "Add new content key",
+      "empty": "No content yet.",
+      "keyRequired": "Key is required",
+      "confirmDelete": "Delete this key? It will affect site copy.",
+      "keyLabel": "Technical key",
+      "groupLabel": "Section",
+      "valueEnLabel": "Text (English)",
+      "valueArLabel": "Text (Arabic)",
+      "keyPlaceholder": "e.g. gate.title",
+      "groupPlaceholder": "e.g. gate, cult, archive",
+      "valueEnPlaceholder": "English text…",
+      "valueArPlaceholder": "Arabic text…"
     },
     "archive": {
       "eyebrow": "Content",
@@ -616,7 +706,12 @@
       "titleAr": "Title AR",
       "coverUrl": "cover URL",
       "type": "Type",
-      "delete": "Delete"
+      "delete": "Delete",
+      "placeholders": {
+        "titleEn": "Of the Rooftop, Hour 17",
+        "titleAr": "من السطح، الساعة ١٧",
+        "coverUrl": "https://example.com/archive-cover.jpg"
+      }
     },
     "media": {
       "eyebrow": "Content",
@@ -640,14 +735,32 @@
       "displayFont": "Display · Fraunces",
       "bodyFont": "Body · Inter",
       "arabicFont": "Arabic · IBM Plex / Amiri",
+      "sections": {
+        "visual": "Visual Identity",
+        "text": "Brand Tagline",
+        "colors": "Colors & Effects"
+      },
+      "saveVisual": "Save Visual Identity",
+      "saveText": "Save Tagline",
+      "saveColors": "Save Colors",
       "fields": {
-        "heroVideoUrl": "Hero Video URL",
-        "logoUrl": "Logo URL",
-        "faviconUrl": "Favicon URL",
-        "brandTagline": "Brand Tagline",
-        "brandTaglineAr": "Brand Tagline (Arabic)",
-        "primaryAccent": "Primary Accent",
-        "heroOverlayOpacity": "Hero Overlay Opacity (0–1)"
+        "heroVideoUrl": "Hero video",
+        "heroVideoUrlHint": "Plays on the welcome screen. Recommend a short 15-30s MP4.",
+        "logoUrl": "Brand logo",
+        "logoUrlHint": "Shown in header and sign-in. Recommend transparent PNG.",
+        "faviconUrl": "Site favicon",
+        "faviconUrlHint": "Small icon in browser tabs. 32×32 or 64×64.",
+        "brandTagline": "Tagline (English)",
+        "brandTaglineAr": "Tagline (Arabic)",
+        "brandTaglineHint": "Subtitle line under the house name in the header.",
+        "primaryAccent": "Primary accent color",
+        "primaryAccentHint": "Used for gold buttons and key UI accents. Default #C9A961.",
+        "heroOverlayOpacity": "Hero overlay opacity",
+        "heroOverlayOpacityHint": "0 = video fully visible, 1 = video fully hidden. Recommend 0.5–0.6."
+      },
+      "placeholders": {
+        "brandTagline": "Atelier Digital",
+        "brandTaglineAr": "أتيليه رقمي"
       },
       "saving": "Saving…",
       "save": "Save"
@@ -678,7 +791,16 @@
       "nameEn": "Name EN",
       "nameAr": "Name AR",
       "governorates": "Governorates (comma)",
-      "eta": "ETA (2-4)"
+      "eta": "ETA (2-4)",
+      "placeholders": {
+        "nameAr": "وسط العراق",
+        "nameEn": "Central Iraq",
+        "priceIQD": "5000",
+        "priceUSD": "5",
+        "eta": "2-4",
+        "freeThreshold": "100000",
+        "codFee": "2000"
+      }
     },
     "payments": {
       "eyebrow": "Store",
@@ -700,7 +822,12 @@
       "name": "Name",
       "email": "Email",
       "password": "Password",
-      "role": "Role"
+      "role": "Role",
+      "placeholders": {
+        "name": "Aqeel Fantasia",
+        "email": "contact@aqeelfantasia.com",
+        "password": "••••••••"
+      }
     },
     "activity": {
       "eyebrow": "System",
@@ -744,7 +871,12 @@
       "title": "Settings",
       "key": "key",
       "group": "group",
-      "value": "value"
+      "value": "value",
+      "placeholders": {
+        "key": "about.foundedYear",
+        "group": "general",
+        "value": "2024"
+      }
     },
     "smartSettings": {
       "tabs": {
@@ -763,7 +895,14 @@
         "storyEn": "House story (English)",
         "foundedYear": "Founded year",
         "foundedCity": "Founded city",
-        "foundedCityPlaceholder": "Baghdad"
+        "foundedCityPlaceholder": "Baghdad",
+        "placeholders": {
+          "founderAr": "عقيل فنتازيا",
+          "founderEn": "Aqeel Fantasia",
+          "storyAr": "وُلدت الدار في بغداد عام ٢٠٢٤، لتجمع بين خياطة الأناقة الكلاسيكية ولحظة فنتازيا واحدة في كل قطعة.",
+          "storyEn": "Born in Baghdad in 2024, the house brings classical tailoring together with a single moment of fantasy in every piece.",
+          "foundedYear": "2024"
+        }
       },
       "branches": {
         "heading": "Branches",
@@ -774,7 +913,12 @@
         "phone": "Branch phone",
         "hours": "Opening hours",
         "hoursPlaceholder": "9 AM — 9 PM",
-        "confirmRemove": "Remove this branch?"
+        "confirmRemove": "Remove this branch?",
+        "placeholders": {
+          "addressAr": "بابل، شارع 40",
+          "addressEn": "Babylon, Street 40",
+          "phone": "+9647700000000"
+        }
       },
       "social": {
         "heading": "Social links",
@@ -792,7 +936,11 @@
         "freeThreshold": "Free shipping threshold",
         "freeThresholdHint": "If order total exceeds this, shipping is free. Set 0 to disable.",
         "codFee": "Cash-on-delivery fee",
-        "codFeeHint": "Extra fee added when COD is chosen. Set 0 for no fee."
+        "codFeeHint": "Extra fee added when COD is chosen. Set 0 for no fee.",
+        "placeholders": {
+          "freeThreshold": "100000",
+          "codFee": "2000"
+        }
       },
       "loyalty": {
         "heading": "Points earning rules",
@@ -801,7 +949,11 @@
         "iqdPerPointHint": "Lower number = customers earn faster. Default 1,000 IQD.",
         "pointsPerUSD": "Points per USD",
         "pointsPerUSDHint": "For USD orders. Default 1 point per dollar.",
-        "tierHint": "Customers auto-upgrade when reaching each tier's points threshold, set in Cult Tiers."
+        "tierHint": "Customers auto-upgrade when reaching each tier's points threshold, set in Cult Tiers.",
+        "placeholders": {
+          "iqdPerPoint": "1000",
+          "pointsPerUSD": "1"
+        }
       }
     },
     "login": {

@@ -16,12 +16,12 @@ export function ArchiveManager({ initial }: { initial: any[] }) {
   return (
     <div className="space-y-4">
       <div className="glass p-4 grid grid-cols-12 gap-2">
-        <input placeholder={t('titleEn')} className="input col-span-3" value={d.titleEn} onChange={(e) => setD({ ...d, titleEn: e.target.value })} />
-        <input placeholder={t('titleAr')} className="input col-span-3" value={d.titleAr} onChange={(e) => setD({ ...d, titleAr: e.target.value })} />
+        <input placeholder={t('placeholders.titleEn')} className="input col-span-3" value={d.titleEn} onChange={(e) => setD({ ...d, titleEn: e.target.value })} />
+        <input placeholder={t('placeholders.titleAr')} className="input col-span-3" value={d.titleAr} onChange={(e) => setD({ ...d, titleAr: e.target.value })} />
         <select className="input col-span-2" value={d.type} onChange={(e) => setD({ ...d, type: e.target.value })}>
           {['photo', 'reel', 'edit', 'campaign'].map((x) => <option key={x}>{x}</option>)}
         </select>
-        <input placeholder={t('coverUrl')} className="input col-span-3" value={d.cover} onChange={(e) => setD({ ...d, cover: e.target.value })} />
+        <input placeholder={t('placeholders.coverUrl')} className="input col-span-3" value={d.cover} onChange={(e) => setD({ ...d, cover: e.target.value })} />
         <button onClick={add} className="btn-primary col-span-1"><Plus className="w-4 h-4" /></button>
       </div>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">

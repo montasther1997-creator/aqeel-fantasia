@@ -25,9 +25,9 @@ export function NotesManager({ initial, products }: { initial: any[]; products: 
       <div className="glass p-6 space-y-4">
         <h3 className="text-xs tracking-cinematic text-muted">— {t('newNote')}</h3>
         <div className="grid grid-cols-12 gap-3">
-          <input type="number" placeholder={t('number')} className="input col-span-1" value={d.number} onChange={(e) => setD({ ...d, number: e.target.value })} />
+          <input type="number" placeholder={t('placeholders.number')} className="input col-span-1" value={d.number} onChange={(e) => setD({ ...d, number: e.target.value })} />
           <input type="date" className="input col-span-3" value={d.noteDate} onChange={(e) => setD({ ...d, noteDate: e.target.value })} />
-          <input placeholder={t('signaturePlaceholder')} className="input col-span-2" value={d.signature} onChange={(e) => setD({ ...d, signature: e.target.value })} />
+          <input placeholder={t('placeholders.signature')} className="input col-span-2" value={d.signature} onChange={(e) => setD({ ...d, signature: e.target.value })} />
           <select className="input col-span-6" value={d.productId} onChange={(e) => setD({ ...d, productId: e.target.value })}>
             <option value="">{t('linkedProduct')}</option>
             {products.map((p) => <option key={p.id} value={p.id}>{p.nameEn}</option>)}

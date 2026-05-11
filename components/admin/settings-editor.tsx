@@ -32,9 +32,9 @@ function NewSetting() {
   };
   return (
     <div className="glass p-4 grid grid-cols-12 gap-2">
-      <input placeholder={t('key')} className="input col-span-4" value={d.key} onChange={(e) => setD({ ...d, key: e.target.value })} />
-      <input placeholder={t('group')} className="input col-span-2" value={d.group} onChange={(e) => setD({ ...d, group: e.target.value })} />
-      <input placeholder={t('value')} className="input col-span-5" value={d.value} onChange={(e) => setD({ ...d, value: e.target.value })} />
+      <input placeholder={t('placeholders.key')} className="input col-span-4" value={d.key} onChange={(e) => setD({ ...d, key: e.target.value })} />
+      <input placeholder={t('placeholders.group')} className="input col-span-2" value={d.group} onChange={(e) => setD({ ...d, group: e.target.value })} />
+      <input placeholder={t('placeholders.value')} className="input col-span-5" value={d.value} onChange={(e) => setD({ ...d, value: e.target.value })} />
       <button onClick={add} className="btn-primary col-span-1"><Plus className="w-4 h-4" /></button>
     </div>
   );

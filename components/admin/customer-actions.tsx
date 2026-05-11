@@ -24,7 +24,7 @@ export function CustomerActions({ id, vipTier, blocked, notes }: { id: string; v
     <div className="glass p-4 flex flex-wrap gap-3 items-end">
       <div><label className="label">{t('vipTier')}</label><select className="input" value={v} onChange={(e) => setV(e.target.value)}>{['none','bronze','silver','gold','black'].map((x) => <option key={x}>{x}</option>)}</select></div>
       <div><label className="label">{t('blocked')}</label><select className="input" value={b ? '1' : '0'} onChange={(e) => setB(e.target.value === '1')}><option value="0">{t('no')}</option><option value="1">{t('yes')}</option></select></div>
-      <div className="flex-1 min-w-[300px]"><label className="label">{t('notes')}</label><input className="input" value={n} onChange={(e) => setN(e.target.value)} /></div>
+      <div className="flex-1 min-w-[300px]"><label className="label">{t('notes')}</label><input className="input" placeholder={t('placeholders.notes')} value={n} onChange={(e) => setN(e.target.value)} /></div>
       <button onClick={save} disabled={saving} className="btn-primary">{saving ? '...' : t('save')}</button>
     </div>
   );
