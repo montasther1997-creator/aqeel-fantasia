@@ -12,14 +12,14 @@ export default async function AdminHome({ params }: { params: Promise<{ locale: 
   const ts = await getTranslations('admin.orderActions.statusOpts');
   const isAr = locale === 'ar';
 
-  const [productsCount, ordersCount, customersCount, revenueAgg, recentOrders, lowStock] = await Promise.all([
-    prisma.product.count(),
-    prisma.order.count(),
-    prisma.customer.count(),
-    prisma.order.aggregate({ _sum: { total: true }, where: { paymentStatus: 'paid' } }),
-    prisma.order.findMany({ orderBy: { createdAt: 'desc' }, take: 8, include: { items: true } }),
-    prisma.product.findMany({ where: { stock: { lt: 5 } }, take: 5, orderBy: { stock: 'asc' } }),
-  ]);
+  // Sequential queries — the pooler `connection_limit=1` (single in-memory client)
+  // makes large Promise.all batches time out. Sequential is reliable on all envs.
+  const productsCount = await prisma.product.count();
+  const ordersCount = await prisma.order.count();
+  const customersCount = await prisma.customer.count();
+  const revenueAgg = await prisma.order.aggregate({ _sum: { total: true }, where: { paymentStatus: 'paid' } });
+  const recentOrders = await prisma.order.findMany({ orderBy: { createdAt: 'desc' }, take: 8, include: { items: true } });
+  const lowStock = await prisma.product.findMany({ where: { stock: { lt: 5 } }, take: 5, orderBy: { stock: 'asc' } });
 
   const ordersByDay = await prisma.order.findMany({
     where: { createdAt: { gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) } },
