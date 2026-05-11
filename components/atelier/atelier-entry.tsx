@@ -43,10 +43,10 @@ export function AtelierEntry() {
           {/* Vignette */}
           <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(10,10,10,0.8) 100%)' }} />
 
-          <div className="relative z-10 text-center px-6 max-w-3xl">
+          <div className="relative z-10 text-center px-6 max-w-3xl" dir="ltr">
             {/* Brand top: AQEEL */}
             <div className="overflow-hidden mb-2">
-              <motion.div className="serif text-pearl tracking-[0.18em] text-3xl sm:text-5xl md:text-6xl lg:text-7xl flex justify-center" style={{ fontWeight: 300 }}>
+              <motion.div dir="ltr" className="serif text-pearl tracking-[0.18em] text-3xl sm:text-5xl md:text-6xl lg:text-7xl flex justify-center" style={{ fontWeight: 300, direction: 'ltr' }}>
                 {BRAND_TOP.split('').map((ch, i) => (
                   <motion.span
                     key={i}
@@ -72,7 +72,7 @@ export function AtelierEntry() {
 
             {/* Brand bottom: FANTASIA */}
             <div className="overflow-hidden">
-              <motion.div className="serif text-pearl tracking-[0.18em] text-4xl sm:text-6xl md:text-7xl lg:text-8xl flex justify-center" style={{ fontWeight: 400 }}>
+              <motion.div dir="ltr" className="serif text-pearl tracking-[0.18em] text-4xl sm:text-6xl md:text-7xl lg:text-8xl flex justify-center" style={{ fontWeight: 400, direction: 'ltr' }}>
                 {BRAND_BOT.split('').map((ch, i) => (
                   <motion.span
                     key={i}
