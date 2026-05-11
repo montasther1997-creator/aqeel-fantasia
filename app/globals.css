@@ -195,9 +195,11 @@
   .text-electric { color: var(--accent); }
   .text-muted { color: var(--fg-tertiary); }
   .text-blood { color: var(--burgundy); }
+  .text-success-soft { color: #6FAF73; }
   .bg-bg-primary { background: var(--bg); }
   .bg-bg-secondary { background: var(--bg-elevated); }
   .border-line { border-color: var(--border); }
+  .bg-line { background-color: var(--border); }
 
   /* ============================================================ */
   /* EDITORIAL ADMIN — magazine-inspired design system             */
@@ -244,23 +246,35 @@
   /* Stat card — editorial style */
   .ed-stat {
     position: relative;
-    padding: 32px 28px;
+    padding: 40px 32px 28px;
     background: var(--bg-elevated);
     border: 1px solid var(--border);
     transition: border-color var(--d-default) var(--ease-editorial),
-                background var(--d-default) var(--ease-editorial);
+                background var(--d-default) var(--ease-editorial),
+                transform var(--d-default) var(--ease-editorial);
     display: block;
     overflow: hidden;
+    text-decoration: none;
+    color: inherit;
   }
-  .ed-stat:hover { border-color: var(--accent); }
+  .ed-stat:hover {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 3%, var(--bg-elevated));
+  }
   .ed-stat::before {
     content: '';
     position: absolute;
-    top: 0; left: 28px; right: 28px;
-    height: 1px;
-    background: var(--accent);
-    opacity: 0.5;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      var(--accent) 20%,
+      var(--accent) 80%,
+      transparent 100%);
+    opacity: 0.7;
+    transition: opacity var(--d-default) var(--ease-editorial);
   }
+  .ed-stat:hover::before { opacity: 1; }
   .ed-stat .label {
     font-size: 10px;
     letter-spacing: 0.3em;
@@ -273,25 +287,40 @@
   .ed-stat .value {
     font-family: var(--serif);
     font-weight: 300;
-    font-size: 42px;
+    font-size: 48px;
     line-height: 1;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
     color: var(--fg);
     display: block;
   }
+  [lang="ar"] .ed-stat .value { font-family: var(--serif-ar); letter-spacing: 0; }
   .ed-stat .trend {
-    margin-top: 14px;
-    padding-top: 14px;
+    margin-top: 22px;
+    padding-top: 16px;
     border-top: 1px solid var(--border);
     font-size: 11px;
     letter-spacing: 0.05em;
     color: var(--fg-tertiary);
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: center;
+    gap: 8px;
   }
+  [lang="ar"] .ed-stat .trend { font-size: 12px; letter-spacing: 0; }
   .ed-stat .trend.up { color: #6FAF73; }
   .ed-stat .trend.down { color: var(--burgundy); }
+  .ed-stat .trend-arrow {
+    transform: translateX(0);
+    transition: transform var(--d-default) var(--ease-editorial),
+                opacity var(--d-default) var(--ease-editorial);
+  }
+  .ed-stat:hover .trend-arrow {
+    transform: translateX(4px);
+    color: var(--accent);
+  }
+  [dir="rtl"] .ed-stat:hover .trend-arrow {
+    transform: translateX(-4px);
+  }
 
   /* Section header — magazine-style */
   .ed-section-head {

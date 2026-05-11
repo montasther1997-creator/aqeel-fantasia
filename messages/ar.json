@@ -259,7 +259,42 @@
       "allGood": "كل شيء على ما يرام",
       "left": "متبقية",
       "viewDetails": "عرض التفاصيل",
-      "trends": "اتجاهات الشهر"
+      "trends": "اتجاهات الشهر",
+      "revenueCaption": "كل الإيرادات المدفوعة",
+      "ordersCaption": "كل الطلبات",
+      "customersCaption": "العملاء المسجّلون",
+      "productsCaption": "في الكتالوج"
+    },
+    "snapshot": {
+      "today": "لقطة اليوم",
+      "yesterday": "مقارنة بالأمس",
+      "ordersToday": "طلبات اليوم",
+      "revenueToday": "إيرادات اليوم",
+      "newCustomersToday": "عملاء جدد اليوم"
+    },
+    "quick": {
+      "heading": "إجراءات سريعة",
+      "newProduct": "منتج جديد",
+      "searchCustomer": "بحث عن عميل",
+      "todaysOrders": "طلبات قيد الانتظار",
+      "addDiscount": "إضافة خصم"
+    },
+    "alerts": {
+      "heading": "تنبيهات",
+      "pendingOrders": "طلب بانتظار المعالجة",
+      "lowStock": "منتج بمخزون منخفض",
+      "newBespoke": "طلب تفصيل جديد",
+      "subscribers": "مشترك في النشرة"
+    },
+    "activityFeed": {
+      "heading": "آخر النشاطات",
+      "empty": "لا توجد نشاطات بعد.",
+      "viewAll": "عرض السجل الكامل"
+    },
+    "governorates": {
+      "heading": "أكثر المحافظات طلبًا",
+      "empty": "لا توجد طلبات بعد.",
+      "orders": "طلب"
     },
     "mediaInput": {
       "upload": "رفع ملف",

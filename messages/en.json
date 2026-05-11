@@ -259,7 +259,42 @@
       "allGood": "All good",
       "left": "left",
       "viewDetails": "View details",
-      "trends": "Month trends"
+      "trends": "Month trends",
+      "revenueCaption": "All paid revenue",
+      "ordersCaption": "All orders",
+      "customersCaption": "Registered customers",
+      "productsCaption": "In catalog"
+    },
+    "snapshot": {
+      "today": "Today's snapshot",
+      "yesterday": "vs yesterday",
+      "ordersToday": "Orders today",
+      "revenueToday": "Revenue today",
+      "newCustomersToday": "New customers today"
+    },
+    "quick": {
+      "heading": "Quick actions",
+      "newProduct": "New product",
+      "searchCustomer": "Find customer",
+      "todaysOrders": "Pending orders",
+      "addDiscount": "Add discount"
+    },
+    "alerts": {
+      "heading": "Alerts",
+      "pendingOrders": "pending orders",
+      "lowStock": "low-stock products",
+      "newBespoke": "new bespoke requests",
+      "subscribers": "newsletter subscribers"
+    },
+    "activityFeed": {
+      "heading": "Latest activity",
+      "empty": "No activity yet.",
+      "viewAll": "View full log"
+    },
+    "governorates": {
+      "heading": "Top governorates by orders",
+      "empty": "No orders yet.",
+      "orders": "orders"
     },
     "mediaInput": {
       "upload": "Upload",
