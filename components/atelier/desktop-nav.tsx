@@ -73,7 +73,7 @@ export function DesktopNav() {
             )}
           </Link>
           {/* Lang switch */}
-          <Link href={'/' as any} locale={isAr ? 'en' : 'ar'} className="text-[10px] tracking-[0.16em] uppercase text-fg-tertiary hover:text-fg border-l border-border pl-5 rtl:border-l-0 rtl:border-r rtl:pl-0 rtl:pr-5" style={isAr ? { letterSpacing: 0 } : {}}>
+          <Link href={(path || '/home') as any} locale={isAr ? 'en' : 'ar'} className="text-[10px] tracking-[0.16em] uppercase text-fg-tertiary hover:text-fg border-l border-border pl-5 rtl:border-l-0 rtl:border-r rtl:pl-0 rtl:pr-5" style={isAr ? { letterSpacing: 0 } : {}}>
             {isAr ? 'EN' : 'العربية'}
           </Link>
         </div>

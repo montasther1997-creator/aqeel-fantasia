@@ -8,6 +8,8 @@ import { useCart } from '@/lib/cart-store';
 import { fmtNumber } from '@/lib/utils';
 import { ProductCard } from './product-card';
 import { playDing } from '@/lib/sound';
+import { toast } from '@/components/ui/toast';
+import { useRef } from 'react';
 
 export function ProductDetail({ product, related }: { product: any; related: any[] }) {
   const t = useTranslations('product');
@@ -18,6 +20,8 @@ export function ProductDetail({ product, related }: { product: any; related: any
   const [size, setSize] = useState<string>('');
   const [imgIdx, setImgIdx] = useState(0);
   const [added, setAdded] = useState(false);
+  const [sizeFlash, setSizeFlash] = useState(false);
+  const sizeSectionRef = useRef<HTMLDivElement | null>(null);
 
   const sizes = Array.from(new Set((product.variants || []).map((v: any) => v.size).filter(Boolean)));
   const images = product.images || [];
@@ -26,7 +30,13 @@ export function ProductDetail({ product, related }: { product: any; related: any
   const desc = isAr ? product.descAr : product.descEn;
 
   const onAdd = (buyNow = false) => {
-    if (sizes.length && !size) return;
+    if (sizes.length && !size) {
+      toast('error', isAr ? 'يرجى اختيار المقاس' : 'Please select a size');
+      setSizeFlash(true);
+      sizeSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => setSizeFlash(false), 1200);
+      return;
+    }
     const variant = (product.variants || []).find((v: any) => v.size === size);
     add({
       productId: product.id, variantId: variant?.id,
@@ -38,6 +48,7 @@ export function ProductDetail({ product, related }: { product: any; related: any
     });
     setAdded(true);
     playDing(0.06);
+    toast('success', isAr ? 'أُضيف إلى الحقيبة' : 'Added to Bag');
     setTimeout(() => setAdded(false), 1800);
     if (buyNow) router.push('/bag' as any);
   };
@@ -111,9 +122,9 @@ export function ProductDetail({ product, related }: { product: any; related: any
               )}
 
               {sizes.length > 0 && (
-                <section className="mt-8">
-                  <div className="text-[10px] tracking-[0.3em] uppercase text-fg-tertiary mb-4" style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>
-                    {t('size')}
+                <section ref={sizeSectionRef} className={`mt-8 transition-all ${sizeFlash ? 'ring-2 ring-burgundy ring-offset-4 ring-offset-bg p-3 -m-3' : ''}`}>
+                  <div className={`text-[10px] tracking-[0.3em] uppercase mb-4 ${sizeFlash ? 'text-burgundy' : 'text-fg-tertiary'}`} style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>
+                    {t('size')} {sizeFlash && <span className="ml-2">{isAr ? '← مطلوب' : '← required'}</span>}
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {sizes.map((s) => (

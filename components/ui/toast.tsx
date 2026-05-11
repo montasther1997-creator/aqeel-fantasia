@@ -1,12 +1,12 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, X, AlertCircle } from 'lucide-react';
 
-type Toast = { id: string; type: 'success' | 'error' | 'info'; message: string };
+type ToastType = 'success' | 'error' | 'info';
+type Toast = { id: string; type: ToastType; message: string };
 let externalAdd: ((t: Omit<Toast, 'id'>) => void) | null = null;
 
-export function toast(type: Toast['type'], message: string) {
+export function toast(type: ToastType, message: string) {
   externalAdd?.({ type, message });
 }
 
@@ -23,23 +23,34 @@ export function ToastHost() {
   }, []);
 
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[150] space-y-2 pointer-events-none" dir="ltr">
+    <div className="fixed top-24 md:top-28 left-1/2 -translate-x-1/2 z-[150] space-y-2 pointer-events-none" dir="ltr">
       <AnimatePresence>
         {toasts.map((t) => (
           <motion.div
             key={t.id}
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className={`pointer-events-auto glass-strong px-5 py-3 flex items-center gap-3 min-w-[280px] ${
-              t.type === 'success' ? 'border-l-2 border-l-electric' :
-              t.type === 'error' ? 'border-l-2 border-l-blood' : 'border-l-2 border-l-chrome'
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className={`pointer-events-auto bg-bg-elevated/95 backdrop-blur-xl border px-5 py-3.5 flex items-center gap-3 min-w-[280px] max-w-md shadow-2xl ${
+              t.type === 'success'
+                ? 'border-accent'
+                : t.type === 'error'
+                ? 'border-burgundy'
+                : 'border-border'
             }`}
+            style={{
+              borderLeftWidth: '3px',
+              borderRightWidth: '0',
+            }}
           >
-            {t.type === 'success' ? <Check className="w-4 h-4 text-electric" /> :
-             t.type === 'error' ? <X className="w-4 h-4 text-blood" /> :
-             <AlertCircle className="w-4 h-4 text-chrome" />}
-            <span className="text-sm text-frost">{t.message}</span>
+            <span className={`text-lg ${
+              t.type === 'success' ? 'text-accent' :
+              t.type === 'error' ? 'text-burgundy' : 'text-fg-secondary'
+            }`}>
+              {t.type === 'success' ? '✓' : t.type === 'error' ? '✕' : 'ⓘ'}
+            </span>
+            <span className="text-sm text-fg font-light">{t.message}</span>
           </motion.div>
         ))}
       </AnimatePresence>

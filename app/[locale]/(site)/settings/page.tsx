@@ -1,19 +1,55 @@
 'use client';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
+import { usePathname } from 'next/navigation';
 import { Icon } from '@/components/atelier/icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useCart } from '@/lib/cart-store';
+import { toast } from '@/components/ui/toast';
+
+type Notifs = { newCollections: boolean; orderUpdates: boolean; bespokeReplies: boolean; journal: boolean };
+const DEFAULT_NOTIFS: Notifs = { newCollections: true, orderUpdates: true, bespokeReplies: true, journal: false };
 
 export default function SettingsPage() {
   const t = useTranslations('settings');
   const locale = useLocale() as 'ar' | 'en';
   const isAr = locale === 'ar';
   const router = useRouter();
+  const pathname = usePathname();
   const currency = useCart((s) => s.currency);
   const setCurrency = useCart((s) => s.setCurrency);
   const [mode, setMode] = useState<'dark' | 'light'>('dark');
-  const [notifs, setNotifs] = useState({ newCollections: true, orderUpdates: true, bespokeReplies: true, journal: false });
+  const [notifs, setNotifs] = useState<Notifs>(DEFAULT_NOTIFS);
+
+  useEffect(() => {
+    const savedMode = (localStorage.getItem('fantasia-theme') as 'dark' | 'light' | null) || 'dark';
+    setMode(savedMode);
+    document.documentElement.dataset.mode = savedMode;
+    try {
+      const savedNotifs = localStorage.getItem('fantasia-notifs');
+      if (savedNotifs) setNotifs({ ...DEFAULT_NOTIFS, ...JSON.parse(savedNotifs) });
+    } catch {}
+  }, []);
+
+  const toggleMode = () => {
+    const next = mode === 'dark' ? 'light' : 'dark';
+    setMode(next);
+    document.documentElement.dataset.mode = next;
+    localStorage.setItem('fantasia-theme', next);
+  };
+
+  const updateNotifs = (patch: Partial<Notifs>) => {
+    const next = { ...notifs, ...patch };
+    setNotifs(next);
+    localStorage.setItem('fantasia-notifs', JSON.stringify(next));
+    toast('success', isAr ? 'حُفِظ' : 'Saved');
+  };
+
+  const switchLanguage = () => {
+    const target = isAr ? 'en' : 'ar';
+    const stripped = (pathname || '/').replace(/^\/(ar|en)(?=\/|$)/, '') || '/';
+    router.replace(stripped as any, { locale: target } as any);
+  };
 
   return (
     <div className="pt-20 md:pt-32 pb-20">
@@ -27,8 +63,8 @@ export default function SettingsPage() {
         </header>
 
         <Group label={t('appearance')} isAr={isAr}>
-          <Row label={t('language')} value={isAr ? 'العربية' : 'English'} onClick={() => router.push('/' as any, { locale: isAr ? 'en' : 'ar' } as any)} />
-          <Row label={t('mode')} value={mode === 'dark' ? t('dark') : t('light')} onClick={() => setMode(mode === 'dark' ? 'light' : 'dark')} />
+          <Row label={t('language')} value={isAr ? 'العربية' : 'English'} onClick={switchLanguage} />
+          <Row label={t('mode')} value={mode === 'dark' ? t('dark') : t('light')} onClick={toggleMode} />
         </Group>
 
         <Group label={t('account')} isAr={isAr}>
@@ -38,10 +74,10 @@ export default function SettingsPage() {
         </Group>
 
         <Group label={t('notifications')} isAr={isAr}>
-          <Toggle label={t('newCollections')} value={notifs.newCollections} onChange={(v) => setNotifs({ ...notifs, newCollections: v })} />
-          <Toggle label={t('orderUpdates')} value={notifs.orderUpdates} onChange={(v) => setNotifs({ ...notifs, orderUpdates: v })} />
-          <Toggle label={t('bespokeReplies')} value={notifs.bespokeReplies} onChange={(v) => setNotifs({ ...notifs, bespokeReplies: v })} />
-          <Toggle label={t('atelierJournal')} value={notifs.journal} onChange={(v) => setNotifs({ ...notifs, journal: v })} />
+          <Toggle label={t('newCollections')} value={notifs.newCollections} onChange={(v) => updateNotifs({ newCollections: v })} />
+          <Toggle label={t('orderUpdates')} value={notifs.orderUpdates} onChange={(v) => updateNotifs({ orderUpdates: v })} />
+          <Toggle label={t('bespokeReplies')} value={notifs.bespokeReplies} onChange={(v) => updateNotifs({ bespokeReplies: v })} />
+          <Toggle label={t('atelierJournal')} value={notifs.journal} onChange={(v) => updateNotifs({ journal: v })} />
         </Group>
 
         <Group label={t('privacy')} isAr={isAr}>

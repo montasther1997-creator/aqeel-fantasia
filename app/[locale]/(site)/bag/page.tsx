@@ -96,9 +96,14 @@ export default function BagPage() {
               <button onClick={() => router.push('/checkout' as any)} className="btn btn-champagne w-full mt-6">
                 {t('checkout')}
               </button>
-              <button className="btn btn-ghost w-full mt-3 text-fg-secondary text-xs">
+              <a
+                href={`https://wa.me/9647700000000?text=${encodeURIComponent(isAr ? 'مرحبًا، أحتاج مساعدة من الخدمة الخاصة بشأن طلبي.' : 'Hello, I need concierge assistance with my order.')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-ghost w-full mt-3 text-fg-secondary text-xs inline-flex items-center justify-center"
+              >
                 {t('concierge')}
-              </button>
+              </a>
             </div>
           </div>
         </div>
