@@ -1,15 +1,23 @@
 import { NextResponse } from 'next/server';
-import { getAdmin, hashPassword } from '@/lib/auth';
+import { apiRequireAdmin, isAdminResponse } from '@/lib/admin-guard';
+import { hashPassword } from '@/lib/auth';
 import { prisma } from '@/lib/db';
+import { AdminUserSchema, zodError } from '@/lib/validators';
 
 export async function POST(req: Request) {
-  const a = await getAdmin();
-  if (!a) return NextResponse.json({ ok: false }, { status: 401 });
-  if (a.role !== 'superadmin') return NextResponse.json({ ok: false, error: 'forbidden' }, { status: 403 });
-  const b = await req.json();
-  if (!b.email || !b.password || !b.name) return NextResponse.json({ ok: false, error: 'missing-fields' }, { status: 400 });
-  const role = ['admin', 'superadmin', 'editor'].includes(b.role) ? b.role : 'admin';
-  const password = await hashPassword(b.password);
-  await prisma.adminUser.create({ data: { email: String(b.email).toLowerCase().slice(0, 200), name: String(b.name).slice(0, 200), role, password } });
-  return NextResponse.json({ ok: true });
+  const admin = await apiRequireAdmin(['superadmin']);
+  if (isAdminResponse(admin)) return admin;
+  const parsed = AdminUserSchema.safeParse(await req.json().catch(() => null));
+  if (!parsed.success) return NextResponse.json(zodError(parsed), { status: 400 });
+  const { email, password, name, role } = parsed.data;
+  try {
+    const password_hash = await hashPassword(password);
+    const a = await prisma.adminUser.create({
+      data: { email: email.toLowerCase(), name, role: role || 'admin', password: password_hash },
+    });
+    return NextResponse.json({ ok: true, id: a.id });
+  } catch (e: any) {
+    if (e?.code === 'P2002') return NextResponse.json({ ok: false, error: 'duplicate-email' }, { status: 409 });
+    return NextResponse.json({ ok: false, error: 'create-failed' }, { status: 400 });
+  }
 }

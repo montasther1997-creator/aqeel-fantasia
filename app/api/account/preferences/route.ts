@@ -1,27 +1,17 @@
 import { NextResponse } from 'next/server';
 import { getCustomer } from '@/lib/auth';
 import { prisma } from '@/lib/db';
-
-const ALLOWED = [
-  'height', 'weight', 'shoulderWidth', 'chestSize', 'waistSize', 'inseam',
-  'preferredSize', 'preferredColors', 'preferredStyles', 'preferredFabrics',
-] as const;
+import { PreferencesSchema, zodError } from '@/lib/validators';
 
 export async function PATCH(req: Request) {
   const c = await getCustomer();
   if (!c) return NextResponse.json({ ok: false }, { status: 401 });
-  const b = await req.json();
-  const data: Record<string, any> = { onboarded: true };
-  for (const k of ALLOWED) {
-    if (k in b) {
-      const v = b[k];
-      if (['height', 'weight', 'shoulderWidth', 'chestSize', 'waistSize', 'inseam'].includes(k)) {
-        data[k] = v == null || v === '' ? null : Number(v);
-      } else {
-        data[k] = v == null ? null : String(v).slice(0, 500);
-      }
-    }
-  }
+  const body = await req.json().catch(() => null);
+  const parsed = PreferencesSchema.safeParse(body);
+  if (!parsed.success) return NextResponse.json(zodError(parsed), { status: 400 });
+  const data: any = { ...parsed.data, onboarded: true };
+  // Normalize empty strings to null
+  for (const k of Object.keys(data)) if (data[k] === '') data[k] = null;
   await prisma.customer.update({ where: { id: c.id }, data });
   return NextResponse.json({ ok: true });
 }
