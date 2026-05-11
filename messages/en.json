@@ -207,5 +207,57 @@
     "cancel": "Cancel",
     "loading": "Loading",
     "next": "Next"
+  },
+  "admin": {
+    "controlRoom": "Control Room",
+    "logout": "Sign out",
+    "groups": {
+      "overview": "Overview",
+      "catalog": "Catalog",
+      "sales": "Sales",
+      "community": "Community",
+      "content": "Content",
+      "store": "Store",
+      "system": "System"
+    },
+    "nav": {
+      "dashboard": "Dashboard",
+      "reports": "Reports",
+      "products": "Products",
+      "categories": "Categories",
+      "collections": "Collections",
+      "orders": "Orders",
+      "customers": "Customers",
+      "discounts": "Discounts",
+      "cult": "Cult Tiers",
+      "bespoke": "Bespoke",
+      "madeForOne": "Made for One",
+      "notes": "Atelier Notes",
+      "newsletter": "Newsletter",
+      "siteContent": "Site Content",
+      "archive": "Archive",
+      "media": "Media",
+      "appearance": "Appearance",
+      "shipping": "Shipping",
+      "payments": "Payments",
+      "users": "Admins",
+      "activity": "Activity",
+      "languages": "Languages",
+      "settings": "Settings"
+    },
+    "labels": {
+      "revenue": "Revenue",
+      "orders": "Orders",
+      "customers": "Customers",
+      "products": "Products",
+      "ordersChart": "Orders (last 30 days)",
+      "revenueChart": "Revenue (last 30 days)",
+      "recentOrders": "Recent Orders",
+      "noOrders": "No orders yet",
+      "items": "items",
+      "lowStock": "Low Stock",
+      "allGood": "All good",
+      "left": "left"
+    }
   }
 }

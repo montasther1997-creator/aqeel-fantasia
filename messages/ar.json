@@ -207,5 +207,57 @@
     "cancel": "إلغاء",
     "loading": "جارٍ التحميل",
     "next": "التالي"
+  },
+  "admin": {
+    "controlRoom": "غرفة التحكم",
+    "logout": "تسجيل الخروج",
+    "groups": {
+      "overview": "نظرة عامة",
+      "catalog": "الكتالوج",
+      "sales": "المبيعات",
+      "community": "المجتمع",
+      "content": "المحتوى",
+      "store": "المتجر",
+      "system": "النظام"
+    },
+    "nav": {
+      "dashboard": "لوحة التحكم",
+      "reports": "التقارير",
+      "products": "المنتجات",
+      "categories": "الفئات",
+      "collections": "المجموعات",
+      "orders": "الطلبات",
+      "customers": "العملاء",
+      "discounts": "الخصومات",
+      "cult": "النادي الحصري",
+      "bespoke": "طلبات التفصيل",
+      "madeForOne": "صُنعت لشخص واحد",
+      "notes": "ملاحظات الدار",
+      "newsletter": "النشرة",
+      "siteContent": "محتوى الموقع",
+      "archive": "الأرشيف",
+      "media": "مكتبة الوسائط",
+      "appearance": "المظهر",
+      "shipping": "الشحن",
+      "payments": "المدفوعات",
+      "users": "المسؤولون",
+      "activity": "سجل النشاط",
+      "languages": "اللغات",
+      "settings": "الإعدادات"
+    },
+    "labels": {
+      "revenue": "الإيرادات",
+      "orders": "الطلبات",
+      "customers": "العملاء",
+      "products": "المنتجات",
+      "ordersChart": "الطلبات (آخر 30 يومًا)",
+      "revenueChart": "الإيرادات (آخر 30 يومًا)",
+      "recentOrders": "أحدث الطلبات",
+      "noOrders": "لا توجد طلبات بعد",
+      "items": "قطعة",
+      "lowStock": "مخزون منخفض",
+      "allGood": "كل شيء على ما يرام",
+      "left": "متبقية"
+    }
   }
 }
