@@ -137,6 +137,9 @@ Use `aws-1-ap-southeast-2.pooler.supabase.com` (NOT `aws-0-`).
 - Port 6543 → transaction pooler (require `pgbouncer=true`)
 - Port 5432 → direct/session (used by Prisma migrations)
 
+### 5.9.1 Pooler connection_limit=1 — sequential queries on dashboards
+The pooler is set to `connection_limit=1`. Large `Promise.all` of >5 prisma queries in a single page handler exceeds the 10s pool timeout and produces server-side exceptions. **Run dashboard queries sequentially** (`await prisma.x(); await prisma.y();`) — the wall time is the same and there is no queue contention. See `app/[locale]/admin/page.tsx` for the pattern.
+
 ### 5.10 Product mutations
 - **Never** `deleteMany` variants on PATCH — they're FK'd by `OrderItem` (`onDelete: Restrict`)
 - Use the diff pattern in `app/api/admin/products/[id]/route.ts`: keep variants that have orders, soft-zero their stock, delete only the orphans
@@ -155,6 +158,10 @@ Use `aws-1-ap-southeast-2.pooler.supabase.com` (NOT `aws-0-`).
 | Personal Stylist | `components/atelier/stylist-section.tsx` | `lib/stylist.ts` — heuristic ranking on history + wishlist + categories + price band |
 | Made for One | `app/[locale]/(site)/made-for-me/` + admin page | `MadeForOne` table; API: `/api/admin/made-for-one` |
 | Atelier Address Book | `app/[locale]/(site)/profile/atelier-book/` | Extended `Customer` table fields; API: `/api/account/preferences` |
+| Loyalty / Cult Tiers | `components/atelier/loyalty-card.tsx` (customer) + `components/admin/cult-manager.tsx` (admin) + `components/admin/tier-changer.tsx` (manual override) | `lib/loyalty.ts` (compute + awardPointsForOrder + manualSetTier), extended `CultTier` model, new `TierHistory` model; APIs: `GET /api/account/loyalty`, `POST /api/admin/customers/[id]/tier`. Points auto-awarded inside the order transaction. Earning rate configurable via Setting keys `loyalty.iqdPerPoint` and `loyalty.pointsPerUSD`. |
+| Smart Settings | `components/admin/smart-settings.tsx` | Tabs: About / Branches / Social / Shipping / Loyalty / Advanced (raw key/value editor). All writes go to the existing `Setting` table via `/api/admin/settings`. |
+| Editorial admin design | `app/globals.css` `.ed-*` classes | `.ed-eye .ed-title .ed-display .ed-caption .ed-stat .ed-section-head .ed-table .ed-pill .ed-card .ed-rule` — magazine-inspired admin design used across every admin page. |
+| Media Input | `components/admin/media-input.tsx` | Tabs `Upload | URL`. Upload posts to `/api/admin/upload`; videos up to 50 MB, images 25 MB. |
 
 ---
 
@@ -221,7 +228,7 @@ The brand demands formal global Arabic. Avoid colloquialisms.
 - **No real-time** — orders/admin updates require refresh
 - **In-memory rate limit** — works per-lambda only; swap with Upstash Redis for production-grade
 - **No tests** — manual QA only
-- **Cult membership** is read-only (tier definitions exist; public subscribe flow not yet shipped)
+- **Cult membership flow** is auto-promotion only (customer ranked into tiers based on points; manual promote/demote is in admin). No public "subscribe" flow.
 
 ---
 
@@ -256,3 +263,11 @@ Default admin: `admin@aqeelfantasia.com` / `Fantasia@2026` (change in production
 - **Brand identity**: Fraunces serif + Inter sans + Amiri/IBM Plex for Arabic; Onyx/Pearl/Champagne palette
 - **Cinematic Entry, Sound of Cloth, Atelier Notes (CMS), Editorial Mix, Personal Stylist (heuristic), Made for One (admin-assigned), Atelier Address Book (measurements + style profile)** — all live
 - **Architecture audit fixes**: atomic order transactions, role-gated admin mutations, Zod validation, in-memory rate limiting, Supabase Storage uploads, performance indexes (15+), variant-safe product PATCH, missing profile pages
+- **Full Arabic admin** (May 2026): `admin` namespace in `messages/{ar,en}.json` with ~400 keys covering every page, manager component, table header, button, placeholder, status, and confirm dialog. Formal Fusha throughout. Order/payment status enums also localized via `admin.orderActions.statusOpts`.
+- **Loyalty / Cult Tiers system**: `CultTier` extended with `pointsThreshold`, `multiplier`, `freeShipping`, `discountPct`, `earlyAccess`. New `TierHistory` audit table. Points auto-awarded inside `/api/orders` transaction; auto-tier-up when points cross threshold. Manual override in admin via `POST /api/admin/customers/[id]/tier`. Customer-facing `LoyaltyCard` in `/profile` with progress bar to next tier.
+- **Smart Settings page**: tabbed UI (About / Branches / Social / Shipping / Loyalty / Advanced raw editor) — friendly named fields backed by the existing `Setting` table.
+- **Editorial admin design**: `.ed-*` CSS layer in `globals.css` (eyebrows, gold-ruled stat cards, em-dash section heads, refined tables with accent hover, `.ed-pill` status badges). Dashboard adds 6 features: today's snapshot, quick actions, KPI trend %, alerts panel, activity feed, top-governorates bar chart.
+- **Shipping settings**: redesigned `shipping-manager.tsx` to card-per-zone with labeled fields. Added store-wide `shipping.freeThresholdIQD` and `shipping.codFeeIQD` settings.
+- **Appearance redesign**: split into Visual / Tagline / Colors sections with `MediaInput` (Upload | URL tabs) + 50 MB video upload limit.
+- **Dark/Light mode fix**: `PhoneShell` no longer hardcodes `data-mode="dark"`; reads from `localStorage` and mirrors `<html>` via MutationObserver so the settings toggle works.
+- **Checkout validation**: custom red-mark validation with centered toast; name/phone/governorate/city/street required; email optional.

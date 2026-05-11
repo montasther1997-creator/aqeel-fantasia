@@ -23,15 +23,15 @@ A men's fashion house where authenticity meets modern elegance. Premium craftsma
 
 | Pillar | Detail |
 |---|---|
-| 🎬 Cinematic storefront | Editorial typography (Playfair Display × Tajawal), gold accents, page transitions, hover reveals |
+| 🎬 Cinematic storefront | Editorial typography (Fraunces serif × Inter sans × Amiri/IBM Plex for Arabic), gold accents, Framer Motion page transitions, hover reveals |
 | 🛍️ Full e-commerce | Catalog, variants, cart, checkout (COD), discount codes, shipping zones, wishlist |
-| 🌐 Bilingual | Arabic (RTL, default) + English (LTR), with formal Fusha terminology |
+| 🌐 Bilingual | Arabic (RTL, default) + English (LTR), with formal Fusha terminology, ~400 admin translation keys |
 | 💰 Dual currency | IQD (default) ↔ USD with live switcher |
-| 🎛️ Admin dashboard | 20+ sections — full CRUD for products, orders, customers, content, settings |
-| 👥 Customer accounts | Phone-based auth (email optional), addresses, order history, wishlist |
+| 🎛️ Editorial admin | 24 sections — full CRUD, magazine-style design system (gold-ruled stat cards, em-dash section heads, accent-hover tables) |
+| 🏅 Loyalty system | Cult tiers with `pointsThreshold` + `multiplier` + perks (free shipping / early access / % discount / custom). Auto-award + auto-tier-up inside the order transaction. Customer-facing tier card with progress bar. |
+| 👥 Customer accounts | Phone-based auth (email optional), addresses, order history, wishlist, atelier book (measurements + style preferences) |
 | 🛡️ Security-hardened | Server-authoritative pricing, role-gated admin actions, upload whitelist, JWT enforcement |
-| 🎵 Subtle sound design | Web Audio synthesized ambient drones (toggle bottom-right) |
-| 🌀 3D | Light Three.js hero scene |
+| 🎵 Subtle sound design | Web Audio synthesized cues (`playWood/playFabric/playDing/playBell/playSwoosh` triggered inline) |
 
 ---
 
@@ -49,7 +49,7 @@ A men's fashion house where authenticity meets modern elegance. Premium craftsma
 Next.js 14 (App Router) · TypeScript · Tailwind 3
 Prisma 5 (multi-schema) · PostgreSQL on Supabase
 Bcrypt + JWT (jose) cookies · next-intl (AR/EN)
-Framer Motion · Recharts · Three.js (R3F) · Zustand
+Framer Motion · Recharts · Zustand · Web Audio API
 Vercel (production) · GitHub (CI auto-deploy)
 ```
 
@@ -138,7 +138,7 @@ i18n/                 next-intl routing
 - **Discount validation**: re-validated server-side, with usage counter
 - **Address ownership**: PATCH whitelists allowed fields (no `customerId` reassignment possible)
 - **Admin role gating**: only `superadmin` can manage other admins
-- **Upload validation**: MIME + extension whitelist, 25 MB / 10 file caps
+- **Upload validation**: MIME + extension whitelist, 25 MB for images / 50 MB for videos / 10 file caps
 - **JWT secret**: throws on startup if missing in production
 - **Cookies**: httpOnly, SameSite=lax, secure in production
 - **Search input**: capped at 100 chars to prevent unbounded LIKE scans
@@ -174,26 +174,23 @@ Edit translations:
 
 | Section | Capability |
 |---------|-----------|
-| Dashboard | Stats + 30-day charts, recent orders, low-stock alerts |
-| Reports | Best sellers, top customers, revenue by status |
-| Products | CRUD with images upload, variants, pricing, SEO |
-| Categories | Inline CRUD |
-| Collections | Inline CRUD with featured flag |
-| Orders | Status, payment status, tracking code updates |
-| Customers | VIP tier, block/unblock, notes |
-| Discounts | Code-based percent/fixed discounts |
-| Cult Members | Membership tier CRUD with hex color |
-| Newsletter | Subscriber list |
-| Site Content | All hero/identity/cult copy in both languages |
-| Archive | Reels/edits/campaigns/photos |
-| Media Library | Drag-drop upload + URL clipboard |
-| Appearance | Read-only theme palette + typography |
-| Shipping | Zone CRUD with governorate mapping + rates |
-| Payments | (placeholder) COD enabled |
+| Dashboard | Today's snapshot vs yesterday, quick actions, KPI cards with 30-day trend %, alerts panel (pending / low stock / bespoke / subscribers), activity feed, top governorates, 30-day charts, recent orders, low-stock list |
+| Reports | Date-range filter, CSV export, best sellers, top customers, orders by status, 4 KPIs (range / 7d / 30d / all time) |
+| Products | CRUD with image upload + URL, variants, pricing, SEO, image-uploader component |
+| Categories / Collections / Discounts / Notes / Archive | Inline CRUD (editorial card layout, labeled placeholders) |
+| Orders | Status + payment + tracking (localized Arabic enums), status filter chips |
+| Customers | VIP tier, block/unblock, notes, manual tier change with history |
+| Cult Tiers | Card-per-tier editor: points threshold, multiplier, perks (free shipping, early access, % discount, custom perks). Members list with points |
+| Newsletter | Subscribers with active toggle, CSV export |
+| Site Content | Friendly group labels (الأرشيف، النادي، الواجهة…) over raw keys |
+| Media Library | Upload + URL clipboard, image/video gallery |
+| Appearance | Sectioned editor: Visual Identity (logo/favicon/hero video with Upload\|URL tabs) + Tagline + Colors (color picker + overlay slider) |
+| Shipping | Card-per-zone with labeled fields, store-wide free-threshold + COD-fee settings |
+| Payments | Per-method enable/disable (COD / Card / Bank / ZainCash) — persisted to Settings |
 | Admins | Add/remove admin users (superadmin only) |
-| Activity Log | Audit trail of admin actions |
+| Activity Log | Filterable audit trail with pagination |
 | Languages | Set default, enable/disable AR/EN |
-| Settings | Key/value config |
+| Settings | Smart tabs: About / Branches (multi) / Social / Shipping / Loyalty / Advanced (raw key/value editor) |
 
 ---
 
