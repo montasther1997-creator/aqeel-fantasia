@@ -4,7 +4,7 @@ import { prisma } from '@/lib/db';
 import { ContentSchema, zodError } from '@/lib/validators';
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const admin = await apiRequireAdmin();
+  const admin = await apiRequireAdmin(['admin', 'superadmin', 'editor']);
   if (isAdminResponse(admin)) return admin;
   const { id } = await params;
   const parsed = ContentSchema.partial().safeParse(await req.json().catch(() => null));

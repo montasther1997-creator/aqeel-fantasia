@@ -4,7 +4,7 @@ import { prisma } from '@/lib/db';
 import { deleteFromStorage } from '@/lib/storage';
 
 export async function DELETE(_: Request, { params }: { params: Promise<{ id: string }> }) {
-  const a = await apiRequireAdmin();
+  const a = await apiRequireAdmin(['admin', 'superadmin', 'editor']);
   if (isAdminResponse(a)) return a;
   const { id } = await params;
   const m = await prisma.mediaAsset.findUnique({ where: { id } });

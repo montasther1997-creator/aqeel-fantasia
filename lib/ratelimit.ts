@@ -1,8 +1,8 @@
 /**
  * Simple in-memory rate limiter.
- * Effective per-region on Vercel (each lambda has its own memory).
+ * Effective per-lambda (each Vercel function instance has its own memory).
  * Not perfect but a real defense-in-depth.
- * For production-grade: swap with @upstash/ratelimit + Redis.
+ * For production-grade distributed limiting: swap with @upstash/ratelimit + Redis.
  */
 
 const store = new Map<string, { count: number; resetAt: number }>();
@@ -35,10 +35,24 @@ export function rateLimit(key: string, max: number, windowMs: number): boolean {
   return true;
 }
 
+/**
+ * Extract the real client IP, preferring Vercel's signed header which the
+ * client cannot forge. Falls back to the LAST hop of X-Forwarded-For so
+ * client-supplied prefixes can't bypass per-IP limits.
+ */
 export function getIp(req: Request): string {
-  return (
-    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-    req.headers.get('x-real-ip') ||
-    'unknown'
-  );
+  // Vercel adds this header itself; clients cannot set it.
+  const vercel = req.headers.get('x-vercel-forwarded-for');
+  if (vercel) return vercel.split(',').pop()?.trim() || 'unknown';
+
+  // Cloudflare path (in case the project ever moves).
+  const cf = req.headers.get('cf-connecting-ip');
+  if (cf) return cf.trim();
+
+  // Fallback: take the LAST hop. Trusted proxies append; the client-supplied
+  // value (if any) is at the start, not the end.
+  const xff = req.headers.get('x-forwarded-for');
+  if (xff) return xff.split(',').pop()?.trim() || 'unknown';
+
+  return req.headers.get('x-real-ip')?.trim() || 'unknown';
 }

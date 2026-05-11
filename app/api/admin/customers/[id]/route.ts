@@ -1,19 +1,15 @@
 import { NextResponse } from 'next/server';
 import { apiRequireAdmin, isAdminResponse } from '@/lib/admin-guard';
 import { prisma } from '@/lib/db';
-
-const VIP_TIERS = ['none', 'bronze', 'silver', 'gold', 'black'];
+import { CustomerPatchSchema, zodError } from '@/lib/validators';
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const admin = await apiRequireAdmin(['admin', 'superadmin']);
   if (isAdminResponse(admin)) return admin;
   const { id } = await params;
-  const b = await req.json();
-  const data: any = {};
-  if ('vipTier' in b && VIP_TIERS.includes(b.vipTier)) data.vipTier = b.vipTier;
-  if ('blocked' in b) data.blocked = !!b.blocked;
-  if ('notes' in b) data.notes = b.notes ? String(b.notes).slice(0, 2000) : null;
-  await prisma.customer.update({ where: { id }, data });
+  const parsed = CustomerPatchSchema.safeParse(await req.json().catch(() => null));
+  if (!parsed.success) return NextResponse.json(zodError(parsed), { status: 400 });
+  await prisma.customer.update({ where: { id }, data: parsed.data });
   await prisma.activityLog.create({ data: { adminId: admin.id, action: 'update', entity: 'customer', entityId: id } });
   return NextResponse.json({ ok: true });
 }

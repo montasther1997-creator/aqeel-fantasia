@@ -23,29 +23,47 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   }
   if ('trackingCode' in b) data.trackingCode = b.trackingCode ? String(b.trackingCode).slice(0, 200) : null;
 
-  // Detect status transition that should restore stock
-  let restoreStock = false;
-  if (data.status && STOCK_RESTORING.has(data.status)) {
-    const existing = await prisma.order.findUnique({ where: { id }, select: { status: true } });
-    if (existing && !STOCK_RESTORING.has(existing.status)) restoreStock = true;
-  }
+  // Stock restore: read previous status INSIDE the transaction and gate the
+  // update with `updateMany({ where: { status: NOT_RESTORING_STATES } })` so
+  // two concurrent PATCH requests can't both increment stock for the same
+  // order (race condition).
+  const restoringTo = data.status && STOCK_RESTORING.has(data.status);
 
+  let restored = false;
   await prisma.$transaction(async (tx) => {
-    if (restoreStock) {
-      const items = await tx.orderItem.findMany({ where: { orderId: id } });
-      for (const it of items) {
-        if (it.variantId) {
-          await tx.productVariant.update({ where: { id: it.variantId }, data: { stock: { increment: it.qty } } }).catch(() => {});
-        } else {
-          await tx.product.updateMany({ where: { id: it.productId, trackStock: true }, data: { stock: { increment: it.qty } } });
+    if (restoringTo) {
+      // Atomic guard: only proceed if order is NOT already in a restoring state.
+      const claim = await tx.order.updateMany({
+        where: { id, status: { notIn: Array.from(STOCK_RESTORING) } },
+        data: { status: data.status },
+      });
+      if (claim.count > 0) {
+        restored = true;
+        const items = await tx.orderItem.findMany({ where: { orderId: id } });
+        for (const it of items) {
+          if (it.variantId) {
+            await tx.productVariant.update({ where: { id: it.variantId }, data: { stock: { increment: it.qty } } }).catch(() => {});
+          } else {
+            await tx.product.updateMany({ where: { id: it.productId, trackStock: true }, data: { stock: { increment: it.qty } } });
+          }
         }
+        // status already applied via updateMany above; remove from `data`
+        delete data.status;
       }
     }
-    await tx.order.update({ where: { id }, data });
+    if (Object.keys(data).length > 0) {
+      await tx.order.update({ where: { id }, data });
+    }
+    await tx.activityLog.create({
+      data: {
+        adminId: admin.id,
+        action: 'update',
+        entity: 'order',
+        entityId: id,
+        details: `${data.status || (restored ? `restored-to-${b.status}` : '') || data.paymentStatus || ''}`,
+      },
+    });
   });
 
-  await prisma.activityLog.create({
-    data: { adminId: admin.id, action: 'update', entity: 'order', entityId: id, details: `${data.status || data.paymentStatus || ''}${restoreStock ? ' [stock-restored]' : ''}` },
-  });
-  return NextResponse.json({ ok: true, stockRestored: restoreStock });
+  return NextResponse.json({ ok: true, stockRestored: restored });
 }

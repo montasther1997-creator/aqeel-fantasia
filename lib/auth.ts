@@ -4,18 +4,24 @@ import { cookies } from 'next/headers';
 import { prisma } from './db';
 
 const SECRET_STR = process.env.JWT_SECRET;
-if (!SECRET_STR && process.env.NODE_ENV === 'production') {
-  throw new Error('JWT_SECRET environment variable is required in production');
+// Require JWT_SECRET in production AND in any non-development environment
+// (preview, staging, Vercel runtime, etc.). Only allow the insecure fallback
+// when explicitly running `npm run dev` (NODE_ENV === 'development').
+if (!SECRET_STR && process.env.NODE_ENV !== 'development') {
+  throw new Error('JWT_SECRET environment variable is required outside development');
 }
 const SECRET = new TextEncoder().encode(SECRET_STR || 'dev-only-secret-do-not-use-in-prod');
 const ADMIN_COOKIE = 'fantasia_admin';
 const CUSTOMER_COOKIE = 'fantasia_customer';
 
+// Bcrypt work factor. 12 ~ 250ms on modern hardware — good 2026 baseline.
+const BCRYPT_ROUNDS = 12;
+
 export type AdminPayload = { id: string; email: string; role: string; name: string };
 export type CustomerPayload = { id: string; phone: string; name: string };
 
 export async function hashPassword(pw: string) {
-  return bcrypt.hash(pw, 10);
+  return bcrypt.hash(pw, BCRYPT_ROUNDS);
 }
 export async function verifyPassword(pw: string, hash: string) {
   return bcrypt.compare(pw, hash);
@@ -38,12 +44,18 @@ async function verify<T>(token: string): Promise<T | null> {
   }
 }
 
+// Pre-computed throwaway hash so login flows always spend a bcrypt comparison
+// even when the email/phone doesn't exist. Prevents user-enumeration via
+// response-time difference.
+const DUMMY_HASH = bcrypt.hashSync('throwaway-do-not-match', BCRYPT_ROUNDS);
+
 // --- Admin ---
 export async function loginAdmin(email: string, password: string) {
   const admin = await prisma.adminUser.findUnique({ where: { email: email.toLowerCase() } });
-  if (!admin) return null;
-  const ok = await verifyPassword(password, admin.password);
-  if (!ok) return null;
+  // Always run a bcrypt compare (constant-ish time) regardless of whether the
+  // admin exists, to deny timing-based user enumeration.
+  const ok = await verifyPassword(password, admin?.password || DUMMY_HASH);
+  if (!admin || !ok) return null;
   const token = await sign({ id: admin.id, email: admin.email, role: admin.role, name: admin.name });
   cookies().set(ADMIN_COOKIE, token, {
     httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production',
@@ -65,9 +77,9 @@ export async function getAdmin(): Promise<AdminPayload | null> {
 // --- Customer ---
 export async function loginCustomer(phone: string, password: string) {
   const customer = await prisma.customer.findUnique({ where: { phone } });
-  if (!customer || customer.blocked) return null;
-  const ok = await verifyPassword(password, customer.password);
-  if (!ok) return null;
+  // Always bcrypt-compare to mask enumeration timing.
+  const ok = await verifyPassword(password, customer?.password || DUMMY_HASH);
+  if (!customer || customer.blocked || !ok) return null;
   await prisma.customer.update({ where: { id: customer.id }, data: { lastLogin: new Date() } });
   const token = await sign({ id: customer.id, phone: customer.phone, name: customer.name });
   cookies().set(CUSTOMER_COOKIE, token, {

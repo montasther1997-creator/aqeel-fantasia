@@ -108,6 +108,9 @@ export const SignalSchema = z.object({
 export const DiscountApplySchema = z.object({
   code: z.string().trim().min(1).max(50),
   subtotal: z.number().nonnegative().max(1_000_000_000),
+  // Optional: subtotal in IQD when the cart currency is USD, so the server
+  // can compare against minSubtotal (which is always denominated in IQD).
+  subtotalIQD: z.number().nonnegative().max(1_000_000_000).optional(),
 });
 export const WishlistSchema = z.object({
   productId: z.string().trim().min(1).max(50),
@@ -166,6 +169,12 @@ export const ArchiveSchema = z.object({
   active: z.boolean().optional(),
   order: z.coerce.number().int().min(0).max(10000).optional(),
 });
+export const CustomerPatchSchema = z.object({
+  vipTier: z.enum(['none', 'bronze', 'silver', 'gold', 'black']).optional(),
+  blocked: z.boolean().optional(),
+  notes: z.string().max(2000).optional().nullable(),
+});
+
 export const CultTierSchema = z.object({
   slug: z.string().trim().min(1).max(100).regex(/^[a-z0-9-]+$/i),
   nameAr: z.string().trim().min(1).max(200),

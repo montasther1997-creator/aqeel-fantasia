@@ -4,7 +4,7 @@ import { prisma } from '@/lib/db';
 import { ArchiveSchema, zodError } from '@/lib/validators';
 
 export async function POST(req: Request) {
-  const admin = await apiRequireAdmin();
+  const admin = await apiRequireAdmin(['admin', 'superadmin', 'editor']);
   if (isAdminResponse(admin)) return admin;
   const parsed = ArchiveSchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json(zodError(parsed), { status: 400 });

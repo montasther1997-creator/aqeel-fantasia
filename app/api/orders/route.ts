@@ -6,6 +6,7 @@ import { Prisma } from '@prisma/client';
 import { rateLimit } from '@/lib/ratelimit';
 import { OrderSchema, zodError } from '@/lib/validators';
 import { awardPointsForOrder } from '@/lib/loyalty';
+import { getIp } from '@/lib/ratelimit';
 
 /**
  * Order creation — fully atomic.
@@ -16,7 +17,7 @@ import { awardPointsForOrder } from '@/lib/loyalty';
  */
 export async function POST(req: Request) {
   // Rate limit: 10 orders/min per IP
-  const ip = req.headers.get('x-forwarded-for')?.split(',')[0] || 'unknown';
+  const ip = getIp(req);
   if (!rateLimit(`orders:${ip}`, 10, 60_000)) {
     return NextResponse.json({ ok: false, error: 'rate-limit' }, { status: 429 });
   }
@@ -111,11 +112,14 @@ export async function POST(req: Request) {
       if (clientDiscount?.code) {
         const code = String(clientDiscount.code).toUpperCase().slice(0, 50);
         const d = await tx.discount.findUnique({ where: { code } });
+        // Discount.minSubtotal is always denominated in IQD (admin's mental
+        // model). Compare against subIQD regardless of the order's display
+        // currency so USD orders can't bypass the minimum.
         if (
           d && d.active
           && (!d.startsAt || new Date() >= d.startsAt)
           && (!d.endsAt || new Date() <= d.endsAt)
-          && (!d.minSubtotal || sub >= d.minSubtotal)
+          && (!d.minSubtotal || subIQD >= d.minSubtotal)
         ) {
           // Atomic increment with maxUses check
           const incremented = await tx.discount.updateMany({

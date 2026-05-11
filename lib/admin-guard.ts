@@ -9,15 +9,23 @@ export async function requireAdmin(locale = 'ar'): Promise<AdminPayload> {
   return admin!;
 }
 
-/** For API routes. Returns either the admin or a Response (401/403). */
-export async function apiRequireAdmin(role?: 'admin' | 'superadmin' | 'editor' | Array<'admin' | 'superadmin' | 'editor'>): Promise<AdminPayload | NextResponse> {
+type Role = 'admin' | 'superadmin' | 'editor';
+
+/**
+ * For API routes. Returns either the admin or a Response (401/403).
+ *
+ * SECURITY: default scope is ['admin', 'superadmin'] — the `editor` role is
+ * intentionally excluded from destructive mutations unless a route opts it in
+ * explicitly. To allow editors (content-only routes), pass ['admin', 'superadmin', 'editor'].
+ */
+export async function apiRequireAdmin(role?: Role | Role[]): Promise<AdminPayload | NextResponse> {
   const admin = await getAdmin();
   if (!admin) return NextResponse.json({ ok: false, error: 'unauthorized' }, { status: 401 });
-  if (role) {
-    const allowed = Array.isArray(role) ? role : [role];
-    if (!allowed.includes(admin.role as any)) {
-      return NextResponse.json({ ok: false, error: 'forbidden' }, { status: 403 });
-    }
+  const allowed = role
+    ? (Array.isArray(role) ? role : [role])
+    : (['admin', 'superadmin'] as Role[]);
+  if (!allowed.includes(admin.role as Role)) {
+    return NextResponse.json({ ok: false, error: 'forbidden' }, { status: 403 });
   }
   return admin;
 }

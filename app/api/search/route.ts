@@ -9,11 +9,11 @@ export async function GET(req: Request) {
     where: {
       active: true,
       OR: [
-        { nameEn: { contains: q } },
+        { nameEn: { contains: q, mode: 'insensitive' } },
         { nameAr: { contains: q } },
-        { taglineEn: { contains: q } },
+        { taglineEn: { contains: q, mode: 'insensitive' } },
         { taglineAr: { contains: q } },
-        { sku: { contains: q } },
+        { sku: { contains: q, mode: 'insensitive' } },
       ],
     },
     include: { images: { take: 1 } },

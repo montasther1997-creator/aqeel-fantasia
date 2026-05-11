@@ -14,7 +14,7 @@ const MAX_AUDIO_SIZE = 25 * 1024 * 1024;
 const MAX_FILES = 10;
 
 export async function POST(req: Request) {
-  const admin = await apiRequireAdmin();
+  const admin = await apiRequireAdmin(['admin', 'superadmin', 'editor']);
   if (isAdminResponse(admin)) return admin;
 
   try {

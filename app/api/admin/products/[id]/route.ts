@@ -1,13 +1,16 @@
 import { NextResponse } from 'next/server';
 import { apiRequireAdmin, isAdminResponse } from '@/lib/admin-guard';
 import { prisma } from '@/lib/db';
+import { ProductSchema, zodError } from '@/lib/validators';
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const admin = await apiRequireAdmin();
   if (isAdminResponse(admin)) return admin;
   const { id } = await params;
   try {
-    const b = await req.json();
+    const parsed = ProductSchema.partial().safeParse(await req.json().catch(() => null));
+    if (!parsed.success) return NextResponse.json(zodError(parsed), { status: 400 });
+    const b = parsed.data as any;
 
     // 1) Diff variants: only delete those NOT in incoming list and NOT referenced by any OrderItem
     const incomingVariants: any[] = Array.isArray(b.variants) ? b.variants : [];
