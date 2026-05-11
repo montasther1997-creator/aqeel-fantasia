@@ -7,6 +7,7 @@ import { Icon } from '@/components/atelier/icons';
 import { useCart } from '@/lib/cart-store';
 import { fmtNumber } from '@/lib/utils';
 import { ProductCard } from './product-card';
+import { playDing } from '@/lib/sound';
 
 export function ProductDetail({ product, related }: { product: any; related: any[] }) {
   const t = useTranslations('product');
@@ -36,6 +37,7 @@ export function ProductDetail({ product, related }: { product: any; related: any
       priceUSD: variant?.priceUSD || product.priceUSD,
     });
     setAdded(true);
+    playDing(0.06);
     setTimeout(() => setAdded(false), 1800);
     if (buyNow) router.push('/bag' as any);
   };
@@ -74,6 +76,14 @@ export function ProductDetail({ product, related }: { product: any; related: any
                 <span className="num">{fmtNumber(product.priceIQD)}</span> <span className="text-fg-tertiary text-sm ml-2">{isAr ? 'د.ع' : 'IQD'}</span>
               </div>
 
+              {/* Made for One badge */}
+              {product.madeForOne && (
+                <div className="mt-6 inline-flex items-center gap-2 border border-accent text-accent px-4 py-2 text-[10px] tracking-[0.3em] uppercase" style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>
+                  ✦ {isAr ? 'صُنعت لشخص واحد' : 'Made for One'}
+                  {product.madeForOne.edition && <span className="text-fg-tertiary num">· {product.madeForOne.edition}</span>}
+                </div>
+              )}
+
               {desc && (
                 <section className={`mt-10 py-8 border-y border-border`}>
                   <div className="text-[10px] tracking-[0.3em] uppercase text-fg-tertiary mb-3" style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>
@@ -82,6 +92,21 @@ export function ProductDetail({ product, related }: { product: any; related: any
                   <p className="serif text-base md:text-lg leading-relaxed font-light" style={isAr ? { fontFamily: 'var(--serif-ar)', fontStyle: 'normal' } : { fontStyle: 'italic' }}>
                     {desc}
                   </p>
+                </section>
+              )}
+
+              {/* Linked Atelier Note */}
+              {product.notes && product.notes.length > 0 && (
+                <section className="mt-8 p-6 md:p-8 border border-border bg-bg-elevated/40">
+                  <div className="text-[10px] tracking-[0.3em] uppercase text-accent mb-3" style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>
+                    ✦ {isAr ? 'ملاحظة الدار' : 'ATELIER NOTE'} · N° {String(product.notes[0].number).padStart(2, '0')}
+                  </div>
+                  <p className="serif italic text-base md:text-lg leading-relaxed font-light" style={isAr ? { fontFamily: 'var(--serif-ar)', fontStyle: 'normal' } : {}}>
+                    «{isAr ? product.notes[0].textAr : product.notes[0].textEn}»
+                  </p>
+                  <div className="mt-3 serif italic text-accent text-sm" style={isAr ? { fontFamily: 'var(--serif-ar)', fontStyle: 'normal' } : {}}>
+                    {product.notes[0].signature || (isAr ? 'ع.' : 'A.')}
+                  </div>
                 </section>
               )}
 

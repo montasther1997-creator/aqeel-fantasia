@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Editorial } from '@/components/atelier/editorial';
+import { playBell } from '@/lib/sound';
 
 export default function BespokePage() {
   const t = useTranslations('bespoke');
@@ -17,6 +18,7 @@ export default function BespokePage() {
     await fetch('/api/bespoke', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(form) });
     setBusy(false);
     setSubmitted(true);
+    playBell(0.06);
   };
 
   if (submitted) {

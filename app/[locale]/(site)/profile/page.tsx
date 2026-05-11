@@ -19,6 +19,8 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
 
   const rows = [
     { label: t('orders'), href: '/profile/orders', desc: me ? `${counts[0]}` : '' },
+    { label: isAr ? 'صُنع لي' : 'Made for me', href: '/made-for-me', desc: isAr ? '✦' : '✦' },
+    { label: isAr ? 'دفتر الدار' : 'Atelier book', href: '/profile/atelier-book', desc: isAr ? 'تفضيلاتي ومقاساتي' : 'My preferences & measurements' },
     { label: t('wishlist'), href: '/saved', desc: me ? `${counts[1]}` : '' },
     { label: t('addresses'), href: '/profile/addresses', desc: me ? `${counts[2]}` : '' },
     { label: t('bespokeInquiries'), href: '/profile/bespoke', desc: me ? `${counts[3]}` : '' },

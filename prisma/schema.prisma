@@ -55,11 +55,25 @@ model Customer {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  // Atelier Address Book — preferences
+  height           Int?
+  weight           Int?
+  preferredSize    String?
+  preferredColors  String?
+  preferredStyles  String?
+  preferredFabrics String?
+  shoulderWidth    Int?
+  chestSize        Int?
+  waistSize        Int?
+  inseam           Int?
+  onboarded        Boolean   @default(false)
+
   addresses   Address[]
   orders      Order[]
   wishlist    WishlistItem[]
   cultMember  CultMember?
   bespokes    BespokeRequest[]
+  madeForOne  MadeForOne[]
   @@schema("fantasia")
 }
 
@@ -156,6 +170,8 @@ model Product {
   variants     ProductVariant[]
   orderItems   OrderItem[]
   wishlist     WishlistItem[]
+  notes        AtelierNote[]
+  madeForOne   MadeForOne?
 
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -378,6 +394,40 @@ model BespokeRequest {
   internalNotes   String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  @@schema("fantasia")
+}
+
+// ==================== ATELIER NOTES ====================
+model AtelierNote {
+  id        String   @id @default(cuid())
+  number    Int      @unique
+  textAr    String
+  textEn    String
+  signature String?  @default("ع. / A.")
+  noteDate  DateTime @default(now())
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  image     String?
+  active    Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@schema("fantasia")
+}
+
+// ==================== MADE FOR ONE ====================
+model MadeForOne {
+  id           String   @id @default(cuid())
+  productId    String   @unique
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  customerId   String?
+  customer     Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  edition      String?
+  personalNote String?
+  claimedAt    DateTime?
+  status       String   @default("available")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
   @@schema("fantasia")
 }
 

@@ -2,6 +2,7 @@ import { prisma } from '@/lib/db';
 import { getTranslations } from 'next-intl/server';
 import { Editorial } from '@/components/atelier/editorial';
 import { ProductCard } from '@/components/atelier/product-card';
+import { EditorialMixGrid } from '@/components/atelier/editorial-grid';
 
 export const revalidate = 60;
 
@@ -68,11 +69,9 @@ export default async function CollectionsPage({ params, searchParams }: { params
         </Editorial>
       </section>
 
-      {/* Product grid */}
+      {/* Editorial Mix Grid (Vogue layout) */}
       <section className="container-x">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
-          {products.map((p) => <ProductCard key={p.id} p={p} />)}
-        </div>
+        <EditorialMixGrid products={products} />
       </section>
     </div>
   );

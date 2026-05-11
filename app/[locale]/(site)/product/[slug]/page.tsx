@@ -8,7 +8,14 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const { slug } = await params;
   const product = await prisma.product.findUnique({
     where: { slug },
-    include: { images: { orderBy: { order: 'asc' } }, variants: true, category: true, collection: true },
+    include: {
+      images: { orderBy: { order: 'asc' } },
+      variants: true,
+      category: true,
+      collection: true,
+      notes: { where: { active: true }, take: 1, orderBy: { number: 'desc' } },
+      madeForOne: { include: { customer: { select: { name: true } } } },
+    },
   });
   if (!product || !product.active) notFound();
 
