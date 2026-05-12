@@ -206,22 +206,22 @@
   /* ============================================================ */
   html { --scroll-pulse: 0; --scroll-dir: 1; }
 
-  /* Ambient overlay: sits ABOVE content via z-[60] with screen blend so
-     the gold silk waves stay visible even on dark hero images. */
+  /* Ambient overlay: gentle gold atmosphere. Uses soft-light blend so it
+     reads as a faint mood layer over content instead of a bright overlay. */
   .ambient-overlay {
     position: fixed;
     inset: 0;
     z-index: 60;
     pointer-events: none;
-    mix-blend-mode: screen;
+    mix-blend-mode: soft-light;
   }
   [data-mode="light"] .ambient-overlay {
     mix-blend-mode: multiply;
   }
 
   .silk-root {
-    filter: brightness(calc(1 + var(--scroll-pulse, 0) * 0.4))
-            saturate(calc(1 + var(--scroll-pulse, 0) * 0.5));
+    filter: brightness(calc(1 + var(--scroll-pulse, 0) * 0.15))
+            saturate(calc(1 + var(--scroll-pulse, 0) * 0.2));
     transition: filter 200ms ease-out;
   }
 

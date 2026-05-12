@@ -79,10 +79,9 @@ export function AmbientBackground({ initial }: { initial: AmbientConfig }) {
   );
 }
 
-/* FABRIC WAVES — high-opacity silk overlaid via screen blend */
+/* FABRIC WAVES — whisper-soft silk; only barely visible */
 function FabricWaves({ intensity }: { intensity: number }) {
-  // bumped from 0.05-0.2 to 0.25-0.6 for visibility above dark hero sections
-  const baseOpacity = Math.max(0.25, Math.min(0.6, intensity * 0.7));
+  const baseOpacity = Math.max(0.04, Math.min(0.12, intensity * 0.14));
   return (
     <div aria-hidden className="fixed inset-0 pointer-events-none overflow-hidden silk-root">
       <svg
@@ -156,7 +155,7 @@ function FabricWaves({ intensity }: { intensity: number }) {
 }
 
 function FabricGrain({ intensity }: { intensity: number }) {
-  const opacity = Math.max(0.04, Math.min(0.12, intensity * 0.14));
+  const opacity = Math.max(0.015, Math.min(0.04, intensity * 0.05));
   return (
     <div
       aria-hidden
@@ -171,16 +170,16 @@ function FabricGrain({ intensity }: { intensity: number }) {
 }
 
 function MotesLayer({ intensity }: { intensity: number }) {
-  // bumped base opacity from 0.06-0.28 to 0.3-0.7
-  const opacityBase = Math.max(0.3, Math.min(0.7, intensity * 0.75));
-  const motes = Array.from({ length: 22 }).map((_, i) => {
+  // Whisper-quiet: a handful of tiny gold motes, barely glowing
+  const opacityBase = Math.max(0.06, Math.min(0.18, intensity * 0.2));
+  const motes = Array.from({ length: 10 }).map((_, i) => {
     const seed = i + 1;
     return {
       left: (seed * 73) % 100,
       top: (seed * 41) % 100,
       delay: (seed * 1.7) % 14,
-      duration: 14 + (seed % 10),
-      size: 2 + (seed % 4),
+      duration: 18 + (seed % 12),
+      size: 1.5 + (seed % 2),
     };
   });
   return (
@@ -197,7 +196,7 @@ function MotesLayer({ intensity }: { intensity: number }) {
             background: '#C9A961',
             opacity: opacityBase,
             animation: `mote-drift ${m.duration}s ease-in-out ${m.delay}s infinite`,
-            boxShadow: `0 0 ${m.size * 8}px #C9A961`,
+            boxShadow: `0 0 ${m.size * 3}px #C9A961`,
             ['--mote-base' as any]: opacityBase,
           }}
         />
@@ -207,7 +206,8 @@ function MotesLayer({ intensity }: { intensity: number }) {
 }
 
 function ScissorSweep({ intensity }: { intensity: number }) {
-  const peakOpacity = Math.max(0.3, Math.min(0.7, intensity * 0.75));
+  // Faint, rare sweep — peak opacity capped low so it reads as atmosphere, not signage
+  const peakOpacity = Math.max(0.08, Math.min(0.18, intensity * 0.2));
   return (
     <div aria-hidden className="fixed inset-0 pointer-events-none overflow-hidden">
       <span
@@ -216,12 +216,12 @@ function ScissorSweep({ intensity }: { intensity: number }) {
           top: '-20%',
           left: '-20%',
           width: '140%',
-          height: '2px',
+          height: '1px',
           background: 'linear-gradient(90deg, transparent 0%, #C9A961 30%, #C9A961 70%, transparent 100%)',
           transform: 'rotate(-12deg)',
           transformOrigin: 'left center',
           opacity: 0,
-          boxShadow: `0 0 26px #C9A961`,
+          boxShadow: `0 0 10px #C9A961`,
           ['--scissor-peak' as any]: peakOpacity,
         }}
       />
@@ -230,7 +230,7 @@ function ScissorSweep({ intensity }: { intensity: number }) {
 }
 
 function ScrollTrail({ intensity }: { intensity: number }) {
-  const peak = Math.max(0.4, Math.min(1, intensity));
+  const peak = Math.max(0.15, Math.min(0.35, intensity * 0.4));
   return (
     <div aria-hidden className="fixed top-0 inset-x-0 pointer-events-none h-px overflow-visible">
       <span
