@@ -6,6 +6,7 @@ import { NotesSection } from '@/components/atelier/notes-section';
 import { StylistSection } from '@/components/atelier/stylist-section';
 import { HeroSlider } from '@/components/atelier/hero-slider';
 import { NewArrivalsSection } from '@/components/atelier/new-arrivals-section';
+import { CategoriesSection } from '@/components/atelier/categories-section';
 import { Link } from '@/i18n/routing';
 import { getCustomer } from '@/lib/auth';
 import { getStylistRecommendations } from '@/lib/stylist';
@@ -43,6 +44,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       {heroSlides.length > 0 && (
         <HeroSlider slides={heroSlides} locale={isAr ? 'ar' : 'en'} />
       )}
+
+      {/* Categories grid — auto-pulls from active Category rows */}
+      <CategoriesSection locale={isAr ? 'ar' : 'en'} />
 
       {/* New Arrivals — auto + manual featured */}
       <NewArrivalsSection locale={isAr ? 'ar' : 'en'} />
