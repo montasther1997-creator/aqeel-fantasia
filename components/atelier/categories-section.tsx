@@ -13,7 +13,7 @@ export async function CategoriesSection({ locale }: { locale: 'ar' | 'en' }) {
   if (categories.length === 0) return null;
 
   return (
-    <section className="py-20 md:py-28 bg-bg-elevated/30 relative">
+    <section className="py-20 md:py-28 bg-bg-elevated/30 relative reveal-on-scroll scroll-glow-y">
       <div className="container-x">
         <header className={`mb-12 md:mb-16 ${isAr ? 'text-right' : 'text-left'}`}>
           <div className="text-[10px] tracking-[0.3em] uppercase text-fg-tertiary mb-3 inline-flex items-center gap-2" style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>

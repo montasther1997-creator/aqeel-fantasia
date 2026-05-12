@@ -106,8 +106,9 @@ function ExperienceTab({ map }: { map: Map<string, string> }) {
           <ExpToggle label={t('background.enabledLabel')} value={d.bgEnabled} onChange={(v) => setD({ ...d, bgEnabled: v })} />
           <Field label={t('background.typeLabel')}>
             <select className="input" value={d.bgType} onChange={(e) => setD({ ...d, bgType: e.target.value })}>
-              <option value="motes">{t('background.types.motes')}</option>
+              <option value="rich">{t('background.types.rich')}</option>
               <option value="fabric">{t('background.types.fabric')}</option>
+              <option value="motes">{t('background.types.motes')}</option>
               <option value="lines">{t('background.types.lines')}</option>
               <option value="off">{t('background.types.off')}</option>
             </select>

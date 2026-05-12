@@ -1014,8 +1014,9 @@
           "typeLabel": "Effect type",
           "intensityLabel": "Effect intensity",
           "types": {
+            "rich": "Silk waves + motes + gold sweep (recommended)",
             "motes": "Floating gold motes",
-            "fabric": "Subtle fabric/paper grain",
+            "fabric": "Silk wave fabric",
             "lines": "Drifting gold lines",
             "off": "Off"
           }

@@ -202,6 +202,40 @@
   .bg-line { background-color: var(--border); }
 
   /* ============================================================ */
+  /* GLOBAL AMBIENT — scroll-reactive site-wide micro-motion       */
+  /* ============================================================ */
+  html { --scroll-pulse: 0; --scroll-dir: 1; }
+
+  /* Section reveal animation — fades + lifts as element enters viewport.
+     Triggered by adding `.reveal-on-scroll` to any element. */
+  .reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+                transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal-on-scroll.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Editorial section borders that catch a soft gold glow during scroll */
+  .scroll-glow-y {
+    position: relative;
+  }
+  .scroll-glow-y::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+    opacity: calc(var(--scroll-pulse, 0) * 0.6);
+    transition: opacity 220ms ease-out;
+    pointer-events: none;
+  }
+
+  /* ============================================================ */
   /* EDITORIAL ADMIN — magazine-inspired design system             */
   /* ============================================================ */
 
