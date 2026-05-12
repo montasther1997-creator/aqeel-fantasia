@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { apiRequireAdmin, isAdminResponse } from '@/lib/admin-guard';
 import { prisma } from '@/lib/db';
 import { HeroSlideSchema, zodError } from '@/lib/validators';
+import { revalidateForEntity } from '@/lib/revalidate';
 
 export async function GET() {
   const admin = await apiRequireAdmin();
@@ -16,5 +17,6 @@ export async function POST(req: Request) {
   const parsed = HeroSlideSchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json(zodError(parsed), { status: 400 });
   const s = await prisma.heroSlide.create({ data: parsed.data as any });
+  revalidateForEntity('slide');
   return NextResponse.json({ ok: true, id: s.id });
 }

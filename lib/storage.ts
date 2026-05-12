@@ -31,10 +31,15 @@ export async function uploadToStorage(file: File, folder = 'uploads'): Promise<s
 
 export async function deleteFromStorage(url: string): Promise<void> {
   try {
-    const m = url.match(/\/storage\/v1\/object\/public\/[^/]+\/(.+)$/);
+    const m = url.match(/\/storage\/v1\/object\/public\/([^/]+)\/(.+)$/);
     if (!m) return;
+    const [, bucket, path] = m;
+    // Only operate within our own bucket and reject any traversal segment so
+    // a malformed/poisoned URL in the DB cannot remove unintended files.
+    if (bucket !== BUCKET) return;
+    if (path.includes('..') || path.startsWith('/')) return;
     const client = getClient();
-    await client.storage.from(BUCKET).remove([m[1]]);
+    await client.storage.from(BUCKET).remove([path]);
   } catch (e) {
     console.error('[storage] delete failed:', e);
   }

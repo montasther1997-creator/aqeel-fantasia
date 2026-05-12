@@ -6,10 +6,8 @@ import { getTranslations } from 'next-intl/server';
 export default async function ShippingAdmin({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params; await requireAdmin(locale);
   const t = await getTranslations('admin.shipping');
-  const [zones, settings] = await Promise.all([
-    prisma.shippingZone.findMany({ orderBy: { order: 'asc' } }),
-    prisma.setting.findMany({ where: { key: { in: ['shipping.freeThresholdIQD', 'shipping.codFeeIQD'] } } }),
-  ]);
+  const zones = await prisma.shippingZone.findMany({ orderBy: { order: 'asc' } });
+  const settings = await prisma.setting.findMany({ where: { key: { in: ['shipping.freeThresholdIQD', 'shipping.codFeeIQD'] } } });
   const settingMap = new Map(settings.map((s) => [s.key, s.value]));
   return (
     <div className="space-y-10">

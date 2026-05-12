@@ -20,6 +20,13 @@ export async function GET(req: Request) {
   const toBase = toStr ? new Date(toStr) : new Date();
   const to = new Date(toBase.getFullYear(), toBase.getMonth(), toBase.getDate(), 23, 59, 59);
 
+  // Cap span at 366 days to prevent unbounded queries from producing
+  // multi-million-row CSVs.
+  const MAX_SPAN_MS = 366 * 86400000;
+  if (from > to || (to.getTime() - from.getTime()) > MAX_SPAN_MS) {
+    return new Response('range-too-large', { status: 400 });
+  }
+
   const orders = await prisma.order.findMany({
     where: { createdAt: { gte: from, lte: to } },
     orderBy: { createdAt: 'desc' },

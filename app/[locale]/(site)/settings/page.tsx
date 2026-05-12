@@ -28,7 +28,9 @@ export default function SettingsPage() {
     try {
       const savedNotifs = localStorage.getItem('fantasia-notifs');
       if (savedNotifs) setNotifs({ ...DEFAULT_NOTIFS, ...JSON.parse(savedNotifs) });
-    } catch {}
+    } catch {
+      // localStorage unavailable or malformed JSON — keep defaults.
+    }
   }, []);
 
   const toggleMode = () => {

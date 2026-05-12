@@ -144,7 +144,7 @@ async function main() {
     create: { email: adminEmail.toLowerCase(), password: adminHash, name: 'AQEEL', role: 'superadmin' },
     update: { password: adminHash },
   });
-  console.log(`✓ Admin: ${adminEmail} / ${adminPassword}`);
+  console.log(`✓ Admin seeded: ${adminEmail} (password from $ADMIN_PASSWORD)`);
 
   // Settings
   for (const s of SETTINGS) {

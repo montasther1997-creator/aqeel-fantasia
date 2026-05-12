@@ -89,21 +89,21 @@ function GeneralSettings({ initial }: { initial: SettingsBag }) {
   const save = async () => {
     setBusy(true);
     try {
-      await Promise.all([
-        fetch('/api/admin/settings', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ key: 'shipping.freeThresholdIQD', value: String(free), group: 'shipping' }),
-        }),
-        fetch('/api/admin/settings', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ key: 'shipping.codFeeIQD', value: String(cod), group: 'shipping' }),
-        }),
-      ]);
+      const r1 = await fetch('/api/admin/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: 'shipping.freeThresholdIQD', value: String(free), group: 'shipping' }),
+      });
+      const r2 = await fetch('/api/admin/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: 'shipping.codFeeIQD', value: String(cod), group: 'shipping' }),
+      });
+      if (!r1.ok || !r2.ok) throw new Error('save-failed');
       toast('success', tc('saved'));
       router.refresh();
-    } catch {
+    } catch (e) {
+      console.error('shipping save:', e);
       toast('error', tc('saveFailed'));
     } finally {
       setBusy(false);

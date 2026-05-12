@@ -206,6 +206,57 @@
   /* ============================================================ */
   html { --scroll-pulse: 0; --scroll-dir: 1; }
 
+  /* Ambient overlay: sits ABOVE content via z-[60] with screen blend so
+     the gold silk waves stay visible even on dark hero images. */
+  .ambient-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    mix-blend-mode: screen;
+  }
+  [data-mode="light"] .ambient-overlay {
+    mix-blend-mode: multiply;
+  }
+
+  .silk-root {
+    filter: brightness(calc(1 + var(--scroll-pulse, 0) * 0.4))
+            saturate(calc(1 + var(--scroll-pulse, 0) * 0.5));
+    transition: filter 200ms ease-out;
+  }
+
+  @keyframes mote-drift {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(40px, -28px); }
+    50% { transform: translate(-24px, 36px); }
+    75% { transform: translate(16px, 20px); }
+  }
+  .motes-root .mote {
+    filter: brightness(calc(1 + var(--scroll-pulse, 0) * 0.8));
+    transition: filter 220ms ease-out;
+  }
+
+  @keyframes scissor-sweep {
+    0%, 30% { opacity: 0; transform: rotate(-12deg) translateY(-200px); }
+    45% { opacity: var(--scissor-peak, 0.5); transform: rotate(-12deg) translateY(40vh); }
+    60% { opacity: 0; transform: rotate(-12deg) translateY(110vh); }
+    100% { opacity: 0; transform: rotate(-12deg) translateY(110vh); }
+  }
+  .scissor-blade { animation: scissor-sweep 22s ease-in-out infinite; }
+
+  .scroll-trail {
+    width: calc(20% + var(--scroll-pulse, 0) * 80%);
+    margin: 0 auto;
+    opacity: calc(var(--scroll-pulse, 0) * var(--trail-peak, 0.6));
+    box-shadow: 0 0 calc(var(--scroll-pulse, 0) * 18px) #C9A961;
+    transition: width 250ms ease-out, opacity 220ms ease-out;
+  }
+
+  @keyframes line-drift {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(50px); }
+  }
+
   /* Section reveal animation — fades + lifts as element enters viewport.
      Triggered by adding `.reveal-on-scroll` to any element. */
   .reveal-on-scroll {

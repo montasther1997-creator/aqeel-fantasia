@@ -19,8 +19,8 @@ export async function POST(req: Request) {
       email: parsed.data.email || undefined,
     });
     return NextResponse.json({ ok: true });
-  } catch (e: any) {
-    const msg = e?.message === 'phone-exists' || e?.message === 'email-exists' ? e.message : 'register-failed';
-    return NextResponse.json({ ok: false, error: msg }, { status: 400 });
+  } catch {
+    // Generic error to avoid customer enumeration via phone/email existence.
+    return NextResponse.json({ ok: false, error: 'register-failed' }, { status: 400 });
   }
 }

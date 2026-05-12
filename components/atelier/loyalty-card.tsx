@@ -50,8 +50,8 @@ export async function LoyaltyCard({ locale }: { locale: 'ar' | 'en' }) {
                  style={isAr ? { letterSpacing: 0, textTransform: 'none' } : {}}>
               {isAr ? 'نقاطك' : 'POINTS'}
             </div>
-            <div className="serif text-3xl md:text-4xl font-light num" style={{ color: accent }}>
-              {points.toLocaleString()}
+            <div className="serif text-3xl md:text-4xl font-light" style={{ color: accent }}>
+              <span className="num">{points.toLocaleString('en-US')}</span>
             </div>
           </div>
         </div>
@@ -66,7 +66,9 @@ export async function LoyaltyCard({ locale }: { locale: 'ar' | 'en' }) {
               <div className="absolute inset-y-0 left-0 transition-all" style={{ width: `${progress}%`, background: accent }} />
             </div>
             <p className="mt-2 text-xs text-fg-tertiary text-center">
-              {isAr ? `${pointsToNext.toLocaleString()} نقطة للمستوى التالي` : `${pointsToNext.toLocaleString()} pts to next tier`}
+              {isAr
+                ? <><span className="num">{pointsToNext.toLocaleString('en-US')}</span>{' نقطة للمستوى التالي'}</>
+                : <><span className="num">{pointsToNext.toLocaleString('en-US')}</span>{' pts to next tier'}</>}
             </p>
           </div>
         )}

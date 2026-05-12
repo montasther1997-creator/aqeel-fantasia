@@ -46,10 +46,10 @@ export default function BagPage() {
         <div className="grid lg:grid-cols-12 gap-10 lg:gap-16">
           {/* Items column */}
           <div className="lg:col-span-7 xl:col-span-8 space-y-px bg-border">
-            {items.map((it, i) => (
-              <div key={i} className="bg-bg p-6 md:p-8 flex gap-4 md:gap-6">
+            {items.map((it) => (
+              <div key={`${it.productId}-${it.variantId ?? ''}`} className="bg-bg p-6 md:p-8 flex gap-4 md:gap-6">
                 <div className="w-24 h-32 md:w-32 md:h-40 shrink-0 bg-bg-elevated overflow-hidden">
-                  {it.image && <img src={it.image} alt="" className="w-full h-full object-cover" />}
+                  {it.image && <img src={it.image} alt={isAr ? it.nameAr : it.nameEn} className="w-full h-full object-cover" />}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="serif text-base md:text-xl" style={isAr ? { fontFamily: 'var(--serif-ar)' } : {}}>{isAr ? it.nameAr : it.nameEn}</div>

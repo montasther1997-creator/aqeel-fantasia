@@ -3,7 +3,7 @@ import { Link, useRouter } from '@/i18n/routing';
 import { useLocale } from 'next-intl';
 import { Editorial } from './editorial';
 import { Icon } from './icons';
-import { fmtNumber } from '@/lib/utils';
+import { Price } from '@/components/ui/price';
 import { useState } from 'react';
 import { toast } from '@/components/ui/toast';
 
@@ -68,7 +68,7 @@ export function ProductCard({ p, saved, onSave }: { p: any; saved?: boolean; onS
       </div>
       <div className="name">{name}</div>
       <div className="meta">{meta}</div>
-      <div className="price"><span className="num">{fmtNumber(p.priceIQD)}</span> {locale === 'ar' ? 'د.ع' : 'IQD'}</div>
+      <Price iqd={p.priceIQD} usd={p.priceUSD} compareIQD={p.compareIQD} compareUSD={p.compareUSD} className="price" />
     </Link>
   );
 }

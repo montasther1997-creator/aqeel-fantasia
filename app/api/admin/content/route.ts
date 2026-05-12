@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { apiRequireAdmin, isAdminResponse } from '@/lib/admin-guard';
 import { prisma } from '@/lib/db';
 import { ContentSchema, zodError } from '@/lib/validators';
+import { revalidateForEntity } from '@/lib/revalidate';
 
 export async function POST(req: Request) {
   const admin = await apiRequireAdmin(['admin', 'superadmin', 'editor']);
@@ -14,6 +15,7 @@ export async function POST(req: Request) {
       create: parsed.data as any,
       update: parsed.data as any,
     });
+    revalidateForEntity('content');
     return NextResponse.json({ ok: true, id: c.id });
   } catch {
     return NextResponse.json({ ok: false, error: 'save-failed' }, { status: 400 });

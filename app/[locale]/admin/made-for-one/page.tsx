@@ -6,11 +6,9 @@ import { getTranslations } from 'next-intl/server';
 export default async function MadeForOneAdminPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params; await requireAdmin(locale);
   const t = await getTranslations('admin.madeForOne');
-  const [items, products, customers] = await Promise.all([
-    prisma.madeForOne.findMany({ include: { product: true, customer: true }, orderBy: { createdAt: 'desc' } }),
-    prisma.product.findMany({ where: { active: true }, select: { id: true, nameEn: true, slug: true } }),
-    prisma.customer.findMany({ select: { id: true, name: true, phone: true } }),
-  ]);
+  const items = await prisma.madeForOne.findMany({ include: { product: true, customer: true }, orderBy: { createdAt: 'desc' } });
+  const products = await prisma.product.findMany({ where: { active: true }, select: { id: true, nameEn: true, slug: true } });
+  const customers = await prisma.customer.findMany({ select: { id: true, name: true, phone: true } });
   return (
     <div className="space-y-10">
       <header className="flex items-end justify-between gap-6 pb-6 border-b border-line">

@@ -6,10 +6,8 @@ import { getTranslations } from 'next-intl/server';
 export default async function CultAdmin({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params; await requireAdmin(locale);
   const t = await getTranslations('admin.cult');
-  const [tiers, members] = await Promise.all([
-    prisma.cultTier.findMany({ orderBy: { order: 'asc' } }),
-    prisma.cultMember.findMany({ include: { customer: true, tier: true } }),
-  ]);
+  const tiers = await prisma.cultTier.findMany({ orderBy: { order: 'asc' } });
+  const members = await prisma.cultMember.findMany({ include: { customer: true, tier: true } });
   return (
     <div className="space-y-10">
       <header className="flex items-end justify-between gap-6 pb-6 border-b border-line">

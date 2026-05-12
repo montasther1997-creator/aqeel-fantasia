@@ -5,7 +5,7 @@ import { WishlistSchema, zodError } from '@/lib/validators';
 
 export async function GET() {
   const c = await getCustomer();
-  if (!c) return NextResponse.json({ ok: false, items: [] }, { status: 401 });
+  if (!c) return NextResponse.json({ ok: false, error: 'unauthorized' }, { status: 401 });
   const items = await prisma.wishlistItem.findMany({
     where: { customerId: c.id },
     include: { product: { include: { images: { take: 1 } } } },

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { apiRequireAdmin, isAdminResponse } from '@/lib/admin-guard';
 import { prisma } from '@/lib/db';
 import { CollectionSchema, zodError } from '@/lib/validators';
+import { revalidateForEntity } from '@/lib/revalidate';
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const admin = await apiRequireAdmin();
@@ -11,6 +12,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   if (!parsed.success) return NextResponse.json(zodError(parsed), { status: 400 });
   try {
     await prisma.collection.update({ where: { id }, data: parsed.data as any });
+    revalidateForEntity('collection');
     return NextResponse.json({ ok: true });
   } catch (e: any) {
     if (e?.code === 'P2002') return NextResponse.json({ ok: false, error: 'duplicate-slug' }, { status: 409 });
@@ -27,5 +29,6 @@ export async function DELETE(_: Request, { params }: { params: Promise<{ id: str
   } catch {
     return NextResponse.json({ ok: false, error: 'delete-failed' }, { status: 400 });
   }
+  revalidateForEntity('collection');
   return NextResponse.json({ ok: true });
 }

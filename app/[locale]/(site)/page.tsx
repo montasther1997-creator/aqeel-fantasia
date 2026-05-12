@@ -4,6 +4,9 @@ import { getTranslations } from 'next-intl/server';
 import { AtelierEntry } from '@/components/atelier/atelier-entry';
 import { prisma } from '@/lib/db';
 
+// Intro settings are already loaded once in the parent layout — read from
+// the same Setting table here with a single targeted query. Layout loads a
+// superset; duplicating two keys is acceptable rather than wiring a context.
 async function loadIntroSettings() {
   try {
     const rows = await prisma.setting.findMany({

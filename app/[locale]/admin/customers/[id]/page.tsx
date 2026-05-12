@@ -4,25 +4,25 @@ import { notFound } from 'next/navigation';
 import { CustomerActions } from '@/components/admin/customer-actions';
 import { TierChanger } from '@/components/admin/tier-changer';
 import { getTranslations } from 'next-intl/server';
+import { normalizeOrderStatus } from '@/lib/status';
 
 export default async function CustomerDetail({ params }: { params: Promise<{ locale: string; id: string }> }) {
   const { locale, id } = await params;
   await requireAdmin(locale);
   const t = await getTranslations('admin.customerDetail');
   const ts = await getTranslations('admin.orderActions.statusOpts');
-  const [customer, tiers, history] = await Promise.all([
-    prisma.customer.findUnique({
-      where: { id },
-      include: { orders: { orderBy: { createdAt: 'desc' } }, addresses: true, cultMember: true },
-    }),
-    prisma.cultTier.findMany({ where: { active: true }, orderBy: { pointsThreshold: 'asc' }, select: { id: true, slug: true, nameAr: true, nameEn: true, color: true } }),
-    prisma.tierHistory.findMany({
-      where: { customerId: id },
-      orderBy: { createdAt: 'desc' },
-      take: 20,
-      include: { tier: { select: { nameAr: true, nameEn: true } } },
-    }),
-  ]);
+  // Sequential — pooler connection_limit=1, see CLAUDE §5.9.1
+  const customer = await prisma.customer.findUnique({
+    where: { id },
+    include: { orders: { orderBy: { createdAt: 'desc' } }, addresses: true, cultMember: true },
+  });
+  const tiers = await prisma.cultTier.findMany({ where: { active: true }, orderBy: { pointsThreshold: 'asc' }, select: { id: true, slug: true, nameAr: true, nameEn: true, color: true } });
+  const history = await prisma.tierHistory.findMany({
+    where: { customerId: id },
+    orderBy: { createdAt: 'desc' },
+    take: 20,
+    include: { tier: { select: { nameAr: true, nameEn: true } } },
+  });
   if (!customer) notFound();
   return (
     <div className="space-y-10">
@@ -62,7 +62,7 @@ export default async function CustomerDetail({ params }: { params: Promise<{ loc
             {customer.orders.map((o) => (
               <div key={o.id} className="py-3 flex justify-between text-sm">
                 <span className="font-mono text-xs">{o.number}</span>
-                <span className="text-electric text-[10px] uppercase tracking-cinematic">{ts(o.status as any)}</span>
+                <span className="text-electric text-[10px] uppercase tracking-cinematic">{ts(normalizeOrderStatus(o.status))}</span>
                 <span>{o.currency} {o.total.toLocaleString()}</span>
               </div>
             ))}

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { apiRequireAdmin, isAdminResponse } from '@/lib/admin-guard';
 import { prisma } from '@/lib/db';
 import { ProductSchema, zodError } from '@/lib/validators';
+import { revalidateForEntity } from '@/lib/revalidate';
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const admin = await apiRequireAdmin();
@@ -11,6 +12,15 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     const parsed = ProductSchema.partial().safeParse(await req.json().catch(() => null));
     if (!parsed.success) return NextResponse.json(zodError(parsed), { status: 400 });
     const b = parsed.data as any;
+
+    // Reject image rebuild if any incoming URL is empty/invalid — prevents
+    // wiping all images then leaving the product blank.
+    const incomingImages: any[] = Array.isArray(b.images) ? b.images : [];
+    for (const img of incomingImages) {
+      if (!img?.url || typeof img.url !== 'string' || !/^https?:\/\//i.test(img.url)) {
+        return NextResponse.json({ ok: false, error: 'invalid-image-url' }, { status: 400 });
+      }
+    }
 
     // 1) Diff variants: only delete those NOT in incoming list and NOT referenced by any OrderItem
     const incomingVariants: any[] = Array.isArray(b.variants) ? b.variants : [];
@@ -79,6 +89,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     });
 
     await prisma.activityLog.create({ data: { adminId: admin.id, action: 'update', entity: 'product', entityId: id } });
+    revalidateForEntity('product');
     return NextResponse.json({ ok: true, orphaned: variantsToOrphan.length });
   } catch (e: any) {
     console.error('product PATCH:', e.message);
@@ -98,5 +109,6 @@ export async function DELETE(_: Request, { params }: { params: Promise<{ id: str
     await prisma.product.delete({ where: { id } });
   }
   await prisma.activityLog.create({ data: { adminId: admin.id, action: count > 0 ? 'soft-delete' : 'delete', entity: 'product', entityId: id } });
+  revalidateForEntity('product');
   return NextResponse.json({ ok: true, archived: count > 0 });
 }

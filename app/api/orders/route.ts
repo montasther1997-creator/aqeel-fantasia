@@ -81,6 +81,22 @@ export async function POST(req: Request) {
     const me = await getCustomer();
     const number = genOrderNumber();
 
+    // Resolve the customer's loyalty tier perks (free shipping + discountPct)
+    // BEFORE the transaction so the values are visible to the order total.
+    let tierFreeShipping = false;
+    let tierDiscountPct = 0;
+    if (me?.id) {
+      const member = await prisma.cultMember.findUnique({
+        where: { customerId: me.id },
+        include: { tier: true },
+      });
+      if (member?.tier?.active) {
+        tierFreeShipping = !!member.tier.freeShipping;
+        tierDiscountPct = Math.max(0, Math.min(100, member.tier.discountPct || 0));
+      }
+    }
+    if (tierFreeShipping) ship = 0;
+
     // Execute everything in ONE transaction
     const order = await prisma.$transaction(async (tx) => {
       // 1. Atomic stock decrement (fails if any product has insufficient stock)
@@ -137,7 +153,11 @@ export async function POST(req: Request) {
         }
       }
 
-      const total = Math.max(0, sub - disc + ship);
+      // Tier discount stacks first on the subtotal, then the promo code
+      // discount applies on the remaining amount.
+      const tierDisc = tierDiscountPct > 0 ? Math.round(sub * (tierDiscountPct / 100)) : 0;
+      const total = Math.max(0, sub - tierDisc - disc + ship);
+      const totalDiscount = disc + tierDisc;
 
       // 3. Create order with items
       const created = await tx.order.create({
@@ -150,7 +170,7 @@ export async function POST(req: Request) {
           currency: cur,
           subtotal: sub,
           shipping: ship,
-          discount: disc,
+          discount: totalDiscount,
           total,
           status: 'pending',
           paymentStatus: 'unpaid',

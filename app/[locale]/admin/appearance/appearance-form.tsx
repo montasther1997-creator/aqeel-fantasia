@@ -40,16 +40,18 @@ export function AppearanceForm({ initial }: { initial: Record<string, string> })
   const saveMany = async (section: string, entries: { key: string; value: string }[]) => {
     setSavingSection(section);
     try {
-      await Promise.all(entries.map((e) =>
-        fetch('/api/admin/settings', {
+      for (const e of entries) {
+        const r = await fetch('/api/admin/settings', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ key: e.key, value: e.value, group: 'appearance' }),
-        })
-      ));
+        });
+        if (!r.ok) throw new Error('save-failed:' + e.key);
+      }
       toast('success', tc('saved'));
       startTransition(() => router.refresh());
-    } catch {
+    } catch (err) {
+      console.error('appearance save:', err);
       toast('error', tc('saveFailed'));
     } finally {
       setSavingSection(null);

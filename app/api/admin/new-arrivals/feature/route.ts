@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { apiRequireAdmin, isAdminResponse } from '@/lib/admin-guard';
 import { prisma } from '@/lib/db';
 import { FeatureProductSchema, zodError } from '@/lib/validators';
+import { revalidateForEntity } from '@/lib/revalidate';
 
 export async function POST(req: Request) {
   const admin = await apiRequireAdmin();
@@ -16,5 +17,6 @@ export async function POST(req: Request) {
     create: { productId, order: order ?? 0 },
     update: { order: order ?? 0 },
   });
+  revalidateForEntity('new-arrival');
   return NextResponse.json({ ok: true });
 }

@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { DashboardCharts } from '@/components/admin/dashboard-charts';
 import { getTranslations } from 'next-intl/server';
+import { normalizeOrderStatus } from '@/lib/status';
 
 export default async function AdminHome({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -87,7 +88,9 @@ export default async function AdminHome({ params }: { params: Promise<{ locale: 
       if (!govMap[gov]) govMap[gov] = { count: 0, total: 0 };
       govMap[gov].count += 1;
       govMap[gov].total += o.total;
-    } catch {}
+    } catch {
+      // Malformed shipAddress JSON — skip this order, log nothing.
+    }
   }
   const topGovernorates = Object.entries(govMap)
     .map(([gov, v]) => ({ gov, ...v }))
@@ -156,7 +159,7 @@ export default async function AdminHome({ params }: { params: Promise<{ locale: 
           <p className="ed-eye mb-3">— {t('groups.overview')}</p>
           <h1 className="ed-title text-5xl md:text-6xl">{t('nav.dashboard')}</h1>
         </div>
-        <p className="ed-caption text-xs text-muted hidden md:block num">{today}</p>
+        <p className="ed-caption text-xs text-muted hidden md:block num" suppressHydrationWarning>{today}</p>
       </header>
 
       {/* Today's Snapshot */}
@@ -298,7 +301,7 @@ export default async function AdminHome({ params }: { params: Promise<{ locale: 
                       <p className="num text-frost serif text-lg" style={isAr ? { fontFamily: 'var(--serif-ar)' } : {}}>
                         {o.total.toLocaleString()} <span className="text-[10px] text-muted">{o.currency}</span>
                       </p>
-                      <span className="ed-pill accent mt-1.5 inline-block">{ts(o.status as any)}</span>
+                      <span className="ed-pill accent mt-1.5 inline-block">{ts(normalizeOrderStatus(o.status))}</span>
                     </div>
                   </Link>
                 </li>

@@ -32,7 +32,7 @@ export function CultManager({ tiers, members }: { tiers: Tier[]; members: any[] 
   const addTier = async () => {
     setCreating(true);
     try {
-      const slug = `tier-${Date.now()}`;
+      const slug = `tier-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
       const res = await fetch('/api/admin/cult', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

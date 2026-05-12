@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { loginAdmin } from '@/lib/auth';
 import { AdminLoginSchema, zodError } from '@/lib/validators';
-import { rateLimit, getIp } from '@/lib/ratelimit';
+import { rateLimit, getIp, checkLockout, recordFailure, clearFailures } from '@/lib/ratelimit';
 
 export async function POST(req: Request) {
   if (!rateLimit(`admin-login:${getIp(req)}`, 10, 60_000)) {
@@ -11,11 +11,23 @@ export async function POST(req: Request) {
   const parsed = AdminLoginSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json(zodError(parsed), { status: 400 });
 
-  if (!rateLimit(`admin-login:email:${parsed.data.email}`, 5, 60_000)) {
+  const emailKey = `admin-login:email:${parsed.data.email.toLowerCase()}`;
+
+  if (!rateLimit(emailKey, 5, 60_000)) {
     return NextResponse.json({ ok: false, error: 'rate-limit' }, { status: 429 });
   }
 
+  // Hour-long lockout after 10 failed attempts on the same email
+  const lock = checkLockout(emailKey, 10);
+  if (lock.locked) {
+    return NextResponse.json({ ok: false, error: 'account-locked' }, { status: 423 });
+  }
+
   const a = await loginAdmin(parsed.data.email, parsed.data.password);
-  if (!a) return NextResponse.json({ ok: false, error: 'invalid-credentials' }, { status: 401 });
+  if (!a) {
+    recordFailure(emailKey);
+    return NextResponse.json({ ok: false, error: 'invalid-credentials' }, { status: 401 });
+  }
+  clearFailures(emailKey);
   return NextResponse.json({ ok: true });
 }

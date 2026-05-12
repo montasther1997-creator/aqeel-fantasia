@@ -25,7 +25,7 @@ export function CategoryManager({ initial }: { initial: Cat[] }) {
   const addCategory = async () => {
     setCreating(true);
     try {
-      const slug = `category-${Date.now()}`;
+      const slug = `category-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
       const res = await fetch('/api/admin/categories', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

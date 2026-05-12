@@ -3,6 +3,7 @@ import { apiRequireAdmin, isAdminResponse } from '@/lib/admin-guard';
 import { prisma } from '@/lib/db';
 import { z } from 'zod';
 import { zodError } from '@/lib/validators';
+import { revalidateForEntity } from '@/lib/revalidate';
 
 // Keys that affect store economics — only superadmin may write these.
 const SUPERADMIN_PREFIXES = ['loyalty.', 'shipping.', 'payments.'];
@@ -72,5 +73,6 @@ export async function POST(req: Request) {
     create: { key, value, group: group || null },
     update: { value, group: group || null },
   });
+  revalidateForEntity('setting');
   return NextResponse.json({ ok: true });
 }

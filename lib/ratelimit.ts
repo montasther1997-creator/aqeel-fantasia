@@ -36,6 +36,42 @@ export function rateLimit(key: string, max: number, windowMs: number): boolean {
 }
 
 /**
+ * Tracks cumulative failures across a long window (separate from the burst
+ * rate-limit). Used to lock an account out for ~1 hour after too many failed
+ * logins. Call `recordFailure(key)` after a failed attempt and `clearFailures`
+ * after success.
+ */
+const failStore = new Map<string, { count: number; lockedUntil: number; resetAt: number }>();
+const FAIL_WINDOW = 60 * 60_000; // 1h
+
+export function checkLockout(key: string, maxFails = 10): { locked: boolean; retryAfter?: number } {
+  const now = Date.now();
+  const e = failStore.get(key);
+  if (!e) return { locked: false };
+  if (e.resetAt < now) { failStore.delete(key); return { locked: false }; }
+  if (e.lockedUntil > now) return { locked: true, retryAfter: e.lockedUntil - now };
+  if (e.count >= maxFails) {
+    e.lockedUntil = now + FAIL_WINDOW;
+    return { locked: true, retryAfter: FAIL_WINDOW };
+  }
+  return { locked: false };
+}
+
+export function recordFailure(key: string) {
+  const now = Date.now();
+  const e = failStore.get(key);
+  if (!e || e.resetAt < now) {
+    failStore.set(key, { count: 1, lockedUntil: 0, resetAt: now + FAIL_WINDOW });
+  } else {
+    e.count++;
+  }
+}
+
+export function clearFailures(key: string) {
+  failStore.delete(key);
+}
+
+/**
  * Extract the real client IP, preferring Vercel's signed header which the
  * client cannot forge. Falls back to the LAST hop of X-Forwarded-For so
  * client-supplied prefixes can't bypass per-IP limits.

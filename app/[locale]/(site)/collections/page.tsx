@@ -12,14 +12,13 @@ export default async function CollectionsPage({ params, searchParams }: { params
   const t = await getTranslations('collections');
   const isAr = locale === 'ar';
 
-  const [products, categories] = await Promise.all([
-    prisma.product.findMany({
-      where: { active: true, ...(sp.cat ? { category: { slug: sp.cat } } : {}) },
-      include: { images: { take: 1, orderBy: { order: 'asc' } } },
-      orderBy: [{ featured: 'desc' }, { order: 'asc' }],
-    }),
-    prisma.category.findMany({ where: { active: true }, orderBy: { order: 'asc' } }),
-  ]);
+  // Sequential — pool=1
+  const products = await prisma.product.findMany({
+    where: { active: true, ...(sp.cat ? { category: { slug: sp.cat } } : {}) },
+    include: { images: { take: 1, orderBy: { order: 'asc' } } },
+    orderBy: [{ featured: 'desc' }, { order: 'asc' }],
+  });
+  const categories = await prisma.category.findMany({ where: { active: true }, orderBy: { order: 'asc' } });
 
   return (
     <div className="pt-20 md:pt-32 pb-20">

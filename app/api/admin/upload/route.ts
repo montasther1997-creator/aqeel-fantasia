@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { apiRequireAdmin, isAdminResponse } from '@/lib/admin-guard';
 import { prisma } from '@/lib/db';
 import { uploadToStorage } from '@/lib/storage';
+import { rateLimit, getIp } from '@/lib/ratelimit';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -14,6 +15,11 @@ const MAX_AUDIO_SIZE = 25 * 1024 * 1024;
 const MAX_FILES = 10;
 
 export async function POST(req: Request) {
+  // Even admin uploads need rate-limit: prevents a compromised admin token
+  // from saturating storage bandwidth or running up storage costs.
+  if (!rateLimit(`upload:${getIp(req)}`, 20, 60_000)) {
+    return NextResponse.json({ ok: false, error: 'rate-limit' }, { status: 429 });
+  }
   const admin = await apiRequireAdmin(['admin', 'superadmin', 'editor']);
   if (isAdminResponse(admin)) return admin;
 

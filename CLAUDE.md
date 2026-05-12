@@ -58,6 +58,7 @@ The digital atelier ships with:
 | `/profile/addresses` | Address book |
 | `/profile/bespoke` | My bespoke inquiries |
 | `/profile/atelier-book` | Measurements + style preferences |
+| `/profile/loyalty` | Cult tier overview + tier history |
 | `/bespoke` | Bespoke inquiry form (writes to DB) |
 | `/made-for-me` | Pieces reserved for this customer |
 | `/settings` | Language/mode/currency/notifications |
@@ -69,7 +70,7 @@ The digital atelier ships with:
 | Catalog | Products, Categories, Collections |
 | Sales | Orders, Customers, Discounts |
 | Community | Cult Tiers, Bespoke Requests, **Made for One**, **Atelier Notes**, Newsletter |
-| Content | Site Content, Archive, Media Library, Appearance |
+| Content | Site Content, Archive, Media Library, Appearance, Slides (hero), New Arrivals (featured) |
 | Store | Shipping, Payments |
 | System | Admins, Activity Log, Languages, Settings |
 
@@ -136,6 +137,13 @@ Pricing: dual-currency `priceIQD: Int` + `priceUSD: Float`. Numbers are **always
 Use `aws-1-ap-southeast-2.pooler.supabase.com` (NOT `aws-0-`).
 - Port 6543 → transaction pooler (require `pgbouncer=true`)
 - Port 5432 → direct/session (used by Prisma migrations)
+
+### 5.9.0 Order/payment status vocabulary
+`Order.status` and `Order.paymentStatus` are free-string columns (not Prisma enums) — keep the vocabulary stable:
+- **status**: `pending` → `confirmed` → `processing` → `shipped` → `delivered` → `cancelled` (terminal)
+- **paymentStatus**: `unpaid` | `paid` | `refunded` | `failed`
+
+Both are localized in `messages/{ar,en}.json` under `admin.orderActions.statusOpts`. Adding a new value requires translation keys in both locales.
 
 ### 5.9.1 Pooler connection_limit=1 — sequential queries on dashboards
 The pooler is set to `connection_limit=1`. Large `Promise.all` of >5 prisma queries in a single page handler exceeds the 10s pool timeout and produces server-side exceptions. **Run dashboard queries sequentially** (`await prisma.x(); await prisma.y();`) — the wall time is the same and there is no queue contention. See `app/[locale]/admin/page.tsx` for the pattern.

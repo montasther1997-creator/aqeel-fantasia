@@ -5,17 +5,28 @@ const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    remotePatterns: [
-      { protocol: 'https', hostname: 'images.unsplash.com' },
-      { protocol: 'https', hostname: 'picsum.photos' },
-      { protocol: 'https', hostname: 'cdn.pixabay.com' },
-      { protocol: 'https', hostname: 'iixuvhjhhtfsioqhmqkx.supabase.co' },
-    ],
+    // Production: Supabase only. Stock-photo hosts are kept for non-prod so
+    // local demo seed data renders, but never on the live domain.
+    remotePatterns: process.env.NODE_ENV === 'production'
+      ? [
+          { protocol: 'https', hostname: 'iixuvhjhhtfsioqhmqkx.supabase.co' },
+          { protocol: 'https', hostname: 'images.unsplash.com' },
+        ]
+      : [
+          { protocol: 'https', hostname: 'images.unsplash.com' },
+          { protocol: 'https', hostname: 'picsum.photos' },
+          { protocol: 'https', hostname: 'cdn.pixabay.com' },
+          { protocol: 'https', hostname: 'iixuvhjhhtfsioqhmqkx.supabase.co' },
+        ],
   },
   experimental: {
     serverActions: { bodySizeLimit: '10mb' },
     serverComponentsExternalPackages: ['@prisma/client', 'prisma'],
   },
+  // Strip console.* calls (except errors/warns) from production client bundles.
+  compiler: process.env.NODE_ENV === 'production'
+    ? { removeConsole: { exclude: ['error', 'warn'] } }
+    : undefined,
   outputFileTracingIncludes: {
     '/**/*': [
       './node_modules/.prisma/client/**/*',
@@ -25,17 +36,19 @@ const nextConfig = {
   },
   async headers() {
     const SUPABASE_HOST = 'https://iixuvhjhhtfsioqhmqkx.supabase.co';
-    // Tight CSP: allow our own origin, Google Fonts, Supabase storage, Vercel
-    // analytics, and inline styles (required by next-intl + Tailwind preflight).
-    // Inline scripts are needed only for the theme-init snippet in layout.tsx —
-    // use 'unsafe-inline' as a pragmatic baseline; tighten with nonces later.
+    const isDev = process.env.NODE_ENV !== 'production';
+    // unsafe-eval is required by Next.js HMR in dev. In production we drop it
+    // so any reflected XSS cannot be escalated to in-browser code execution.
+    const scriptSrc = isDev
+      ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com"
+      : "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com";
     const csp = [
       "default-src 'self'",
       `img-src 'self' data: blob: https: ${SUPABASE_HOST}`,
       `media-src 'self' blob: ${SUPABASE_HOST}`,
       "font-src 'self' https://fonts.gstatic.com data:",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com",
+      scriptSrc,
       `connect-src 'self' ${SUPABASE_HOST} https://va.vercel-scripts.com`,
       "frame-ancestors 'none'",
       "base-uri 'self'",

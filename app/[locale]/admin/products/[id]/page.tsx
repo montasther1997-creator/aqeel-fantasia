@@ -8,11 +8,9 @@ export default async function EditProduct({ params }: { params: Promise<{ locale
   const { locale, id } = await params;
   await requireAdmin(locale);
   const t = await getTranslations('admin.productEdit');
-  const [product, categories, collections] = await Promise.all([
-    prisma.product.findUnique({ where: { id }, include: { images: { orderBy: { order: 'asc' } }, variants: true } }),
-    prisma.category.findMany({ orderBy: { order: 'asc' } }),
-    prisma.collection.findMany({ orderBy: { order: 'asc' } }),
-  ]);
+  const product = await prisma.product.findUnique({ where: { id }, include: { images: { orderBy: { order: 'asc' } }, variants: true } });
+  const categories = await prisma.category.findMany({ orderBy: { order: 'asc' } });
+  const collections = await prisma.collection.findMany({ orderBy: { order: 'asc' } });
   if (!product) notFound();
   return (
     <div className="space-y-10">

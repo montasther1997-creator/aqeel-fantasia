@@ -24,19 +24,18 @@ export default async function ActivityAdmin({
   if (sp.entity) where.entity = sp.entity;
   if (sp.admin) where.adminId = sp.admin;
 
-  const [logs, total, admins, actions, entities] = await Promise.all([
-    prisma.activityLog.findMany({
-      where,
-      include: { admin: true },
-      orderBy: { createdAt: 'desc' },
-      skip: (page - 1) * PAGE_SIZE,
-      take: PAGE_SIZE,
-    }),
-    prisma.activityLog.count({ where }),
-    prisma.adminUser.findMany({ select: { id: true, name: true } }),
-    prisma.activityLog.findMany({ distinct: ['action'], select: { action: true }, take: 50 }),
-    prisma.activityLog.findMany({ distinct: ['entity'], select: { entity: true }, take: 50 }),
-  ]);
+  // Sequential — pool=1
+  const logs = await prisma.activityLog.findMany({
+    where,
+    include: { admin: true },
+    orderBy: { createdAt: 'desc' },
+    skip: (page - 1) * PAGE_SIZE,
+    take: PAGE_SIZE,
+  });
+  const total = await prisma.activityLog.count({ where });
+  const admins = await prisma.adminUser.findMany({ select: { id: true, name: true } });
+  const actions = await prisma.activityLog.findMany({ distinct: ['action'], select: { action: true }, take: 50 });
+  const entities = await prisma.activityLog.findMany({ distinct: ['entity'], select: { entity: true }, take: 50 });
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const qs = (overrides: Record<string, string | number | undefined>) => {

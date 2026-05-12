@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocale } from 'next-intl';
 
@@ -32,16 +32,23 @@ export function AtelierEntry({
   const scale = dur / 4;
   const ms = (n: number) => Math.round(n * scale);
 
+  const skipTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
     if (!enabled) return;
     const t1 = setTimeout(() => setPhase(1), ms(1600));
     const t2 = setTimeout(() => setPhase(2), ms(3400));
     const t3 = setTimeout(() => setShow(false), ms(4000));
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enabled]);
+    return () => {
+      clearTimeout(t1); clearTimeout(t2); clearTimeout(t3);
+      if (skipTimerRef.current) clearTimeout(skipTimerRef.current);
+    };
+  }, [enabled, dur]);
 
-  const skip = () => { setPhase(2); setTimeout(() => setShow(false), 400); };
+  const skip = () => {
+    setPhase(2);
+    skipTimerRef.current = setTimeout(() => setShow(false), 400);
+  };
 
   if (!enabled) return null;
 

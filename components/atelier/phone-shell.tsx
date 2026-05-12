@@ -25,7 +25,9 @@ export function PhoneShell({
       const initial = saved || defaultMode;
       setMode(initial);
       document.documentElement.dataset.mode = initial;
-    } catch {}
+    } catch {
+      // localStorage may be unavailable (SSR, privacy mode) — fall back to defaultMode.
+    }
 
     const onStorage = (e: StorageEvent) => {
       if (e.key === 'fantasia-theme' && (e.newValue === 'dark' || e.newValue === 'light')) {

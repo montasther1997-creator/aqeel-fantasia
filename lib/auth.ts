@@ -4,13 +4,14 @@ import { cookies } from 'next/headers';
 import { prisma } from './db';
 
 const SECRET_STR = process.env.JWT_SECRET;
-// Require JWT_SECRET in production AND in any non-development environment
-// (preview, staging, Vercel runtime, etc.). Only allow the insecure fallback
-// when explicitly running `npm run dev` (NODE_ENV === 'development').
-if (!SECRET_STR && process.env.NODE_ENV !== 'development') {
-  throw new Error('JWT_SECRET environment variable is required outside development');
+// JWT_SECRET is REQUIRED in every environment, including local dev. A
+// predictable fallback in dev means tokens forged on a developer machine
+// could authenticate against a preview or staging deployment if env files
+// leak. Force every contributor to set their own secret.
+if (!SECRET_STR || SECRET_STR.length < 16) {
+  throw new Error('JWT_SECRET environment variable is required and must be at least 16 chars');
 }
-const SECRET = new TextEncoder().encode(SECRET_STR || 'dev-only-secret-do-not-use-in-prod');
+const SECRET = new TextEncoder().encode(SECRET_STR);
 const ADMIN_COOKIE = 'fantasia_admin';
 const CUSTOMER_COOKIE = 'fantasia_customer';
 

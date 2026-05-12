@@ -6,10 +6,8 @@ import { getTranslations } from 'next-intl/server';
 export default async function NotesAdminPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params; await requireAdmin(locale);
   const t = await getTranslations('admin.notes');
-  const [notes, products] = await Promise.all([
-    prisma.atelierNote.findMany({ orderBy: { number: 'desc' } }),
-    prisma.product.findMany({ where: { active: true }, select: { id: true, nameEn: true } }),
-  ]);
+  const notes = await prisma.atelierNote.findMany({ orderBy: { number: 'desc' } });
+  const products = await prisma.product.findMany({ where: { active: true }, select: { id: true, nameEn: true } });
   return (
     <div className="space-y-10">
       <header className="flex items-end justify-between gap-6 pb-6 border-b border-line">

@@ -3,6 +3,7 @@ import { prisma } from '@/lib/db';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
+import { normalizeOrderStatus } from '@/lib/status';
 
 export default async function OrdersAdmin({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ status?: string }> }) {
   const { locale } = await params;
@@ -85,7 +86,7 @@ export default async function OrdersAdmin({ params, searchParams }: { params: Pr
                   <span className="text-[10px] text-muted ms-1">{o.currency}</span>
                 </td>
                 <td>
-                  <span className="ed-pill accent">{ts(o.status as any)}</span>
+                  <span className="ed-pill accent">{ts(normalizeOrderStatus(o.status))}</span>
                 </td>
                 <td className="muted num-col">{new Date(o.createdAt).toLocaleDateString(isAr ? 'ar-IQ' : 'en-US')}</td>
                 <td>

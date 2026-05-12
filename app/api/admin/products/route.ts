@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { apiRequireAdmin, isAdminResponse } from '@/lib/admin-guard';
 import { prisma } from '@/lib/db';
 import { ProductSchema, zodError } from '@/lib/validators';
+import { revalidateForEntity } from '@/lib/revalidate';
 
 export async function POST(req: Request) {
   const admin = await apiRequireAdmin(['admin', 'superadmin']);
@@ -39,6 +40,7 @@ export async function POST(req: Request) {
       },
     });
     await prisma.activityLog.create({ data: { adminId: admin.id, action: 'create', entity: 'product', entityId: product.id, details: product.nameEn } });
+    revalidateForEntity('product');
     return NextResponse.json({ ok: true, id: product.id });
   } catch (e: any) {
     // Prisma unique constraint

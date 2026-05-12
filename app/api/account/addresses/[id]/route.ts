@@ -1,26 +1,19 @@
 import { NextResponse } from 'next/server';
 import { getCustomer } from '@/lib/auth';
 import { prisma } from '@/lib/db';
-
-const ALLOWED = ['recipient', 'phone', 'country', 'governorate', 'city', 'area', 'street', 'details', 'isDefault'] as const;
+import { AddressSchema, zodError } from '@/lib/validators';
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const c = await getCustomer();
   if (!c) return NextResponse.json({ ok: false }, { status: 401 });
   const { id } = await params;
-  const b = await req.json().catch(() => ({}));
+  const parsed = AddressSchema.partial().safeParse(await req.json().catch(() => null));
+  if (!parsed.success) return NextResponse.json(zodError(parsed), { status: 400 });
 
   const a = await prisma.address.findUnique({ where: { id } });
   if (!a || a.customerId !== c.id) return NextResponse.json({ ok: false }, { status: 403 });
 
-  const data: Record<string, any> = {};
-  for (const k of ALLOWED) if (k in b) data[k] = b[k];
-
-  // Length caps
-  for (const k of ['recipient', 'phone', 'country', 'governorate', 'city', 'area', 'street', 'details']) {
-    if (typeof data[k] === 'string') data[k] = data[k].slice(0, 500);
-  }
-  if ('isDefault' in data) data.isDefault = !!data.isDefault;
+  const data = parsed.data as Record<string, any>;
 
   // Atomic isDefault flip
   await prisma.$transaction(async (tx) => {

@@ -67,7 +67,7 @@ export function ProductDetail({ product, related }: { product: any; related: any
               <div className="mt-4 grid grid-cols-5 gap-2">
                 {images.map((im: any, i: number) => (
                   <button key={im.id} onClick={() => setImgIdx(i)} className={`aspect-square overflow-hidden border ${i === imgIdx ? 'border-accent' : 'border-border'}`}>
-                    <img src={im.url} alt="" className="w-full h-full object-cover" />
+                    <img src={im.url} alt={`${name} — ${i + 1}`} className="w-full h-full object-cover" />
                   </button>
                 ))}
               </div>

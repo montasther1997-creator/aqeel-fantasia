@@ -2,6 +2,7 @@ import { requireAdmin } from '@/lib/admin-guard';
 import { prisma } from '@/lib/db';
 import { Download } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
+import { normalizeOrderStatus } from '@/lib/status';
 
 function parseDate(s: string | undefined, fallback: Date): Date {
   if (!s) return fallback;
@@ -52,12 +53,11 @@ export default async function ReportsAdmin({
 
   const since7 = new Date(Date.now() - 7 * 86400000);
   const since30 = new Date(Date.now() - 30 * 86400000);
-  const [r7, r30, all, range] = await Promise.all([
-    prisma.order.aggregate({ _sum: { total: true }, _count: true, where: { createdAt: { gte: since7 } } }),
-    prisma.order.aggregate({ _sum: { total: true }, _count: true, where: { createdAt: { gte: since30 } } }),
-    prisma.order.aggregate({ _sum: { total: true }, _count: true }),
-    prisma.order.aggregate({ _sum: { total: true }, _count: true, where: rangeWhere }),
-  ]);
+  // Sequential — pool=1, see CLAUDE §5.9.1
+  const r7 = await prisma.order.aggregate({ _sum: { total: true }, _count: true, where: { createdAt: { gte: since7 } } });
+  const r30 = await prisma.order.aggregate({ _sum: { total: true }, _count: true, where: { createdAt: { gte: since30 } } });
+  const all = await prisma.order.aggregate({ _sum: { total: true }, _count: true });
+  const range = await prisma.order.aggregate({ _sum: { total: true }, _count: true, where: rangeWhere });
 
   const csvQuery = `?from=${fromStr}&to=${toStr}`;
 
@@ -163,7 +163,7 @@ export default async function ReportsAdmin({
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-line">
             {byStatus.map((s) => (
               <div key={s.status} className="bg-bg-elevated p-5">
-                <p className="ed-pill accent">{ts(s.status as any)}</p>
+                <p className="ed-pill accent">{ts(normalizeOrderStatus(s.status))}</p>
                 <p className="serif font-light text-3xl mt-3 num" style={isAr ? { fontFamily: 'var(--serif-ar)' } : {}}>
                   {s._count}
                 </p>

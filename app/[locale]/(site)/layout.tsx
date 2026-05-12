@@ -10,12 +10,11 @@ import { prisma } from '@/lib/db';
 
 async function loadExperienceSettings() {
   try {
+    // Intro keys load on the welcome page itself; layout only reads ambient + nav.
     const rows = await prisma.setting.findMany({
       where: {
         key: {
           in: [
-            'intro.enabled',
-            'intro.durationSeconds',
             'appearance.background.enabled',
             'appearance.background.type',
             'appearance.background.intensity',
@@ -27,8 +26,6 @@ async function loadExperienceSettings() {
     });
     const map = new Map(rows.map((r) => [r.key, r.value]));
     return {
-      introEnabled: map.get('intro.enabled') !== '0',
-      introDuration: Number(map.get('intro.durationSeconds')) || 4,
       bgEnabled: map.get('appearance.background.enabled') !== '0',
       bgType: ((map.get('appearance.background.type') as any) || 'rich') as 'motes' | 'fabric' | 'lines' | 'rich' | 'off',
       bgIntensity: Number(map.get('appearance.background.intensity')) || 0.5,
@@ -37,8 +34,6 @@ async function loadExperienceSettings() {
     };
   } catch {
     return {
-      introEnabled: true,
-      introDuration: 4,
       bgEnabled: true,
       bgType: 'rich' as const,
       bgIntensity: 0.7,

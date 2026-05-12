@@ -7,10 +7,8 @@ export default async function NewProduct({ params }: { params: Promise<{ locale:
   const { locale } = await params;
   await requireAdmin(locale);
   const t = await getTranslations('admin.productNew');
-  const [categories, collections] = await Promise.all([
-    prisma.category.findMany({ orderBy: { order: 'asc' } }),
-    prisma.collection.findMany({ orderBy: { order: 'asc' } }),
-  ]);
+  const categories = await prisma.category.findMany({ orderBy: { order: 'asc' } });
+  const collections = await prisma.collection.findMany({ orderBy: { order: 'asc' } });
   return (
     <div className="space-y-10">
       <header className="flex items-end justify-between gap-6 pb-6 border-b border-line">
