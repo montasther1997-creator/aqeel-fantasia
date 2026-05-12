@@ -279,3 +279,16 @@ Default admin: `admin@aqeelfantasia.com` / `Fantasia@2026` (change in production
 - **Appearance redesign**: split into Visual / Tagline / Colors sections with `MediaInput` (Upload | URL tabs) + 50 MB video upload limit.
 - **Dark/Light mode fix**: `PhoneShell` no longer hardcodes `data-mode="dark"`; reads from `localStorage` and mirrors `<html>` via MutationObserver so the settings toggle works.
 - **Checkout validation**: custom red-mark validation with centered toast; name/phone/governorate/city/street required; email optional.
+- **Comprehensive audit pass (May 2026 — commit `6246b0e`, 42 fixes across 62 files):**
+  - **Ambient overlay** moved above content with `z-[60]` + `mix-blend-mode: screen` so silk waves stay visible above section backgrounds; styles extracted to `globals.css` `.ambient-overlay` / `.silk-root` / `.scroll-trail` keyframes.
+  - **`/profile/loyalty` page** (was 404 from `LoyaltyCard`). Shows tier, points, progress, all tiers, tier history.
+  - **Loyalty perks now enforced in checkout** (`app/api/orders/route.ts`): the customer's current tier is resolved before the transaction; `freeShipping` zeroes `ship`, `discountPct` stacks on the subtotal before the promo code. `discount` column stores the combined total.
+  - **Sequential prisma queries** on 9 admin pages (`Promise.all` removed) to honor `connection_limit=1`.
+  - **`lib/revalidate.ts`** + `revalidateForEntity(...)` called from products/categories/collections/notes/slides/new-arrivals/content/settings admin routes so admin mutations bust the public-route cache instead of waiting 60s.
+  - **Security hardening**: CSP drops `'unsafe-eval'` in production; `JWT_SECRET` now required in every env (≥16 chars, no dev fallback); admin middleware redirect for unauthenticated `/admin/*`; admin login adds 1-hour lockout after 10 fails (`checkLockout`/`recordFailure` in `lib/ratelimit.ts`); register endpoint returns generic error to block enumeration; `/api/discount` tighter rate-limit + per-code throttle; `/api/admin/upload` IP rate-limited; CSV export capped at 366 days; `deleteFromStorage` rejects `..` and wrong bucket; address PATCH validated by `AddressSchema.partial()`; production `images.remotePatterns` restricted to Supabase + Unsplash only.
+  - **Status vocabulary** centralised in `lib/status.ts` (`normalizeOrderStatus` / `normalizePaymentStatus`) — unknown values fall back to `pending` / `unpaid` instead of leaking key strings. Vocabulary documented in §5.9.0.
+  - **`<Price>` component wired** into `ProductCard` so the IQD/USD currency toggle actually affects displayed prices.
+  - **Forbidden Arabic terms purged** from `messages/ar.json` per §9 (`مفصّل`→`التفصيل`, `ادخل`→`اكتشف`/`سجّل`).
+  - **`/api/newsletter`** is the canonical endpoint; `/api/signal` re-exports it for back-compat.
+  - **Production console.* stripped** via Next compiler (`removeConsole: { exclude: ['error', 'warn'] }`).
+  - Bag list keys use `productId+variantId`. Intro `setTimeout` cleaned on unmount. Slug generation uses random suffix instead of bare `Date.now()`. Image alts localized.

@@ -30,7 +30,8 @@ A men's fashion house where authenticity meets modern elegance. Premium craftsma
 | 🎛️ Editorial admin | 24 sections — full CRUD, magazine-style design system (gold-ruled stat cards, em-dash section heads, accent-hover tables) |
 | 🏅 Loyalty system | Cult tiers with `pointsThreshold` + `multiplier` + perks (free shipping / early access / % discount / custom). Auto-award + auto-tier-up inside the order transaction. Customer-facing tier card with progress bar. |
 | 👥 Customer accounts | Phone-based auth (email optional), addresses, order history, wishlist, atelier book (measurements + style preferences) |
-| 🛡️ Security-hardened | Server-authoritative pricing, role-gated admin actions, upload whitelist, JWT enforcement |
+| 🛡️ Security-hardened | Server-authoritative pricing, role-gated admin actions, upload whitelist, mandatory `JWT_SECRET`, middleware admin guard, account lockout, production CSP without `unsafe-eval` |
+| 🌫️ Ambient overlay | Always-on silk waves + gold motes + scissor sweep rendered above content via `mix-blend-mode: screen`, reactive to scroll velocity |
 | 🎵 Subtle sound design | Web Audio synthesized cues (`playWood/playFabric/playDing/playBell/playSwoosh` triggered inline) |
 
 ---
@@ -113,7 +114,7 @@ app/
   api/
     account/          Customer endpoints (auth, addresses, wishlist)
     admin/            Admin CRUD (server-side authorization required)
-    orders, search, shipping, signal, discount, health
+    orders, search, shipping, newsletter (/signal alias), discount, health
 components/
   site/               Storefront UI (Hero, Marquee, ProductCard, …)
   admin/              Admin shell + per-section managers
