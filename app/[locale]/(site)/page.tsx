@@ -1,14 +1,34 @@
 import { Crest } from '@/components/atelier/crest';
 import { Link } from '@/i18n/routing';
 import { getTranslations } from 'next-intl/server';
+import { AtelierEntry } from '@/components/atelier/atelier-entry';
+import { prisma } from '@/lib/db';
+
+async function loadIntroSettings() {
+  try {
+    const rows = await prisma.setting.findMany({
+      where: { key: { in: ['intro.enabled', 'intro.durationSeconds'] } },
+    });
+    const map = new Map(rows.map((r) => [r.key, r.value]));
+    return {
+      enabled: map.get('intro.enabled') !== '0',
+      duration: Number(map.get('intro.durationSeconds')) || 4,
+    };
+  } catch {
+    return { enabled: true, duration: 4 };
+  }
+}
 
 export default async function WelcomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations('welcome');
   const isAr = locale === 'ar';
+  const intro = await loadIntroSettings();
 
   return (
     <div className="relative min-h-screen overflow-hidden">
+      {/* Intro overlay — only shown on the welcome page, not on every navigation */}
+      <AtelierEntry enabled={intro.enabled} durationSeconds={intro.duration} />
       {/* Background image */}
       <div className="absolute inset-0">
         <img src="https://images.unsplash.com/photo-1593030103066-0093718efeb9?w=2400&q=85" alt="" className="w-full h-full object-cover" style={{ filter: 'grayscale(0.4) contrast(1.1) brightness(0.45)' }} />

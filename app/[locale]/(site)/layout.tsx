@@ -3,7 +3,6 @@ import { DesktopNav } from '@/components/atelier/desktop-nav';
 import { DesktopFooter } from '@/components/atelier/desktop-footer';
 import { BottomNav } from '@/components/atelier/bottomnav';
 import { ToastHost } from '@/components/ui/toast';
-import { AtelierEntry } from '@/components/atelier/atelier-entry';
 import { SoundToggle } from '@/components/atelier/sound-toggle';
 import { AmbientBackground } from '@/components/atelier/ambient-background';
 import { ScrollRevealInit } from '@/components/atelier/scroll-reveal-init';
@@ -58,7 +57,6 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         initial={{ enabled: s.bgEnabled, type: s.bgType, intensity: s.bgIntensity }}
       />
       <ScrollRevealInit />
-      <AtelierEntry enabled={s.introEnabled} durationSeconds={s.introDuration} />
       <DesktopNav enable3d={s.nav3dEnabled} intensity={s.nav3dIntensity} />
       <main className="min-h-screen pb-[80px] md:pb-0 relative z-10">{children}</main>
       <DesktopFooter />
