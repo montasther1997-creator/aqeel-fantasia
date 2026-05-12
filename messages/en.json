@@ -691,13 +691,25 @@
     "categories": {
       "eyebrow": "Catalog",
       "title": "Categories",
+      "intro": "Add categories to split your products (Suits, Shoes, Italian…). They appear on the home page and in product picker.",
+      "addCategory": "Add category",
+      "empty": "No categories yet. Add your first.",
+      "confirmDelete": "Delete this category? Linked products will not be deleted.",
+      "fields": {
+        "nameAr": "Name (Arabic)",
+        "nameEn": "Name (English)",
+        "slug": "Technical slug",
+        "slugHint": "Lowercase letters and hyphens, e.g. italian-suits",
+        "image": "Category image",
+        "imageHint": "Shown on the category card. Recommended 800x1000 or larger."
+      },
       "slug": "slug",
       "nameEn": "Name EN",
       "nameAr": "Name AR",
       "placeholders": {
-        "slug": "outerwear",
-        "nameEn": "Outerwear",
-        "nameAr": "المعاطف"
+        "slug": "italian-suits",
+        "nameEn": "Italian Suits",
+        "nameAr": "بدلات إيطالية"
       }
     },
     "collections": {
