@@ -169,6 +169,22 @@ export const ArchiveSchema = z.object({
   active: z.boolean().optional(),
   order: z.coerce.number().int().min(0).max(10000).optional(),
 });
+export const HeroSlideSchema = z.object({
+  imageUrl: z.string().url().max(1000),
+  titleAr: z.string().max(200).optional().nullable(),
+  titleEn: z.string().max(200).optional().nullable(),
+  subtitleAr: z.string().max(500).optional().nullable(),
+  subtitleEn: z.string().max(500).optional().nullable(),
+  linkUrl: z.string().max(500).optional().nullable(),
+  order: z.coerce.number().int().min(0).max(1000).optional(),
+  active: z.boolean().optional(),
+});
+
+export const FeatureProductSchema = z.object({
+  productId: z.string().min(1).max(50),
+  order: z.coerce.number().int().min(0).max(1000).optional(),
+});
+
 export const CustomerPatchSchema = z.object({
   vipTier: z.enum(['none', 'bronze', 'silver', 'gold', 'black']).optional(),
   blocked: z.boolean().optional(),

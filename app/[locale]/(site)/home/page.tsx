@@ -4,6 +4,8 @@ import { Editorial } from '@/components/atelier/editorial';
 import { ProductCard } from '@/components/atelier/product-card';
 import { NotesSection } from '@/components/atelier/notes-section';
 import { StylistSection } from '@/components/atelier/stylist-section';
+import { HeroSlider } from '@/components/atelier/hero-slider';
+import { NewArrivalsSection } from '@/components/atelier/new-arrivals-section';
 import { Link } from '@/i18n/routing';
 import { getCustomer } from '@/lib/auth';
 import { getStylistRecommendations } from '@/lib/stylist';
@@ -17,16 +19,19 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   const me = await getCustomer();
 
-  const [products, notes, recs] = await Promise.all([
-    prisma.product.findMany({
-      where: { active: true },
-      include: { images: { take: 1, orderBy: { order: 'asc' } } },
-      orderBy: [{ featured: 'desc' }, { order: 'asc' }],
-      take: 12,
-    }),
-    prisma.atelierNote.findMany({ where: { active: true }, orderBy: { number: 'desc' }, take: 5 }),
-    me ? getStylistRecommendations(me.id, 4) : Promise.resolve([] as any[]),
-  ]);
+  // Sequential queries (pooler is connection_limit=1)
+  const products = await prisma.product.findMany({
+    where: { active: true },
+    include: { images: { take: 1, orderBy: { order: 'asc' } } },
+    orderBy: [{ featured: 'desc' }, { order: 'asc' }],
+    take: 12,
+  });
+  const notes = await prisma.atelierNote.findMany({ where: { active: true }, orderBy: { number: 'desc' }, take: 5 });
+  const recs = me ? await getStylistRecommendations(me.id, 4) : [] as any[];
+  const heroSlides = await prisma.heroSlide.findMany({
+    where: { active: true },
+    orderBy: { order: 'asc' },
+  });
 
   const curated = products.slice(0, 4);
   const second = products.slice(4, 8);
@@ -34,6 +39,14 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   return (
     <div>
+      {/* Hero Slider — admin-managed (above the static hero) */}
+      {heroSlides.length > 0 && (
+        <HeroSlider slides={heroSlides} locale={isAr ? 'ar' : 'en'} />
+      )}
+
+      {/* New Arrivals — auto + manual featured */}
+      <NewArrivalsSection locale={isAr ? 'ar' : 'en'} />
+
       {/* Hero — full viewport */}
       <section className="relative h-screen min-h-[600px] overflow-hidden">
         <Editorial variant="v5" ratio="auto" className="absolute inset-0" fade>

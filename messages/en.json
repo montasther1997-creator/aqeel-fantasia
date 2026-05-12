@@ -240,6 +240,8 @@
       "appearance": "Appearance",
       "shipping": "Shipping",
       "payments": "Payments",
+      "slides": "Hero Slides",
+      "newArrivals": "New Arrivals",
       "users": "Admins",
       "activity": "Activity",
       "languages": "Languages",
@@ -767,6 +769,55 @@
       "uploading": "UPLOADING...",
       "dropOrClick": "DROP FILES OR CLICK"
     },
+    "slides": {
+      "eyebrow": "Content",
+      "title": "Hero Slides",
+      "intro": "Add images that auto-rotate at the top of the home page. They change every 5 seconds.",
+      "addSlide": "Add slide",
+      "slideHeading": "Slide",
+      "empty": "No slides yet. Add your first slide.",
+      "confirmDelete": "Delete this slide?",
+      "imageRequired": "Slide image is required",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "fields": {
+        "image": "Slide image",
+        "imageHint": "Recommended 1920x1080 or larger. JPG / PNG / WEBP.",
+        "titleAr": "Title (Arabic)",
+        "titleEn": "Title (English)",
+        "subtitleAr": "Subtitle (Arabic)",
+        "subtitleEn": "Subtitle (English)",
+        "linkUrl": "Click link (optional)",
+        "linkUrlHint": "e.g. /product/void-hoodie or /collections — opens when slide is clicked"
+      },
+      "placeholders": {
+        "titleAr": "ربيع 2026",
+        "titleEn": "Spring 2026",
+        "subtitleAr": "من السطح",
+        "subtitleEn": "From the rooftop",
+        "linkUrl": "/collections"
+      }
+    },
+    "newArrivals": {
+      "eyebrow": "Content",
+      "title": "Latest Arrivals",
+      "subtitle": "Any new product appears here automatically. You can also pin products manually.",
+      "addedToFeatured": "Added to Latest Arrivals",
+      "confirmRemove": "Remove from Latest Arrivals?",
+      "manual": {
+        "heading": "Manually pinned",
+        "intro": "These products appear at the top of the Latest Arrivals section before the auto-latest list.",
+        "selectProduct": "Select a product",
+        "add": "Add",
+        "empty": "No pinned products. Add some to feature them first."
+      },
+      "auto": {
+        "heading": "Auto-latest",
+        "intro": "Most recently added products. Auto-appear in the Latest Arrivals section after manually pinned items.",
+        "empty": "No products yet.",
+        "note": "Count is configurable from Settings → Experience → Latest Arrivals."
+      }
+    },
     "appearance": {
       "eyebrow": "Content",
       "title": "Appearance",
@@ -933,7 +984,45 @@
         "social": "Social",
         "shipping": "Shipping",
         "loyalty": "Loyalty",
+        "experience": "Experience",
         "advanced": "Advanced"
+      },
+      "experience": {
+        "intro": {
+          "heading": "Welcome Intro",
+          "enabledLabel": "Show intro on first visit",
+          "durationLabel": "Total duration",
+          "durationHint": "Between 2 and 10 seconds. Default 4.",
+          "seconds": "sec"
+        },
+        "background": {
+          "heading": "Site background",
+          "hint": "A quiet effect that brings life to the black background without distraction.",
+          "enabledLabel": "Enable effect",
+          "typeLabel": "Effect type",
+          "intensityLabel": "Effect intensity",
+          "types": {
+            "motes": "Floating gold motes",
+            "fabric": "Subtle fabric/paper grain",
+            "lines": "Drifting gold lines",
+            "off": "Off"
+          }
+        },
+        "topNav": {
+          "heading": "Prominent top nav",
+          "hint": "Soft gold shadow + bottom rule that lifts the nav forward on scroll.",
+          "enabledLabel": "Enable 3D effect",
+          "intensityLabel": "Shadow intensity"
+        },
+        "newArrivals": {
+          "heading": "Latest Arrivals section",
+          "hint": "Auto-shows recent products. Pin specific products from the New Arrivals admin page.",
+          "enabledLabel": "Show section on home page",
+          "countLabel": "Number of auto products",
+          "countHint": "Between 4 and 20",
+          "headingArLabel": "Section heading (Arabic)",
+          "headingEnLabel": "Section heading (English)"
+        }
       },
       "about": {
         "heading": "Founder & House story",

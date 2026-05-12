@@ -1,12 +1,12 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Save, Plus, Trash2, Building2, Phone, Share2, Truck, Crown, Settings as SettingsIcon, Sparkles } from 'lucide-react';
+import { Save, Plus, Trash2, Building2, Phone, Share2, Truck, Crown, Settings as SettingsIcon, Sparkles, Palette } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { toast } from '@/components/ui/toast';
 import { SettingsEditor } from './settings-editor';
 
-type Tab = 'about' | 'branches' | 'social' | 'shipping' | 'loyalty' | 'advanced';
+type Tab = 'about' | 'branches' | 'social' | 'shipping' | 'loyalty' | 'experience' | 'advanced';
 
 export function SmartSettings({ items }: { items: any[] }) {
   const [tab, setTab] = useState<Tab>('about');
@@ -19,6 +19,7 @@ export function SmartSettings({ items }: { items: any[] }) {
     { id: 'social', label: t('tabs.social'), icon: <Share2 className="w-4 h-4" /> },
     { id: 'shipping', label: t('tabs.shipping'), icon: <Truck className="w-4 h-4" /> },
     { id: 'loyalty', label: t('tabs.loyalty'), icon: <Crown className="w-4 h-4" /> },
+    { id: 'experience', label: t('tabs.experience'), icon: <Palette className="w-4 h-4" /> },
     { id: 'advanced', label: t('tabs.advanced'), icon: <SettingsIcon className="w-4 h-4" /> },
   ];
 
@@ -43,8 +44,135 @@ export function SmartSettings({ items }: { items: any[] }) {
       {tab === 'social' && <SocialTab map={map} />}
       {tab === 'shipping' && <ShippingTab map={map} />}
       {tab === 'loyalty' && <LoyaltyTab map={map} />}
+      {tab === 'experience' && <ExperienceTab map={map} />}
       {tab === 'advanced' && <SettingsEditor items={items} />}
     </div>
+  );
+}
+
+function ExperienceTab({ map }: { map: Map<string, string> }) {
+  const t = useTranslations('admin.smartSettings.experience');
+  const tc = useTranslations('admin.common');
+  const { save, busy } = useSaver('appearance');
+  const [d, setD] = useState({
+    introEnabled: map.get('intro.enabled') !== '0',
+    introDuration: map.get('intro.durationSeconds') || '4',
+    bgEnabled: map.get('appearance.background.enabled') !== '0',
+    bgType: map.get('appearance.background.type') || 'motes',
+    bgIntensity: map.get('appearance.background.intensity') || '0.5',
+    nav3dEnabled: map.get('appearance.topNav3d.enabled') !== '0',
+    nav3dIntensity: map.get('appearance.topNav3d.intensity') || '0.5',
+    naEnabled: map.get('newArrivals.enabled') !== '0',
+    naAr: map.get('newArrivals.heading_ar') || 'جديد الدار',
+    naEn: map.get('newArrivals.heading_en') || 'Latest Arrivals',
+    naCount: map.get('newArrivals.autoCount') || '8',
+  });
+
+  const persist = () => save([
+    { key: 'intro.enabled', value: d.introEnabled ? '1' : '0' },
+    { key: 'intro.durationSeconds', value: d.introDuration },
+    { key: 'appearance.background.enabled', value: d.bgEnabled ? '1' : '0' },
+    { key: 'appearance.background.type', value: d.bgType },
+    { key: 'appearance.background.intensity', value: d.bgIntensity },
+    { key: 'appearance.topNav3d.enabled', value: d.nav3dEnabled ? '1' : '0' },
+    { key: 'appearance.topNav3d.intensity', value: d.nav3dIntensity },
+    { key: 'newArrivals.enabled', value: d.naEnabled ? '1' : '0' },
+    { key: 'newArrivals.heading_ar', value: d.naAr },
+    { key: 'newArrivals.heading_en', value: d.naEn },
+    { key: 'newArrivals.autoCount', value: d.naCount },
+  ]);
+
+  return (
+    <div className="space-y-6">
+      {/* Intro */}
+      <div className="glass p-6 space-y-4">
+        <h3 className="text-xs tracking-cinematic text-muted">{t('intro.heading')}</h3>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <ExpToggle label={t('intro.enabledLabel')} value={d.introEnabled} onChange={(v) => setD({ ...d, introEnabled: v })} />
+          <Field label={t('intro.durationLabel')} hint={t('intro.durationHint')}>
+            <div className="flex items-center gap-2">
+              <input type="number" min={2} max={10} step={0.5} className="input num flex-1" value={d.introDuration} onChange={(e) => setD({ ...d, introDuration: e.target.value })} />
+              <span className="text-xs text-muted">{t('intro.seconds')}</span>
+            </div>
+          </Field>
+        </div>
+      </div>
+
+      {/* Background */}
+      <div className="glass p-6 space-y-4">
+        <h3 className="text-xs tracking-cinematic text-muted">{t('background.heading')}</h3>
+        <p className="text-sm text-muted">{t('background.hint')}</p>
+        <div className="grid sm:grid-cols-3 gap-4">
+          <ExpToggle label={t('background.enabledLabel')} value={d.bgEnabled} onChange={(v) => setD({ ...d, bgEnabled: v })} />
+          <Field label={t('background.typeLabel')}>
+            <select className="input" value={d.bgType} onChange={(e) => setD({ ...d, bgType: e.target.value })}>
+              <option value="motes">{t('background.types.motes')}</option>
+              <option value="fabric">{t('background.types.fabric')}</option>
+              <option value="lines">{t('background.types.lines')}</option>
+              <option value="off">{t('background.types.off')}</option>
+            </select>
+          </Field>
+          <Field label={t('background.intensityLabel')}>
+            <div className="space-y-1">
+              <input type="range" min={0} max={1} step={0.05} className="w-full accent-electric" value={d.bgIntensity} onChange={(e) => setD({ ...d, bgIntensity: e.target.value })} />
+              <p className="text-[10px] text-muted num text-center">{d.bgIntensity}</p>
+            </div>
+          </Field>
+        </div>
+      </div>
+
+      {/* Top Nav 3D */}
+      <div className="glass p-6 space-y-4">
+        <h3 className="text-xs tracking-cinematic text-muted">{t('topNav.heading')}</h3>
+        <p className="text-sm text-muted">{t('topNav.hint')}</p>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <ExpToggle label={t('topNav.enabledLabel')} value={d.nav3dEnabled} onChange={(v) => setD({ ...d, nav3dEnabled: v })} />
+          <Field label={t('topNav.intensityLabel')}>
+            <div className="space-y-1">
+              <input type="range" min={0} max={1} step={0.05} className="w-full accent-electric" value={d.nav3dIntensity} onChange={(e) => setD({ ...d, nav3dIntensity: e.target.value })} />
+              <p className="text-[10px] text-muted num text-center">{d.nav3dIntensity}</p>
+            </div>
+          </Field>
+        </div>
+      </div>
+
+      {/* New Arrivals */}
+      <div className="glass p-6 space-y-4">
+        <h3 className="text-xs tracking-cinematic text-muted">{t('newArrivals.heading')}</h3>
+        <p className="text-sm text-muted">{t('newArrivals.hint')}</p>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <ExpToggle label={t('newArrivals.enabledLabel')} value={d.naEnabled} onChange={(v) => setD({ ...d, naEnabled: v })} />
+          <Field label={t('newArrivals.countLabel')} hint={t('newArrivals.countHint')}>
+            <input type="number" min={4} max={20} className="input num" value={d.naCount} onChange={(e) => setD({ ...d, naCount: e.target.value })} />
+          </Field>
+          <Field label={t('newArrivals.headingArLabel')}>
+            <input className="input" value={d.naAr} onChange={(e) => setD({ ...d, naAr: e.target.value })} />
+          </Field>
+          <Field label={t('newArrivals.headingEnLabel')}>
+            <input className="input" dir="ltr" value={d.naEn} onChange={(e) => setD({ ...d, naEn: e.target.value })} />
+          </Field>
+        </div>
+      </div>
+
+      <button onClick={persist} disabled={busy} className="btn-primary inline-flex items-center gap-2 disabled:opacity-50">
+        <Save className="w-4 h-4" /> {tc('save')}
+      </button>
+    </div>
+  );
+}
+
+function ExpToggle({ label, value, onChange }: { label: string; value: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <label className="flex items-center justify-between cursor-pointer p-3 border border-line">
+      <span className="text-[11px] tracking-cinematic text-muted">{label}</span>
+      <button
+        type="button"
+        onClick={() => onChange(!value)}
+        className={`relative w-10 h-5 rounded-full transition-colors ${value ? 'bg-accent' : 'bg-border'}`}
+      >
+        <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-pearl transition-transform ${value ? 'left-[22px]' : 'left-0.5'}`} />
+      </button>
+    </label>
   );
 }
 

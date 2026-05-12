@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import {
   LayoutDashboard, Package, ShoppingBag, Users, FolderTree, Layers,
   FileText, Image, Palette, Mail, Tag, Truck, CreditCard, Settings, Activity, LogOut, Crown, Globe2,
+  Images, Sparkles,
 } from 'lucide-react';
 import { Logo } from '@/components/ui/logo';
 
@@ -38,6 +39,8 @@ export function AdminShell({ children, locale, admin }: { children: React.ReactN
       { href: '/newsletter', label: t('nav.newsletter'), icon: Mail },
     ]},
     { group: t('groups.content'), items: [
+      { href: '/slides', label: t('nav.slides'), icon: Images },
+      { href: '/new-arrivals', label: t('nav.newArrivals'), icon: Sparkles },
       { href: '/content', label: t('nav.siteContent'), icon: FileText },
       { href: '/archive', label: t('nav.archive'), icon: Image },
       { href: '/media', label: t('nav.media'), icon: Image },

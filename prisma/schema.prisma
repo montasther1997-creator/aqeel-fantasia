@@ -173,6 +173,7 @@ model Product {
   wishlist     WishlistItem[]
   notes        AtelierNote[]
   madeForOne   MadeForOne?
+  featured_in  FeaturedProduct?
 
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -318,6 +319,34 @@ model TierHistory {
   adminId     String?
   createdAt   DateTime @default(now())
   @@index([customerId, createdAt])
+  @@schema("fantasia")
+}
+
+// ==================== HERO SLIDES ====================
+model HeroSlide {
+  id          String   @id @default(cuid())
+  imageUrl    String
+  titleAr     String?
+  titleEn     String?
+  subtitleAr  String?
+  subtitleEn  String?
+  linkUrl     String?
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  @@index([active, order])
+  @@schema("fantasia")
+}
+
+// Manually-curated "جديد الدار" picks layered on top of the auto-latest feed.
+model FeaturedProduct {
+  id        String   @id @default(cuid())
+  productId String   @unique
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  order     Int      @default(0)
+  addedAt   DateTime @default(now())
+  @@index([order])
   @@schema("fantasia")
 }
 

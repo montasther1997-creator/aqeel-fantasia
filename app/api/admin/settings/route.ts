@@ -24,6 +24,10 @@ const ALLOWED_KEY_PATTERNS: RegExp[] = [
   /^loyalty\.(iqdPerPoint|pointsPerUSD)$/,
   /^payments\.[a-z]+\.enabled$/,
   /^appearance\.(heroVideoUrl|logoUrl|faviconUrl|brandTagline(Ar)?|primaryAccent|heroOverlayOpacity)$/,
+  /^appearance\.background\.(enabled|type|intensity)$/,
+  /^appearance\.topNav3d\.(enabled|intensity)$/,
+  /^intro\.(enabled|durationSeconds)$/,
+  /^newArrivals\.(enabled|heading_ar|heading_en|autoCount)$/,
 ];
 
 const SettingPostSchema = z.object({

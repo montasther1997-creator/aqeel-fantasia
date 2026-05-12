@@ -6,7 +6,13 @@ import { Crest } from './crest';
 import { Icon } from './icons';
 import { useCart } from '@/lib/cart-store';
 
-export function DesktopNav() {
+export function DesktopNav({
+  enable3d = true,
+  intensity = 0.5,
+}: {
+  enable3d?: boolean;
+  intensity?: number;
+}) {
   const t = useTranslations('nav');
   const locale = useLocale();
   const path = usePathname();
@@ -20,6 +26,16 @@ export function DesktopNav() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // 3D-prominent shadow strength when scrolled (admin-controlled intensity).
+  const i = Math.max(0, Math.min(1, intensity));
+  const elevatedStyle = scrolled && enable3d
+    ? {
+        boxShadow: `0 4px 24px rgba(201,169,97,${0.08 + 0.15 * i}), 0 1px 0 rgba(201,169,97,${0.1 + 0.25 * i}) inset`,
+        borderBottom: `1px solid rgba(201,169,97,${0.15 + 0.25 * i})`,
+        transform: 'translateY(0)',
+      }
+    : undefined;
+
   const links = [
     { href: '/home', label: t('home') },
     { href: '/collections', label: t('collections') },
@@ -31,7 +47,10 @@ export function DesktopNav() {
   if (hideOnRoutes.includes(path)) return null;
 
   return (
-    <header className={`hidden md:block fixed top-0 inset-x-0 z-40 transition-all duration-500 ${scrolled ? 'bg-bg/90 backdrop-blur-xl border-b border-border' : 'bg-transparent'}`}>
+    <header
+      className={`hidden md:block fixed top-0 inset-x-0 z-40 transition-all duration-500 ${scrolled ? 'bg-bg/95 backdrop-blur-xl' : 'bg-transparent'}`}
+      style={elevatedStyle}
+    >
       <div className="max-w-[1500px] mx-auto px-6 lg:px-12 h-20 flex items-center justify-between">
         {/* Left: nav links */}
         <nav className="flex items-center gap-10">
